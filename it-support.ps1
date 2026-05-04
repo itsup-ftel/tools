@@ -19,7 +19,7 @@ set "Res=%ESC%[0m"
 cls
 echo.
 echo   %G%=====================================================================================================================%Res%
-echo                                         %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 8.9%Res%
+echo                                         %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 2.6%Res%
 echo   %G%=====================================================================================================================%Res%
 echo.
 echo      %Y%[ QUAN LY HE THONG ]%Res%               %C%[ MANG ^& INTERNET ]%Res%                %C%[ MAY IN (PRINTER) ]%Res%
