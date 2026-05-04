@@ -104,7 +104,7 @@ echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
 :: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
-powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://activated.win | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
 
 :systemInfo
