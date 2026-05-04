@@ -100,7 +100,11 @@ cls
 echo %Y%=====================================================%Res%
 echo        DANG KET NOI DEN MAY CHU MAS...
 echo =====================================================%Res%
-powershell -Command "irm https://activated.win | iex"
+echo.
+echo %C%Luu y: May tinh can co ket noi Internet.%Res%
+echo.
+:: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://activated.win | iex"
 goto menu
 
 :systemInfo
