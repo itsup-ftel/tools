@@ -1,3 +1,4 @@
+$batchCode = @"
 @echo off
 title IT SUPPORT PROFESSIONAL TOOLKIT v8.9
 mode con: cols=125 lines=42
@@ -295,3 +296,10 @@ shutdown /r /t 0
 
 :shutdown
 shutdown /s /t 0
+
+"@
+
+$tempFile = "$env:TEMP\ITSupport.bat"
+$batchCode | Out-File -FilePath $tempFile -Encoding ascii
+Start-Process $tempFile -Verb RunAs -Wait
+Remove-Item $tempFile
