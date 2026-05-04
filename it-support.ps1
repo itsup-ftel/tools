@@ -1,7 +1,7 @@
 # it-support.ps1
 $batchCode = @'
 @echo off
-title IT SUPPORT PROFESSIONAL TOOLKIT v8.9
+title IT SUPPORT PROFESSIONAL TOOLKIT v2.6
 mode con: cols=125 lines=42
 
 :: Tao ky tu ESC de chay mau ANSI
