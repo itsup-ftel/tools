@@ -1,4 +1,5 @@
-$batchCode = @"
+# it-support.ps1
+$batchCode = @'
 @echo off
 title IT SUPPORT PROFESSIONAL TOOLKIT v8.9
 mode con: cols=125 lines=42
@@ -297,9 +298,10 @@ shutdown /r /t 0
 :shutdown
 shutdown /s /t 0
 
-"@
+'@
 
-$tempFile = "$env:TEMP\ITSupport.bat"
-$batchCode | Out-File -FilePath $tempFile -Encoding ascii
-Start-Process $tempFile -Verb RunAs -Wait
-Remove-Item $tempFile
+# Tạo file tạm và thực thi với quyền Admin
+$tempPath = "$env:TEMP\it_tool.bat"
+$batchCode | Out-File -FilePath $tempPath -Encoding ascii
+Start-Process $tempPath -Verb RunAs -Wait
+Remove-Item $tempPath
