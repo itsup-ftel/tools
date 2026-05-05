@@ -161,13 +161,11 @@ goto menu
 
 :cleanJunk
 cls
-echo %Y%Dang don dep file rac he thong...%Res%
-del /s /q /f "%temp%\*.*" >nul 2>&1
-rd /s /q "%temp%" >nul 2>&1
-mkdir "%temp%"
-del /s /q /f "C:\Windows\Temp\*.*" >nul 2>&1
-del /s /q /f "C:\Windows\Prefetch\*.*" >nul 2>&1
-echo %G%Da don dep xong!%Res%
+echo %Yellow%Dang don dep file rac he thong (Dung PowerShell)...%Reset%
+:: Chuyen sang dung PowerShell de xoa file - Chống treo và tự đóng
+powershell -Command "$dirs = @('$env:TEMP', 'C:\Windows\Temp', 'C:\Windows\Prefetch'); foreach ($dir in $dirs) { if (Test-Path $dir) { Get-ChildItem $dir -Recurse | Remove-Item -Force -Recurse -ErrorAction SilentlyContinue } }"
+echo.
+echo %Green%Da don dep xong!%Reset%
 pause
 goto menu
 
