@@ -7,7 +7,7 @@ if %errorLevel% neq 0 (
     powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
     exit /b
 )
-title IT SUPPORT PROFESSIONAL TOOLKIT v2.6
+title IT SUPPORT PROFESSIONAL TOOLKIT v26.5
 mode con: cols=125 lines=42
 
 :: Tao ky tu ESC de chay mau ANSI
@@ -25,7 +25,7 @@ set "Res=%ESC%[0m"
 cls
 echo.
 echo   %G%=====================================================================================================================%Res%
-echo                                         %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 2.6%Res%
+echo                                         %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo   %G%=====================================================================================================================%Res%
 echo.
 echo      %Y%[ QUAN LY HE THONG ]%Res%               %C%[ MANG ^& INTERNET ]%Res%                %C%[ MAY IN (PRINTER) ]%Res%
