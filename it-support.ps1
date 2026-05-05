@@ -306,6 +306,16 @@ shutdown /s /t 0
 
 # Tạo file tạm và thực thi với quyền Admin
 $tempPath = "$env:TEMP\it_tool.bat"
+
+# 1. Ghi file với mã hóa chuẩn
 $batchCode | Out-File -FilePath $tempPath -Encoding ascii
-Start-Process $tempPath -Verb RunAs -Wait
-Remove-Item $tempPath
+
+# 2. Chạy file Batch và ép PowerShell đợi cho đến khi cửa sổ Batch đóng hẳn
+if (Test-Path $tempPath) {
+    $process = Start-Process $tempPath -Verb RunAs -PassThru -Wait
+    
+    # 3. Chỉ xóa sau khi tiến trình đã kết thúc
+    if ($process.HasExited) {
+        Remove-Item $tempPath -ErrorAction SilentlyContinue
+    }
+}
