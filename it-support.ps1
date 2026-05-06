@@ -122,12 +122,21 @@ goto menu
 :systemInfo
 cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
-echo ---------------------------------------------------
-wmic computersystem get name, manufacturer, model
-wmic os get caption, osarchitecture, version, installdate
-wmic cpu get name
-powershell -NoProfile -Command "Write-Host ('RAM: ' + [math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory/1GB, 2) + ' GB')"
-echo ---------------------------------------------------
+powershell -NoProfile -Command ^
+    "$os = Get-CimInstance Win32_OperatingSystem;" ^
+    "$cpu = Get-CimInstance Win32_Processor ^| Select-Object -First 1;" ^
+    "$cs = Get-CimInstance Win32_ComputerSystem;" ^
+    "echo '---------------------------------------------------';" ^
+    "echo (\"Ten may:          \" + $cs.Name);" ^
+    "echo (\"Nha san xuat:     \" + $cs.Manufacturer);" ^
+    "echo (\"Dong may:         \" + $cs.Model);" ^
+    "echo (\"He dieu hanh:     \" + $os.Caption + ' ' + $os.OSArchitecture);" ^
+    "echo (\"Version:          \" + $os.Version);" ^
+    "echo (\"CPU:              \" + $cpu.Name);" ^
+    "echo (\"RAM:              \" + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + \" GB\");" ^
+    "echo (\"Ngay cai Win:     \" + $os.InstallDate);" ^
+    "echo (\"Boot gan nhat:    \" + $os.LastBootUpTime);" ^
+    "echo '---------------------------------------------------';"
 pause
 goto menu
 
