@@ -198,7 +198,7 @@ echo %G%[+] RAM:%Res%
 powershell -command "[Math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB), 2).ToString() + ' GB'"
 
 echo %G%[+] O CUNG:%Res%
-powershell -command "Get-PhysicalDisk | Select-Object -Property FriendlyName, MediaType, HealthStatus | Out-String"
+powershell -command "Get-PhysicalDisk | ForEach-Object { $pd = $_; $logic = Get-Partition -DiskNumber $pd.DeviceNumber | Get-Volume; $letters = ($logic.DriveLetter -join ','); $total = [Math]::Round($pd.Size / 1GB, 2); $free = [Math]::Round(($logic.SizeRemaining | Measure-Object -Sum).Sum / 1GB, 2); [PSCustomObject]@{ 'Ten o dia'=$pd.FriendlyName; 'Loai'=$pd.MediaType; 'O'=$letters; 'Trong/Tong'=\"$free/$total GB\"; 'Status'=$pd.HealthStatus } } | Format-Table -AutoSize"
 
 echo %G%[+] GPU:%Res%
 powershell -command "(Get-CimInstance Win32_VideoController).Name"
