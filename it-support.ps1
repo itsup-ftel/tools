@@ -124,18 +124,18 @@ cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
 powershell -NoProfile -Command ^
     "$os = Get-CimInstance Win32_OperatingSystem;" ^
-    "$cpu = Get-CimInstance Win32_Processor ^| Select-Object -First 1;" ^
+    "$cpu = Get-CimInstance Win32_Processor;" ^
     "$cs = Get-CimInstance Win32_ComputerSystem;" ^
     "echo '---------------------------------------------------';" ^
-    "echo (\"Ten may:          \" + $cs.Name);" ^
-    "echo (\"Nha san xuat:     \" + $cs.Manufacturer);" ^
-    "echo (\"Dong may:         \" + $cs.Model);" ^
-    "echo (\"He dieu hanh:     \" + $os.Caption + ' ' + $os.OSArchitecture);" ^
-    "echo (\"Version:          \" + $os.Version);" ^
-    "echo (\"CPU:              \" + $cpu.Name);" ^
-    "echo (\"RAM:              \" + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + \" GB\");" ^
-    "echo (\"Ngay cai Win:     \" + $os.InstallDate);" ^
-    "echo (\"Boot gan nhat:    \" + $os.LastBootUpTime);" ^
+    "echo ('Ten may:          ' + $cs.Name);" ^
+    "echo ('Nha san xuat:     ' + $cs.Manufacturer);" ^
+    "echo ('Dong may:         ' + $cs.Model);" ^
+    "echo ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture);" ^
+    "echo ('Version:          ' + $os.Version);" ^
+    "echo ('CPU:              ' + $cpu.Name);" ^
+    "echo ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
+    "echo ('Ngay cai Win:     ' + $os.InstallDate);" ^
+    "echo ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
     "echo '---------------------------------------------------';"
 pause
 goto menu
