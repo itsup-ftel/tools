@@ -8,7 +8,7 @@ if %errorLevel% neq 0 (
     exit /b
 )
 title IT SUPPORT PROFESSIONAL TOOLKIT v26.5
-mode con: cols=125 lines=42
+mode con: cols=160 lines=42
 
 :: Tao ky tu ESC de chay mau ANSI
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
@@ -24,31 +24,35 @@ set "Res=%ESC%[0m"
 :menu
 cls
 echo.
-echo   %G%=====================================================================================================================%Res%
-echo                                         %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
-echo   %G%=====================================================================================================================%Res%
+echo   %G%================================================================================================================================================================%Res%
+echo                                                              %W%IT SUPPORT PROFESSIONAL TOOLKIT - V26.5%Res%
+echo   %G%================================================================================================================================================================%Res%
 echo.
-echo      %Y%[ QUAN LY HE THONG ]%Res%               %C%[ MANG ^& INTERNET ]%Res%                %C%[ MAY IN (PRINTER) ]%Res%
+echo       %Y%[ 1. HE THONG ]%Res%                   %Y%[ 2. PHAN CUNG ]%Res%                 %Y%[ 3. MANG ^& INTERNET ]%Res%             %Y%[ 4. MAY IN (PRINTER) ]%Res%
 echo.
-echo      %G%01.%Res% Don dep file rac             %G%12.%Res% Get MAC ^& Serial SN          %G%22.%Res% Restart Print Spooler
-echo      %G%02.%Res% Thong tin he thong           %G%13.%Res% Xem chi tiet IP Config       %G%23.%Res% Xoa lenh in bi ket
-echo      %G%03.%Res% Sua loi SFC ^& DISM           %G%14.%Res% Flush DNS / Renew IP         %G%24.%Res% In thu trang Test Page
-echo      %G%04.%Res% Xem Model may                %G%15.%Res% Double Ping (GW ^& 8.8)       %G%25.%Res% Liet ke cac may in
-echo      %G%05.%Res% Thong tin RAM chi tiet       %G%16.%Res% Xem Pass Wi-Fi cu            
-echo      %G%06.%Res% Thong tin CPU chi tiet       %G%17.%Res% Reset thiet lap mang         
-echo      %G%07.%Res% Bao cao suc khoe Pin         %G%18.%Res% Liet ke cac Task             %Y%[ TRUY CAP NHANH (OPEN) ]%Res%
-echo      %G%08.%Res% Xuat Info ra Desktop         %G%19.%Res% Dong ung dung treo           
-echo      %G%09.%Res% Reset Windows Update         %G%20.%Res% Tat nhanh Chrome             %G%31.%Res% Control Panel
-echo      %G%10.%Res% Restart Explorer             %G%21.%Res% Danh sach User may           %G%32.%Res% Task Manager
-echo      %G%11.%Res% Kiem tra o cung (SMART)                                       %G%33.%Res% Services (msc)
-echo.                                                                       %G%34.%Res% Device Manager
-echo      %Y%[ BAN QUYEN - ACTIVE ]%Res%                                            %G%35.%Res% Print Management
-echo      %G%40.%Res% %R%MO CONG CU ACTIVE (MAS)%Res%                                       %G%36.%Res% Network Connections
-echo                                                                        %G%37.%Res% Registry Editor
-echo      %Y%[ HE THONG ]%Res%                                                      %G%38.%Res% Advanced Firewall
-echo      %R%[ R ]%Res% Restart PC   %R%[ S ]%Res% Shutdown PC                                 
-echo      %W%[ 0 ] Thoat%Res%
-echo   %G%=====================================================================================================================%Res%
+echo       %G%01.%Res% Don dep file rac            %G%04.%Res% Cau hinh (CPU/RAM)           %G%12.%Res% Get MAC ^& Serial SN          %G%22.%Res% Restart Print Spooler
+echo       %G%02.%Res% Thong tin Win chi tiet      %G%07.%Res% Bao cao suc khoe Pin        %G%13.%Res% Xem chi tiet IP Config       %G%23.%Res% Xoa lenh in bi kiet
+echo       %G%03.%Res% Sua loi SFC ^& DISM          %G%11.%Res% Kiem tra o cung SMART       %G%14.%Res% Flush DNS / Renew IP         %G%24.%Res% In thu trang Test Page
+echo       %G%09.%Res% Reset Windows Update        %G%08.%Res% Xuat Info ra Desktop        %G%15.%Res% Double Ping (GW ^& 8.8)      %G%25.%Res% Liet ke cac may in
+echo       %G%10.%Res% Restart Explorer            %G%--%Res% ----------------------       %G%16.%Res% Xem Pass Wi-Fi cu            %G%--%Res% ----------------------
+echo       %G%19.%Res% Dong ung dung treo          %G%--%Res% ----------------------       %G%17.%Res% Reset thiet lap mang         %G%--%Res% ----------------------
+echo       %G%20.%Res% Tat nhanh Chrome            %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%21.%Res% Danh sach User              %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo.
+echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%           %C%[ 6. TRUY CAP NHANH 2 ]%Res%           %C%[ 7. BAN QUYEN ]%Res%                  %C%[ 8. LENH NHANH ]%Res%
+echo.
+echo       %G%31.%Res% Control Panel               %G%35.%Res% Print Management            %G%40.%Res% %R%ACTIVE WINDOWS/OFFICE%Res%       %R%[ R ]%Res% Restart Computer
+echo       %G%32.%Res% Task Manager                %G%36.%Res% Network Connections         %G%--%Res% ----------------------       %R%[ S ]%Res% Shutdown Computer
+echo       %G%33.%Res% Services (msc)              %G%37.%Res% Registry Editor             %G%--%Res% ----------------------       %G%00.%Res% Thoat chuong trinh
+echo       %G%34.%Res% Device Manager              %G%38.%Res% Advanced Firewall           %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%39.%Res% Windows Settings            %G%41.%Res% Appwiz.cpl (Go App)         %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo.
+echo   %G%================================================================================================================================================================%Res%
 set /p opt="  %W%>>> Lua chon cua ban: %Res%"
 
 :: --- DIEU HUONG LOGIC ---
