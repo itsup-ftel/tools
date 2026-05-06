@@ -8,7 +8,7 @@ if %errorLevel% neq 0 (
     exit /b
 )
 title IT SUPPORT PROFESSIONAL TOOLKIT v26.5
-mode con: cols=160 lines=42
+mode con: cols=150 lines=45
 
 :: Tao ky tu ESC de chay mau ANSI
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
@@ -47,11 +47,13 @@ echo       %G%32.%Res% Task Manager                %G%36.%Res% Network Connectio
 echo       %G%33.%Res% Services (msc)              %G%37.%Res% Registry Editor             %G%--%Res% ----------------------       %G%00.%Res% Thoat chuong trinh
 echo       %G%34.%Res% Device Manager              %G%38.%Res% Advanced Firewall           %G%--%Res% ----------------------       %G%--%Res% ----------------------
 echo       %G%39.%Res% Windows Settings            %G%41.%Res% Appwiz.cpl (Go App)         %G%--%Res% ----------------------       %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%35.%Res% Print Management            %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%36.%Res% Network Connections         %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%37.%Res% Registry Editor             %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
+echo       %G%38.%Res% Advanced Firewall           %G%--%Res% ----------------------       %G%--%Res% ----------------------       %G%--%Res% ----------------------
 echo.
+echo      %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC                                 
+echo      %W%[ 0 ] Thoat tool%Res%
 echo   %G%================================================================================================================================================================%Res%
 set /p opt="  %W%>>> Lua chon cua ban: %Res%"
 
