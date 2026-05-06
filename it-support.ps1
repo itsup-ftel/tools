@@ -25,7 +25,7 @@ set "Res=%ESC%[0m"
 cls
 echo.
 echo   %G%============================================================================================================================================%Res%
-echo                                                 %W%IT SUPPORT PROFESSIONAL TOOLKIT - MATRIX LAYOUT 4x2%Res%
+echo                                                 %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo   %G%============================================================================================================================================%Res%
 echo.
 echo       %Y%[ 1. HE THONG ]%Res%               %Y%[ 2. PHAN CUNG ]%Res%             %Y%[ 3. MANG ^& INTERNET ]%Res%         %Y%[ 4. MAY IN (PRINTER) ]%Res%
@@ -40,17 +40,17 @@ echo       %G%19.%Res% Dong ung dung treo      %G%--%Res% ----------------------
 echo       %G%20.%Res% Tat nhanh Chrome        %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%21.%Res% Danh sach User          %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo.
-echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%       %C%[ 6. TRUY CAP NHANH 2 ]%Res%       %C%[ 7. BAN QUYEN ]%Res%              %C%[ 8. LENH NHANH ]%Res%
+echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%       %C%[ 6. TRUY CAP NHANH 2 ]%Res%       %C%[ 7. CAI DAT - KICH HOAT ]%Res%              %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%40.%Res% %R%ACTIVE WIN/OFFICE%Res%       %R%[ R ]%Res% Restart Computer
-echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%--%Res% ----------------------   %R%[ S ]%Res% Shutdown Computer
-echo       %G%33.%Res% Services (msc)          %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%00.%Res% Thoat chuong trinh
+echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%40.%Res% %R%ACTIVE WIN/OFFICE%Res%       %G%--%Res% ----------------------
+echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%33.%Res% Services (msc)          %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%34.%Res% Device Manager          %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%39.%Res% Windows Settings        %G%41.%Res% Appwiz.cpl (Go App)     %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%35.%Res% Print Management        %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%36.%Res% Network Connections     %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo.
 echo      %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC                                 
 echo      %W%[ 0 ] Thoat tool%Res%
