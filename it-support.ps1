@@ -122,21 +122,21 @@ goto menu
 :systemInfo
 cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
-powershell -NoProfile -Command "^
-    $os = Get-CimInstance Win32_OperatingSystem; ^
-    $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1; ^
-    $cs = Get-CimInstance Win32_ComputerSystem; ^
-    echo '---------------------------------------------------'; ^
-    echo ('Ten may:          ' + $cs.Name); ^
-    echo ('Nha san xuat:     ' + $cs.Manufacturer); ^
-    echo ('Dong may:         ' + $cs.Model); ^
-    echo ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture); ^
-    echo ('Version:          ' + $os.Version); ^
-    echo ('CPU:              ' + $cpu.Name); ^
-    echo ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB'); ^
-    echo ('Ngay cai Win:     ' + $os.InstallDate); ^
-    echo ('Boot gan nhat:    ' + $os.LastBootUpTime); ^
-    echo '---------------------------------------------------';"
+powershell -NoProfile -Command ^
+    "$os = Get-CimInstance Win32_OperatingSystem;" ^
+    "$cpu = Get-CimInstance Win32_Processor | Select-Object -First 1;" ^
+    "$cs = Get-CimInstance Win32_ComputerSystem;" ^
+    "Write-Host '---------------------------------------------------';" ^
+    "Write-Host ('Ten may:          ' + $cs.Name);" ^
+    "Write-Host ('Nha san xuat:     ' + $cs.Manufacturer);" ^
+    "Write-Host ('Dong may:         ' + $cs.Model);" ^
+    "Write-Host ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture);" ^
+    "Write-Host ('Version:          ' + $os.Version);" ^
+    "Write-Host ('CPU:              ' + $cpu.Name);" ^
+    "Write-Host ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
+    "Write-Host ('Ngay cai Win:     ' + $os.InstallDate);" ^
+    "Write-Host ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
+    "Write-Host '---------------------------------------------------';"
 pause
 goto menu
 
