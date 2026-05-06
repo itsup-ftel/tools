@@ -122,25 +122,22 @@ goto menu
 :systemInfo
 cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
-echo %W%Vui long doi trong giay lat...%Res%
-echo ---------------------------------------------------
-:: Lay ten may
-for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"Host Name"') do set "name=%%a"
-:: Lay ten OS
-for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"OS Name"') do set "os=%%a"
-:: Lay Model may
-for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"System Model"') do set "model=%%a"
-:: Lay RAM
-for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"Total Physical Memory"') do set "ram=%%a"
-
-echo Ten may:          %name:~1%
-echo He dieu hanh:     %os:~1%
-echo Dong may:         %model:~1%
-echo RAM:              %ram:~1%
-echo ---------------------------------------------------
-echo.
-echo %G%Bam phim bat ky de quay lai Menu...%Res%
-pause >nul
+powershell -NoProfile -Command ^
+    "$os = Get-CimInstance Win32_OperatingSystem;" ^
+    "$cpu = Get-CimInstance Win32_Processor;" ^
+    "$cs = Get-CimInstance Win32_ComputerSystem;" ^
+    "echo '---------------------------------------------------';" ^
+    "echo ('Ten may:          ' + $cs.Name);" ^
+    "echo ('Nha san xuat:     ' + $cs.Manufacturer);" ^
+    "echo ('Dong may:         ' + $cs.Model);" ^
+    "echo ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture);" ^
+    "echo ('Version:          ' + $os.Version);" ^
+    "echo ('CPU:              ' + $cpu.Name);" ^
+    "echo ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
+    "echo ('Ngay cai Win:     ' + $os.InstallDate);" ^
+    "echo ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
+    "echo '---------------------------------------------------';"
+pause
 goto menu
 
 :doublePing
