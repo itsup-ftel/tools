@@ -24,15 +24,15 @@ set "Res=%ESC%[0m"
 :menu
 cls
 echo.
-echo   %G%================================================================================================================================================================%Res%
+echo   %G%==========================================================================================================================================================%Res%
 echo                                                              %W%IT SUPPORT PROFESSIONAL TOOLKIT - V26.5%Res%
-echo   %G%================================================================================================================================================================%Res%
+echo   %G%==========================================================================================================================================================%Res%
 echo.
 echo       %Y%[ 1. HE THONG ]%Res%                   %Y%[ 2. PHAN CUNG ]%Res%                 %Y%[ 3. MANG ^& INTERNET ]%Res%             %Y%[ 4. MAY IN (PRINTER) ]%Res%
 echo.
-echo       %G%01.%Res% Don dep file rac            %G%04.%Res% Cau hinh (CPU/RAM)           %G%12.%Res% Get MAC ^& Serial SN          %G%22.%Res% Restart Print Spooler
+echo       %G%01.%Res% Don dep file rac            %G%04.%Res% Cau hinh (CPU/RAM)          %G%12.%Res% Get MAC ^& Serial SN         %G%22.%Res% Restart Print Spooler
 echo       %G%02.%Res% Thong tin Win chi tiet      %G%07.%Res% Bao cao suc khoe Pin        %G%13.%Res% Xem chi tiet IP Config       %G%23.%Res% Xoa lenh in bi kiet
-echo       %G%03.%Res% Sua loi SFC ^& DISM          %G%11.%Res% Kiem tra o cung SMART       %G%14.%Res% Flush DNS / Renew IP         %G%24.%Res% In thu trang Test Page
+echo       %G%03.%Res% Sua loi SFC ^& DISM         %G%11.%Res% Kiem tra o cung SMART       %G%14.%Res% Flush DNS / Renew IP         %G%24.%Res% In thu trang Test Page
 echo       %G%09.%Res% Reset Windows Update        %G%08.%Res% Xuat Info ra Desktop        %G%15.%Res% Double Ping (GW ^& 8.8)      %G%25.%Res% Liet ke cac may in
 echo       %G%10.%Res% Restart Explorer            %G%--%Res% ----------------------       %G%16.%Res% Xem Pass Wi-Fi cu            %G%--%Res% ----------------------
 echo       %G%19.%Res% Dong ung dung treo          %G%--%Res% ----------------------       %G%17.%Res% Reset thiet lap mang         %G%--%Res% ----------------------
@@ -54,7 +54,7 @@ echo       %G%38.%Res% Advanced Firewall           %G%--%Res% ------------------
 echo.
 echo      %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC                                 
 echo      %W%[ 0 ] Thoat tool%Res%
-echo   %G%================================================================================================================================================================%Res%
+echo   %G%==========================================================================================================================================================%Res%
 set /p opt="  %W%>>> Lua chon cua ban: %Res%"
 
 :: --- DIEU HUONG LOGIC ---
