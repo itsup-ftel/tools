@@ -198,7 +198,7 @@ echo %G%[+] RAM:%Res%
 powershell -command "[Math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB), 2).ToString() + ' GB'"
 
 echo %G%[+] O CUNG:%Res%
-powershell -command "Get-CimInstance Win32_DiskDrive | ForEach-Object { $disk = $_; $partitions = Get-CimInstance -Query \"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='$($disk.DeviceID)'} WHERE AssocClass = Win32_DiskDriveToDiskPartition\"; $volumes = foreach ($p in $partitions) { Get-CimInstance -Query \"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='$($p.DeviceID)'} WHERE AssocClass = Win32_LogicalDiskToPartition\" }; $driveLetters = ($volumes.DeviceID -join ', '); $freeSpace = [Math]::Round(($volumes.FreeSpace | Measure-Object -Sum).Sum / 1GB, 2); $totalSize = [Math]::Round($disk.Size / 1GB, 2); Write-Host \"    - $($disk.Model) [$driveLetters]\" -ForegroundColor Cyan; Write-Host \"      Loai: $($disk.MediaType) | Trong: $freeSpace GB / Tong: $totalSize GB\" }"
+powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
 
 echo %G%[+] GPU:%Res%
 powershell -command "(Get-CimInstance Win32_VideoController).Name"
