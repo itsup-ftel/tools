@@ -185,10 +185,26 @@ goto menu
 
 :hardwareInfo
 cls
-echo %Cyan%[ THONG TIN PHAN CUNG CHI TIET ]%Reset%
-powershell -command "Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model; Get-CimInstance Win32_Processor | Select-Object Name; Get-CimInstance Win32_PhysicalMemory | Select-Object DeviceLocator, @{N='GB';E={$_.Capacity/1GB}}, Speed"
-powershell -command "Get-CimInstance Win32_PhysicalMemory | Select-Object DeviceLocator, @{Name='Capacity(GB)';Expression={$_.Capacity / 1GB}}, Speed, Manufacturer"
-powershell -command "Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors"
+:: 1. Hiển thị tiêu đề bằng mã màu CMD
+echo %C%==================================================%Res%
+echo %Y%[ THONG TIN PHAN CUNG CHI TIET ]%Res%
+echo %C%==================================================%Res%
+
+:: 2. Gọi PowerShell để lấy dữ liệu (Sử dụng màu của bạn cho từng dòng)
+echo %G%[+] CPU:%Res%
+powershell -command "(Get-CimInstance Win32_Processor).Name"
+
+echo %G%[+] RAM:%Res%
+powershell -command "[Math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB), 2).ToString() + ' GB'"
+
+echo %G%[+] O CUNG:%Res%
+powershell -command "Get-PhysicalDisk | Select-Object -Property FriendlyName, MediaType, HealthStatus | Out-String"
+
+echo %G%[+] GPU:%Res%
+powershell -command "(Get-CimInstance Win32_VideoController).Name"
+
+echo %C%--------------------------------------------------%Res%
+echo %W%Kiem tra hoan tat!%Res%
 pause
 goto menu
 
