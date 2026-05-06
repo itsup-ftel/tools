@@ -198,7 +198,7 @@ echo %G%[+] RAM:%Res%
 powershell -command "[Math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB), 2).ToString() + ' GB'"
 
 echo %G%[+] O CUNG:%Res%
-powershell -command "Get-PhysicalDisk | ForEach-Object { $pd = $_; $logic = Get-Partition -DiskNumber $pd.DeviceNumber | Get-Volume; $letters = ($logic.DriveLetter -join ','); $total = [Math]::Round($pd.Size / 1GB, 2); $free = [Math]::Round(($logic.SizeRemaining | Measure-Object -Sum).Sum / 1GB, 2); [PSCustomObject]@{ 'Ten o dia'=$pd.FriendlyName; 'Loai'=$pd.MediaType; 'O'=$letters; 'Trong/Tong'=\"$free/$total GB\"; 'Status'=$pd.HealthStatus } } | Format-Table -AutoSize"
+powershell -command "Get-CimInstance Win32_DiskDrive | ForEach-Object { $disk = $_; $partitions = Get-CimInstance -Query \"ASSOCIATORS OF {Win32_DiskDrive.DeviceID='$($disk.DeviceID)'} WHERE AssocClass = Win32_DiskDriveToDiskPartition\"; $volumes = foreach ($p in $partitions) { Get-CimInstance -Query \"ASSOCIATORS OF {Win32_DiskPartition.DeviceID='$($p.DeviceID)'} WHERE AssocClass = Win32_LogicalDiskToPartition\" }; $driveLetters = ($volumes.DeviceID -join ', '); $freeSpace = [Math]::Round(($volumes.FreeSpace | Measure-Object -Sum).Sum / 1GB, 2); $totalSize = [Math]::Round($disk.Size / 1GB, 2); Write-Host \"    - $($disk.Model) [$driveLetters]\" -ForegroundColor Cyan; Write-Host \"      Loai: $($disk.MediaType) | Trong: $freeSpace GB / Tong: $totalSize GB\" }"
 
 echo %G%[+] GPU:%Res%
 powershell -command "(Get-CimInstance Win32_VideoController).Name"
