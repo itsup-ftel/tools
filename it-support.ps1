@@ -122,22 +122,30 @@ goto menu
 :systemInfo
 cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
-powershell -NoProfile -Command ^
+echo %C%---------------------------------------------------%Res%
+
+:: Sử dụng powershell để lấy và định dạng dữ liệu trực tiếp
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$os = Get-CimInstance Win32_OperatingSystem;" ^
-    "$cpu = Get-CimInstance Win32_Processor;" ^
+    "$cpu = Get-CimInstance Win32_Processor | Select-Object -First 1;" ^
     "$cs = Get-CimInstance Win32_ComputerSystem;" ^
-    "echo '---------------------------------------------------';" ^
-    "echo ('Ten may:          ' + $cs.Name);" ^
-    "echo ('Nha san xuat:     ' + $cs.Manufacturer);" ^
-    "echo ('Dong may:         ' + $cs.Model);" ^
-    "echo ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture);" ^
-    "echo ('Version:          ' + $os.Version);" ^
-    "echo ('CPU:              ' + $cpu.Name);" ^
-    "echo ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
-    "echo ('Ngay cai Win:     ' + $os.InstallDate);" ^
-    "echo ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
-    "echo '---------------------------------------------------';"
-pause
+    "$G = [char]27 + '[92m';" ^
+    "$W = [char]27 + '[97m';" ^
+    "$Res = [char]27 + '[0m';" ^
+    "Write-Host \"${G}Ten may:          ${W}$($cs.Name)\";" ^
+    "Write-Host \"${G}Nha san xuat:     ${W}$($cs.Manufacturer)\";" ^
+    "Write-Host \"${G}Dong may:         ${W}$($cs.Model)\";" ^
+    "Write-Host \"${G}He dieu hanh:     ${W}$($os.Caption) $($os.OSArchitecture)\";" ^
+    "Write-Host \"${G}Version:          ${W}$($os.Version)\";" ^
+    "Write-Host \"${G}CPU:              ${W}$($cpu.Name)\";" ^
+    "Write-Host \"${G}RAM:              ${W}$([math]::Round($cs.TotalPhysicalMemory/1GB, 2)) GB\";" ^
+    "Write-Host \"${G}Ngay cai Win:     ${W}$($os.InstallDate.ToString('dd/MM/yyyy HH:mm:ss'))\";" ^
+    "Write-Host \"${G}Boot gan nhat:    ${W}$($os.LastBootUpTime.ToString('dd/MM/yyyy HH:mm:ss'))\";"
+
+echo %C%---------------------------------------------------%Res%
+echo.
+echo %W%Bam phím bat ky de quay lai menu...%Res%
+pause >nul
 goto menu
 
 :doublePing
