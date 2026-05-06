@@ -203,6 +203,8 @@ powershell -command "Get-PhysicalDisk | Select-Object -Property FriendlyName, Me
 echo %G%[+] GPU:%Res%
 powershell -command "(Get-CimInstance Win32_VideoController).Name"
 
+echo %G%[+] Nhiet do CPU (Uoc tinh):%Res%
+powershell -command "$temp = Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue; if($temp) { [Math]::Round(($temp.CurrentTemperature / 10) - 273.15, 2).ToString() + ' C' } else { 'Khong the lay du lieu (Yeu cau quyen Admin hoac Mainboard khong ho tro)' }"
 echo %C%--------------------------------------------------%Res%
 echo %W%Kiem tra hoan tat!%Res%
 pause
