@@ -204,7 +204,8 @@ echo %G%[+] GPU:%Res%
 powershell -command "(Get-CimInstance Win32_VideoController).Name"
 
 echo %G%[+] Nhiet do CPU (Uoc tinh):%Res%
-powershell -command "$temp = Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue; if($temp) { [Math]::Round(($temp.CurrentTemperature / 10) - 273.15, 2).ToString() + ' C' } else { 'Khong the lay du lieu (Yeu cau quyen Admin hoac Mainboard khong ho tro)' }"
+echo %G%[+] Nhiet do hien tai:%Res%
+powershell -command "$t = Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue; if($t) { $celsius = [Math]::Round(($t.CurrentTemperature / 10) - 273.15, 1); if($celsius -gt 80) { Write-Host \"$celsius °C\" -ForegroundColor Red } else { Write-Host \"$celsius °C\" -ForegroundColor Green } } else { Write-Host 'Khong ho tro hoac can quyen Admin' -ForegroundColor Yellow }"
 echo %C%--------------------------------------------------%Res%
 echo %W%Kiem tra hoan tat!%Res%
 pause
