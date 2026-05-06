@@ -122,22 +122,25 @@ goto menu
 :systemInfo
 cls
 echo %C%[ DANG LAY THONG TIN HE THONG... ]%Res%
-powershell -NoProfile -Command ^
-    "$os = Get-CimInstance Win32_OperatingSystem;" ^
-    "$cpu = Get-CimInstance Win32_Processor | Select-Object -First 1;" ^
-    "$cs = Get-CimInstance Win32_ComputerSystem;" ^
-    "Write-Host '---------------------------------------------------';" ^
-    "Write-Host ('Ten may:          ' + $cs.Name);" ^
-    "Write-Host ('Nha san xuat:     ' + $cs.Manufacturer);" ^
-    "Write-Host ('Dong may:         ' + $cs.Model);" ^
-    "Write-Host ('He dieu hanh:     ' + $os.Caption + ' ' + $os.OSArchitecture);" ^
-    "Write-Host ('Version:          ' + $os.Version);" ^
-    "Write-Host ('CPU:              ' + $cpu.Name);" ^
-    "Write-Host ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
-    "Write-Host ('Ngay cai Win:     ' + $os.InstallDate);" ^
-    "Write-Host ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
-    "Write-Host '---------------------------------------------------';"
-pause
+echo %W%Vui long doi trong giay lat...%Res%
+echo ---------------------------------------------------
+:: Lay ten may
+for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"Host Name"') do set "name=%%a"
+:: Lay ten OS
+for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"OS Name"') do set "os=%%a"
+:: Lay Model may
+for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"System Model"') do set "model=%%a"
+:: Lay RAM
+for /f "tokens=2 delims=:" %%a in ('systeminfo ^| findstr /C:"Total Physical Memory"') do set "ram=%%a"
+
+echo Ten may:          %name:~1%
+echo He dieu hanh:     %os:~1%
+echo Dong may:         %model:~1%
+echo RAM:              %ram:~1%
+echo ---------------------------------------------------
+echo.
+echo %G%Bam phim bat ky de quay lai Menu...%Res%
+pause >nul
 goto menu
 
 :doublePing
