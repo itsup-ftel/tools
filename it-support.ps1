@@ -64,8 +64,8 @@ if /i "%opt%"=="2" goto systemInfo
 if /i "%opt%"=="02" goto systemInfo
 if /i "%opt%"=="3" goto repairSys
 if /i "%opt%"=="03" goto repairSys
-if /i "%opt%"=="4" goto getModel
-if /i "%opt%"=="04" goto getModel
+if /i "%opt%"=="4" goto hardwareInfo
+if /i "%opt%"=="04" goto hardwareInfo
 if /i "%opt%"=="5" goto ramInfo
 if /i "%opt%"=="05" goto ramInfo
 if /i "%opt%"=="6" goto cpuInfo
@@ -183,22 +183,11 @@ dism /online /cleanup-image /restorehealth
 pause
 goto menu
 
-:getModel
+:hardwareInfo
 cls
-powershell -command "Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model"
-pause
-goto menu
-
-:ramInfo
-cls
-echo %C%[ CHI TIET RAM ]%Res%
+echo %Cyan%[ THONG TIN PHAN CUNG CHI TIET ]%Reset%
+powershell -command "Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model; Get-CimInstance Win32_Processor | Select-Object Name; Get-CimInstance Win32_PhysicalMemory | Select-Object DeviceLocator, @{N='GB';E={$_.Capacity/1GB}}, Speed"
 powershell -command "Get-CimInstance Win32_PhysicalMemory | Select-Object DeviceLocator, @{Name='Capacity(GB)';Expression={$_.Capacity / 1GB}}, Speed, Manufacturer"
-pause
-goto menu
-
-:cpuInfo
-cls
-echo %C%[ CHI TIET CPU ]%Res%
 powershell -command "Get-CimInstance Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors"
 pause
 goto menu
