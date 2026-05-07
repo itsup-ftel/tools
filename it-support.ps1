@@ -343,7 +343,7 @@ echo =========================================
 echo [1] TAT HAN Windows Update (Registry)
 echo [2] MO LAI Windows Update
 echo [3] RESET Windows Update
-echo [0] THOAT
+echo [0] TRO LAI MENU CHINH
 echo =========================================
 
 set /p choice="Nhap lua chon cua ban (0-2): "
@@ -351,7 +351,7 @@ set /p choice="Nhap lua chon cua ban (0-2): "
 if "%choice%"=="1" goto DisWU
 if "%choice%"=="2" goto EnaWU
 if "%choice%"=="3" goto resetWU
-if "%choice%"=="0" exit
+if "%choice%"=="0" goto menu
 goto menu
 
 :DisWU
