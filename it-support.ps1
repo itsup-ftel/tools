@@ -34,7 +34,7 @@ echo       %G%01.%Res% Don dep file rac        %G%04.%Res% Kiem tra o cung      
 echo       %G%02.%Res% Thong tin Win           %G%07.%Res% Bao cao suc khoe Pin    %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi kiet
 echo       %G%03.%Res% Sua loi SFC ^& DISM      %G%11.%Res% Kiem tra o cung SMART   %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
 echo       %G%09.%Res% Reset Windows Update    %G%08.%Res% Xuat Info ra Desktop    %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke cac may in
-echo       %G%10.%Res% Restart Explorer        %G%--%Res% ----------------------   %G%16.%Res% Xem Pass Wi-Fi cu        %G%--%Res% ----------------------
+echo       %G%10.%Res% Restart Explorer        %G%26.%Res% Ung dung da cai dat     %G%16.%Res% Xem Pass Wi-Fi cu        %G%--%Res% ----------------------
 echo       %G%18.%Res% Liet ke cac Task        %G%--%Res% ----------------------   %G%17.%Res% Reset thiet lap mang     %G%--%Res% ----------------------
 echo       %G%19.%Res% Dong ung dung treo      %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%20.%Res% Tat nhanh Chrome        %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
@@ -92,6 +92,7 @@ if /i "%opt%"=="22" goto restartSpooler
 if /i "%opt%"=="23" goto clearQueue
 if /i "%opt%"=="24" goto printTest
 if /i "%opt%"=="25" goto listPrinters
+if /i "%opt%"=="26" goto listapp
 if /i "%opt%"=="31" start control & goto menu
 if /i "%opt%"=="32" start taskmgr & goto menu
 if /i "%opt%"=="33" start services.msc & goto menu
@@ -266,6 +267,13 @@ goto menu
 
 :listUsers
 net user
+pause
+goto menu
+
+:listapp
+cls
+echo %C%[ CHUONG TRINH - UNG DUNG ]%Res%
+powershell -command "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion"
 pause
 goto menu
 
