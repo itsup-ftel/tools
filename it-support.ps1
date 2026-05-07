@@ -204,7 +204,7 @@ powershell -command "Get-PhysicalDisk | Select-Object `
     Format-Table -AutoSize
 "
 echo %C%--------------------------------------------------%Res%
-echo %W%Kiem tra hoan tat!%Res%
+echo %W%Lay thong tin hoan tat!%Res%
 pause
 goto menu
 
