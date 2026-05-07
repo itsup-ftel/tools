@@ -161,7 +161,7 @@ if "%choice_ver%"=="5" (set "prodID=ProPlus2021Volume" & set "verName=Office 202
 if "%choice_ver%"=="6" (set "prodID=ProPlus2019Retail" & set "verName=Office 2019" & set "channel=Current")
 if "%choice_ver%"=="7" (set "prodID=ProPlus2019Volume" & set "verName=Office 2019 VL" & set "channel=PerpetualVL2019")
 if "%choice_ver%"=="8" (set "prodID=ProPlusRetail" & set "verName=Office 2016" & set "channel=Current")
-if "%choice_ver%"=="9" goto menu
+if "%choice_ver%"=="9" goto menu else goto menu
 if not defined prodID (goto MENU_OFFICE)
 
 :: --- BƯỚC 2: CHỌN CHẾ ĐỘ CÀI ---
