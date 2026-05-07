@@ -136,7 +136,7 @@ echo 5. Office 2021 (LTSC - Volume)
 echo 6. Office 2019 (Retail)
 echo 7. Office 2019 (Volume)
 echo 8. Office 2016 (Retail)
-echo 9. THOAT
+echo 9. THOAT CAI DAT
 echo ====================================================
 set /p choice_ver="Nhap lua chon (1-9): "
 
@@ -149,7 +149,7 @@ if "%choice_ver%"=="5" (set "prodID=ProPlus2021Volume" & set "verName=Office 202
 if "%choice_ver%"=="6" (set "prodID=ProPlus2019Retail" & set "verName=Office 2019" & set "channel=Current")
 if "%choice_ver%"=="7" (set "prodID=ProPlus2019Volume" & set "verName=Office 2019 VL" & set "channel=PerpetualVL2019")
 if "%choice_ver%"=="8" (set "prodID=ProPlusRetail" & set "verName=Office 2016" & set "channel=Current")
-if "%choice_ver%"=="9" exit & goto menu
+if "%choice_ver%"=="9" goto menu
 if not defined prodID (goto MENU_OFFICE)
 
 :: --- BƯỚC 2: CHỌN CHẾ ĐỘ CÀI ---
