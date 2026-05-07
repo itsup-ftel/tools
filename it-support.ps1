@@ -32,9 +32,9 @@ echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 
 echo.
 echo     %G%02.%Res% Xem thong so PC      %G%01.%Res% Don dep rac         %G%12.%Res% Get MAC ^& SN         %G%22.%Res% Restart Spooler
 echo     %G%04.%Res% Kiem tra o cung      %G%03.%Res% Sua loi SFC/DISM    %G%13.%Res% Chi tiet IP          %G%23.%Res% Xoa ket lenh in
-echo     %G%21.%Res% Danh sach User       %G%05.%Res% Kiem tra RAM        %G%14.%Res% Flush DNS/Renew      %G%24.%Res% In trang Test
-echo     %G%26.%Res% App da cai dat       %G%09.%Res% On/Off Win Update   %G%15.%Res% Double Ping          %G%25.%Res% Liet ke d/s in
-echo     %G%--%Res% -------------------   %G%10.%Res% Restart Explorer    %G%16.%Res% Xem Pass Wi-Fi       %G%--%Res% ---------------
+echo     %G%05.%Res% Kiem tra RAM         %G%19.%Res% Dong ung dung treo  %G%14.%Res% Flush DNS/Renew      %G%24.%Res% In trang Test
+echo     %G%21.%Res% Danh sach User       %G%09.%Res% On/Off Win Update   %G%15.%Res% Ping kiem tra        %G%25.%Res% Liet ke d/s in
+echo     %G%26.%Res% App da cai dat       %G%10.%Res% Restart Explorer    %G%16.%Res% Xem Pass Wi-Fi       %G%--%Res% ---------------
 echo     %G%--%Res% -------------------   %G%18.%Res% Liet ke Task        %G%17.%Res% Reset Mang           %G%--%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP NHANH 1 ]%Res%   %C%[ 6. TRUY CAP NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
