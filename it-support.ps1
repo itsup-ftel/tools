@@ -24,37 +24,29 @@ set "Res=%ESC%[0m"
 :menu
 cls
 echo.
-echo   %G%============================================================================================================================================%Res%
-echo                                                 %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
-echo   %G%============================================================================================================================================%Res%
+echo  %G%====================================================================================================================%Res%
+echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
+echo  %G%====================================================================================================================%Res%
 echo.
-echo       %Y%[ 1. HE THONG ]%Res%               %Y%[ 2. PHAN CUNG ]%Res%            %Y%[ 3. MANG ^& INTERNET ]%Res%      %Y%[ 4. MAY IN (PRINTER) ]%Res%
+echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
-echo       %G%02.%Res% Xem thong so PC         %G%01.%Res% Don dep file rac        %G%12.%Res% Get MAC ^& SN card       %G%22.%Res% Restart Print Spooler
-echo       %G%04.%Res% Kiem tra o cung         %G%03.%Res% Sua loi SFC ^& DISM     %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi ket
-echo       %G%21.%Res% Danh sach User          %G%05.%Res% Kiem tra khe RAM        %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
-echo       %G%26.%Res% Ung dung da cai dat     %G%09.%Res% On/Off Windows Update   %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke d/s may in
-echo       %G%--%Res% ----------------------   %G%10.%Res% Restart Explorer        %G%16.%Res% Xem Pass Wi-Fi cu        %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%18.%Res% Liet ke cac Task        %G%17.%Res% Reset thiet lap mang     %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%19.%Res% Dong ung dung treo      %G%--%Res% ----------------------    %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%20.%Res% Tat nhanh Chrome        %G%--%Res% ----------------------    %G%--%Res% ----------------------
-echo       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------    %G%--%Res% ----------------------
+echo     %G%02.%Res% Xem thong so PC      %G%01.%Res% Don dep rac         %G%12.%Res% Get MAC ^& SN         %G%22.%Res% Restart Spooler
+echo     %G%04.%Res% Kiem tra o cung      %G%03.%Res% Sua loi SFC/DISM    %G%13.%Res% Chi tiet IP          %G%23.%Res% Xoa ket lenh in
+echo     %G%21.%Res% Danh sach User       %G%05.%Res% Kiem tra RAM        %G%14.%Res% Flush DNS/Renew      %G%24.%Res% In trang Test
+echo     %G%26.%Res% App da cai dat       %G%09.%Res% On/Off Win Update   %G%15.%Res% Double Ping          %G%25.%Res% Liet ke d/s in
+echo     %G%--%Res% -------------------   %G%10.%Res% Restart Explorer    %G%16.%Res% Xem Pass Wi-Fi       %G%--%Res% ---------------
+echo     %G%--%Res% -------------------   %G%18.%Res% Liet ke Task        %G%17.%Res% Reset Mang           %G%--%Res% ---------------
 echo.
-echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%       %C%[ 6. TRUY CAP NHANH 2 ]%Res%     %C%[ 7. CAI DAT - KICH HOAT ]%Res%    %C%[ 8. LENH NHANH ]%Res%
+echo     %C%[ 5. TRUY CAP NHANH 1 ]%Res%   %C%[ 6. TRUY CAP NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%39.%Res% Cai dat OFFICE           %G%--%Res% ----------------------
-echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%40.%Res% %G%Active WIN/OFFICE%Res%  %G%--%Res% ----------------------
-echo       %G%33.%Res% Services (msc)          %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%34.%Res% Device Manager          %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%39.%Res% Windows Settings        %G%41.%Res% Appwiz.cpl (Go App)     %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%35.%Res% Print Management        %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%36.%Res% Network Connections     %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
-echo       %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo     %G%31.%Res% Control Panel        %G%35.%Res% Print Management    %G%39.%Res% Cai OFFICE           %G%--%Res% ---------------
+echo     %G%32.%Res% Task Manager         %G%36.%Res% Network Conn        %G%40.%Res% %G%Active WIN/OFF%Res%     %G%--%Res% ---------------
+echo     %G%33.%Res% Services (msc)       %G%37.%Res% Registry Editor     %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%34.%Res% Device Manager       %G%38.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%39.%Res% Windows Settings     %G%41.%Res% Appwiz.cpl          %G%--%Res% -------------------   %G%--%Res% ---------------
 echo.
-echo      %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC                                 
-echo      %W%[ 0 ] Thoat tool%Res%
-echo   %G%============================================================================================================================================%Res%
+echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
+echo  %G%====================================================================================================================%Res%
 set /p opt="  %W%>>> Lua chon cua ban: %Res%"
 
 :: --- DIEU HUONG LOGIC ---
