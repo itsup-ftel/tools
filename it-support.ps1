@@ -30,7 +30,7 @@ echo   %G%======================================================================
 echo.
 echo       %Y%[ 1. HE THONG ]%Res%               %Y%[ 2. PHAN CUNG ]%Res%             %Y%[ 3. MANG ^& INTERNET ]%Res%         %Y%[ 4. MAY IN (PRINTER) ]%Res%
 echo.
-echo       %G%01.%Res% Don dep file rac        %G%04.%Res% Cau hinh (CPU/RAM)       %G%12.%Res% Get MAC ^& Serial SN      %G%22.%Res% Restart Print Spooler
+echo       %G%01.%Res% Don dep file rac        %G%04.%Res% Kiem tra o cung       %G%12.%Res% Get MAC ^& Serial SN      %G%22.%Res% Restart Print Spooler
 echo       %G%02.%Res% Thong tin Win           %G%07.%Res% Bao cao suc khoe Pin    %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi kiet
 echo       %G%03.%Res% Sua loi SFC ^& DISM      %G%11.%Res% Kiem tra o cung SMART   %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
 echo       %G%09.%Res% Reset Windows Update    %G%08.%Res% Xuat Info ra Desktop    %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke cac may in
@@ -126,6 +126,7 @@ powershell -NoProfile -Command ^
     "$os = Get-CimInstance Win32_OperatingSystem;" ^
     "$cpu = Get-CimInstance Win32_Processor;" ^
     "$cs = Get-CimInstance Win32_ComputerSystem;" ^
+    "$vga = Get-CimInstance Win32_VideoController;" ^
     "echo '---------------------------------------------------';" ^
     "echo ('Ten may:          ' + $cs.Name);" ^
     "echo ('Nha san xuat:     ' + $cs.Manufacturer);" ^
@@ -134,6 +135,7 @@ powershell -NoProfile -Command ^
     "echo ('Version:          ' + $os.Version);" ^
     "echo ('CPU:              ' + $cpu.Name);" ^
     "echo ('RAM:              ' + [math]::Round($cs.TotalPhysicalMemory/1GB, 2) + ' GB');" ^
+    "echo ('VGA:              ' + $vga.Name);" ^
     "echo ('Ngay cai Win:     ' + $os.InstallDate);" ^
     "echo ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
     "echo '---------------------------------------------------';"
@@ -190,22 +192,8 @@ cls
 echo %C%==================================================%Res%
 echo %Y%[ THONG TIN PHAN CUNG CHI TIET ]%Res%
 echo %C%==================================================%Res%
-
-:: 2. Gọi PowerShell để lấy dữ liệu (Sử dụng màu của bạn cho từng dòng)
-echo %G%[+] CPU:%Res%
-powershell -command "(Get-CimInstance Win32_Processor).Name"
-
-echo %G%[+] RAM:%Res%
-powershell -command "[Math]::Round(((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB), 2).ToString() + ' GB'"
-
 echo %G%[+] O CUNG:%Res%
-powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
-
-echo %G%[+] GPU:%Res%
-powershell -command "(Get-CimInstance Win32_VideoController).Name"
-
-echo %G%[+] Nhiet do CPU (Uoc tinh):%Res%
-powershell -command "$t = Get-CimInstance -Namespace root/wmi -ClassName MSAcpi_ThermalZoneTemperature -ErrorAction SilentlyContinue; if($t) { $celsius = [Math]::Round(($t.CurrentTemperature / 10) - 273.15, 1); if($celsius -gt 80) { Write-Host \"$celsius °C\" -ForegroundColor Red } else { Write-Host \"$celsius °C\" -ForegroundColor Green } } else { Write-Host 'Mainboard hong ho tro' -ForegroundColor Yellow }"
+powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
 echo %C%--------------------------------------------------%Res%
 echo %W%Kiem tra hoan tat!%Res%
 pause
