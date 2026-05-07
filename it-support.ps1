@@ -110,6 +110,18 @@ goto menu
 
 :: --- CAC HAM XU LY ---
 
+:activeMAS
+cls
+echo %Y%=====================================================%Res%
+echo        DANG KET NOI DEN MAY CHU MAS...
+echo =====================================================%Res%
+echo.
+echo %C%Luu y: May tinh can co ket noi Internet.%Res%
+echo.
+:: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+goto menu
+
 :MENU_OFFICE
 cls
 set "setupDir=C:\OfficeInstall"
@@ -227,20 +239,8 @@ echo 1. Co (Yeu cau Internet)
 echo 2. Khong, quay lai Menu chinh
 echo ====================================================
 set /p choice_act="Lua chon cua ban (1-2): "
-if "%choice_act%"=="1" goto :activeMAS
+if "%choice_act%"=="1" goto :activeMAS else goto MENU_OFFICE
 pause > nul
-goto MENU_OFFICE
-
-:activeMAS
-cls
-echo %Y%=====================================================%Res%
-echo        DANG KET NOI DEN MAY CHU MAS...
-echo =====================================================%Res%
-echo.
-echo %C%Luu y: May tinh can co ket noi Internet.%Res%
-echo.
-:: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
-powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
 
 :systemInfo
