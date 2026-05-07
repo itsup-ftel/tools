@@ -74,8 +74,8 @@ if /i "%opt%"=="7" goto battery
 if /i "%opt%"=="07" goto battery
 if /i "%opt%"=="8" goto exportSys
 if /i "%opt%"=="08" goto exportSys
-if /i "%opt%"=="9" goto resetWU
-if /i "%opt%"=="09" goto resetWU
+if /i "%opt%"=="9" goto wuchange
+if /i "%opt%"=="09" goto wuchange
 if /i "%opt%"=="10" goto resExp
 if /i "%opt%"=="11" goto 
 if /i "%opt%"=="12" goto getMacSN
