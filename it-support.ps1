@@ -193,7 +193,17 @@ echo %C%==================================================%Res%
 echo %Y%[ THONG TIN PHAN CUNG CHI TIET ]%Res%
 echo %C%==================================================%Res%
 echo %G%[+] O CUNG:%Res%
-powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
+powershell -command "Get-PhysicalDisk | Select-Object `
+    FriendlyName, `
+    SerialNumber, `
+    MediaType, `
+    BusType, `
+    @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, `
+    @{Name='Temp(C)';Expression={(Get-StorageHealthReport -PhysicalDisk $_).Temperature}}, `
+    HealthStatus, `
+    OperationalStatus | `
+    Format-Table -AutoSize
+"
 echo %C%--------------------------------------------------%Res%
 echo %W%Kiem tra hoan tat!%Res%
 pause
