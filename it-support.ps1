@@ -146,8 +146,19 @@ goto menu
 :ramInfo
 cls
 echo %C%[ DANG LAY THONG TIN RAM... ]%Res%
-powershell -command "Get-CimInstance -ClassName Win32_PhysicalMemory | Format-Table Devicelocator, Manufacturer, Speed, BankLabel
-``` [2, 7]"
+powershell -command "Get-CimInstance -ClassName Win32_PhysicalMemory | Format-Table Manufacturer, SerialNumber, ConfiguredClockSpeed, Capacity, DeviceLocator -AutoSize"
+pause
+goto menu
+
+:hardwareInfo
+cls
+:: 1. Hiển thị tiêu đề bằng mã màu CMD
+echo %C%==================================================%Res%
+echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
+echo %C%==================================================%Res%
+powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
+echo %C%--------------------------------------------------%Res%
+echo %W%Lay thong tin hoan tat!%Res%
 pause
 goto menu
 
@@ -192,18 +203,6 @@ cls
 echo %Y%Dang chay SFC ^& DISM...%Res%
 sfc /scannow
 dism /online /cleanup-image /restorehealth
-pause
-goto menu
-
-:hardwareInfo
-cls
-:: 1. Hiển thị tiêu đề bằng mã màu CMD
-echo %C%==================================================%Res%
-echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
-echo %C%==================================================%Res%
-powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
-echo %C%--------------------------------------------------%Res%
-echo %W%Lay thong tin hoan tat!%Res%
 pause
 goto menu
 
