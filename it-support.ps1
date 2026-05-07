@@ -190,9 +190,8 @@ goto menu
 cls
 :: 1. Hiển thị tiêu đề bằng mã màu CMD
 echo %C%==================================================%Res%
-echo %Y%[ THONG TIN PHAN CUNG CHI TIET ]%Res%
+echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
 echo %C%==================================================%Res%
-echo %G%[+] O CUNG:%Res%
 powershell -command "Get-PhysicalDisk | Select-Object `
     FriendlyName, `
     SerialNumber, `
