@@ -212,6 +212,41 @@ echo %G%Da xuat file SysInfo.txt ra Desktop!%Reset%
 pause
 goto menu
 
+:wuchange
+cls
+echo =========================================
+echo       QUAN LY WINDOWS UPDATE (REG)
+echo =========================================
+echo [1] TAT HAN Windows Update (Registry)
+echo [2] MO LAI Windows Update
+echo [3] RESET Windows Update
+echo [0] THOAT
+echo =========================================
+
+set /p choice="Nhap lua chon cua ban (0-2): "
+
+if "%choice%"=="1" goto DisWU
+if "%choice%"=="2" goto EnaWU
+if "%choice%"=="3" goto resetWU
+if "%choice%"=="0" exit
+goto menu
+
+:DisWU
+echo Dang thuc hien tat Windows Update...
+powershell -command "Set-Service wuauserv -StartupType Disabled; Stop-Service wuauserv -Force; Reg add 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' /v NoAutoUpdate /t REG_DWORD /d 1 /f"
+echo.
+echo DA TAT HAN TRONG REGISTRY.
+pause
+goto menu
+
+:EnaWU
+echo Dang thuc hien mo Windows Update...
+powershell -command "Reg delete 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU' /v NoAutoUpdate /f; Set-Service wuauserv -StartupType Manual; Start-Service wuauserv"
+echo.
+echo DA MO LAI VA XOA KHOA REGISTRY.
+pause
+goto menu
+
 :resetWU
 cls
 net stop wuauserv & net stop cryptSvc & net stop bits & net stop msiserver
