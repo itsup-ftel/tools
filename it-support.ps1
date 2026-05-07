@@ -31,8 +31,8 @@ echo.
 echo       %Y%[ 1. HE THONG ]%Res%               %Y%[ 2. PHAN CUNG ]%Res%             %Y%[ 3. MANG ^& INTERNET ]%Res%         %Y%[ 4. MAY IN (PRINTER) ]%Res%
 echo.
 echo       %G%01.%Res% Don dep file rac        %G%04.%Res% Kiem tra o cung       %G%12.%Res% Get MAC ^& Serial SN      %G%22.%Res% Restart Print Spooler
-echo       %G%02.%Res% Thong tin Win           %G%07.%Res% Bao cao suc khoe Pin    %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi kiet
-echo       %G%03.%Res% Sua loi SFC ^& DISM      %G%11.%Res% Kiem tra o cung SMART   %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
+echo       %G%02.%Res% Xem thong so PC         %G%07.%Res% Bao cao suc khoe Pin    %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi kiet
+echo       %G%03.%Res% Sua loi SFC ^& DISM      %G%05.%Res% Kiem tra khe RAM   %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
 echo       %G%09.%Res% Reset Windows Update    %G%08.%Res% Xuat Info ra Desktop    %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke cac may in
 echo       %G%10.%Res% Restart Explorer        %G%26.%Res% Ung dung da cai dat     %G%16.%Res% Xem Pass Wi-Fi cu        %G%--%Res% ----------------------
 echo       %G%18.%Res% Liet ke cac Task        %G%--%Res% ----------------------   %G%17.%Res% Reset thiet lap mang     %G%--%Res% ----------------------
@@ -77,7 +77,7 @@ if /i "%opt%"=="08" goto exportSys
 if /i "%opt%"=="9" goto resetWU
 if /i "%opt%"=="09" goto resetWU
 if /i "%opt%"=="10" goto resExp
-if /i "%opt%"=="11" goto diskHealth
+if /i "%opt%"=="11" goto 
 if /i "%opt%"=="12" goto getMacSN
 if /i "%opt%"=="13" goto getIP
 if /i "%opt%"=="14" goto flushDNS
@@ -140,6 +140,14 @@ powershell -NoProfile -Command ^
     "echo ('Ngay cai Win:     ' + $os.InstallDate);" ^
     "echo ('Boot gan nhat:    ' + $os.LastBootUpTime);" ^
     "echo '---------------------------------------------------';"
+pause
+goto menu
+
+:ramInfo
+cls
+echo %C%[ DANG LAY THONG TIN RAM... ]%Res%
+powershell -command "Get-CimInstance -ClassName Win32_PhysicalMemory | Format-Table Devicelocator, Manufacturer, Speed, BankLabel
+``` [2, 7]"
 pause
 goto menu
 
@@ -217,13 +225,6 @@ goto menu
 
 :resExp
 taskkill /f /im explorer.exe & start explorer.exe
-goto menu
-
-:diskHealth
-cls
-echo %C%[ TRANG THAI O CUNG - S.M.A.R.T ]%Res%
-powershell -command "Get-CimInstance -Namespace root\wmi -ClassName MSStorageDriver_FailurePredictStatus | Select-Object InstanceName, PredictFailure"
-pause
 goto menu
 
 :getIP
