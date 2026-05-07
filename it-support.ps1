@@ -273,7 +273,7 @@ goto menu
 :listapp
 cls
 echo %C%[ CHUONG TRINH - UNG DUNG ]%Res%
-powershell -command "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion"
+powershell -command "Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object { $_.DisplayName -ne $null } | Select-Object @{Name='TenApp';Expression={$_.DisplayName}}, @{Name='PhienBan';Expression={$_.DisplayVersion}}"
 pause
 goto menu
 
