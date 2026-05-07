@@ -171,6 +171,7 @@ echo %Yellow%Dang don dep file rac he thong...%Reset%
 :: Chuyen sang dung PowerShell de xoa file 
 powershell -command "& {Remove-Item -Path 'C:\Windows\Temp\*' -Recurse -Force -EA SilentlyContinue; Remove-Item -Path 'C:\Users\$env:UserName\AppData\Local\Temp\*' -Recurse -Force -EA SilentlyContinue; Remove-Item -Path 'C:\Windows\Prefetch\*' -Recurse -Force -EA SilentlyContinue}"
 echo.
+cleanmgr /sagerun:1
 echo %Green%Da don dep xong!%Reset%
 pause
 goto menu
