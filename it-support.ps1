@@ -33,7 +33,7 @@ echo.
 echo       %G%01.%Res% Don dep file rac        %G%04.%Res% Kiem tra o cung       %G%12.%Res% Get MAC ^& Serial SN      %G%22.%Res% Restart Print Spooler
 echo       %G%02.%Res% Xem thong so PC         %G%07.%Res% Bao cao suc khoe Pin    %G%13.%Res% Xem chi tiet IP Config   %G%23.%Res% Xoa lenh in bi kiet
 echo       %G%03.%Res% Sua loi SFC ^& DISM      %G%05.%Res% Kiem tra khe RAM   %G%14.%Res% Flush DNS / Renew IP     %G%24.%Res% In thu trang Test Page
-echo       %G%09.%Res% Reset Windows Update    %G%08.%Res% Xuat Info ra Desktop    %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke cac may in
+echo       %G%09.%Res% On/Off Windows Update   %G%08.%Res% Xuat Info ra Desktop    %G%15.%Res% Double Ping (GW ^& 8.8)  %G%25.%Res% Liet ke cac may in
 echo       %G%10.%Res% Restart Explorer        %G%26.%Res% Ung dung da cai dat     %G%16.%Res% Xem Pass Wi-Fi cu        %G%--%Res% ----------------------
 echo       %G%18.%Res% Liet ke cac Task        %G%--%Res% ----------------------   %G%17.%Res% Reset thiet lap mang     %G%--%Res% ----------------------
 echo       %G%19.%Res% Dong ung dung treo      %G%--%Res% ----------------------   %G%--%Res% ----------------------   %G%--%Res% ----------------------
