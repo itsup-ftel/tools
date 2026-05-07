@@ -192,17 +192,7 @@ cls
 echo %C%==================================================%Res%
 echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
 echo %C%==================================================%Res%
-powershell -command "Get-PhysicalDisk | Select-Object `
-    FriendlyName, `
-    SerialNumber, `
-    MediaType, `
-    BusType, `
-    @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, `
-    @{Name='Temp(C)';Expression={(Get-StorageHealthReport -PhysicalDisk $_).Temperature}}, `
-    HealthStatus, `
-    OperationalStatus | `
-    Format-Table -AutoSize
-"
+powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
 echo %C%--------------------------------------------------%Res%
 echo %W%Lay thong tin hoan tat!%Res%
 pause
