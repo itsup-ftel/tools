@@ -42,7 +42,7 @@ echo       %G%21.%Res% Danh sach User          %G%--%Res% ----------------------
 echo.
 echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%       %C%[ 6. TRUY CAP NHANH 2 ]%Res%       %C%[ 7. CAI DAT - KICH HOAT ]%Res%              %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%39.%Res% %G%Cai dat OFFICE%Res%       %G%--%Res% ----------------------
+echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%39.%Res% Cai dat OFFICE          %G%--%Res% ----------------------
 echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%40.%Res% %G%Active WIN/OFFICE%Res%  %G%--%Res% ----------------------
 echo       %G%33.%Res% Services (msc)          %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%34.%Res% Device Manager          %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------
