@@ -42,8 +42,8 @@ echo       %G%21.%Res% Danh sach User          %G%--%Res% ----------------------
 echo.
 echo       %C%[ 5. TRUY CAP NHANH 1 ]%Res%       %C%[ 6. TRUY CAP NHANH 2 ]%Res%       %C%[ 7. CAI DAT - KICH HOAT ]%Res%              %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%40.%Res% %R%ACTIVE WIN/OFFICE%Res%       %G%--%Res% ----------------------
-echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%--%Res% ----------------------   %G%--%Res% ----------------------
+echo       %G%31.%Res% Control Panel           %G%35.%Res% Print Management        %G%39.%Res% %G%Cai dat OFFICE%Res%       %G%--%Res% ----------------------
+echo       %G%32.%Res% Task Manager            %G%36.%Res% Network Connections     %G%40.%Res% %G%Active WIN/OFFICE%Res%  %G%--%Res% ----------------------
 echo       %G%33.%Res% Services (msc)          %G%37.%Res% Registry Editor         %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%34.%Res% Device Manager          %G%38.%Res% Advanced Firewall       %G%--%Res% ----------------------   %G%--%Res% ----------------------
 echo       %G%39.%Res% Windows Settings        %G%41.%Res% Appwiz.cpl (Go App)     %G%--%Res% ----------------------   %G%--%Res% ----------------------
@@ -101,6 +101,7 @@ if /i "%opt%"=="35" start printmanagement.msc & goto menu
 if /i "%opt%"=="36" start ncpa.cpl & goto menu
 if /i "%opt%"=="37" start regedit & goto menu
 if /i "%opt%"=="38" start wf.msc & goto menu
+if /i "%opt%"=="39" goto MENU_OFFICE
 if /i "%opt%"=="40" goto activeMAS
 if /i "%opt%"=="r" goto restart
 if /i "%opt%"=="s" goto shutdown
@@ -108,6 +109,128 @@ if /i "%opt%"=="0" exit
 goto menu
 
 :: --- CAC HAM XU LY ---
+
+:MENU_OFFICE
+cls
+set "setupDir=C:\OfficeInstall"
+if not exist "%setupDir%" mkdir "%setupDir%"
+cd /d "%setupDir%"
+set "setupUrl=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/setup.exe"
+powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%setupUrl%', 'setup.exe')" >nul 2>&1
+
+if not exist "setup.exe" (
+    cls
+    echo [!] LOI: Khong the tai file setup.exe. Kiem tra mang!
+    pause & exit /b
+)
+set "prodID="
+set "channel=Current"
+echo ====================================================
+echo             BUOC 1: CHON PHIEN BAN OFFICE
+echo ====================================================
+echo 1. Office 365 (Retail)
+echo 2. Office 2024 (Retail)
+echo 3. Office 2024 (LTSC - Volume)
+echo 4. Office 2021 (Retail)
+echo 5. Office 2021 (LTSC - Volume)
+echo 6. Office 2019 (Retail)
+echo 7. Office 2019 (Volume)
+echo 8. Office 2016 (Retail)
+echo 9. THOAT
+echo ====================================================
+set /p choice_ver="Nhap lua chon (1-9): "
+
+:: Cập nhật chuẩn ProductID và Channel
+if "%choice_ver%"=="1" (set "prodID=O365ProPlusRetail" & set "verName=Office 365" & set "channel=Current")
+if "%choice_ver%"=="2" (set "prodID=ProPlus2024Retail" & set "verName=Office 2024" & set "channel=Current")
+if "%choice_ver%"=="3" (set "prodID=ProPlus2024Volume" & set "verName=Office 2024 VL" & set "channel=PerpetualVL2024")
+if "%choice_ver%"=="4" (set "prodID=ProPlus2021Retail" & set "verName=Office 2021" & set "channel=Current")
+if "%choice_ver%"=="5" (set "prodID=ProPlus2021Volume" & set "verName=Office 2021 VL" & set "channel=PerpetualVL2021")
+if "%choice_ver%"=="6" (set "prodID=ProPlus2019Retail" & set "verName=Office 2019" & set "channel=Current")
+if "%choice_ver%"=="7" (set "prodID=ProPlus2019Volume" & set "verName=Office 2019 VL" & set "channel=PerpetualVL2019")
+if "%choice_ver%"=="8" (set "prodID=ProPlusRetail" & set "verName=Office 2016" & set "channel=Current")
+if "%choice_ver%"=="9" exit & goto menu
+if not defined prodID (goto MENU_OFFICE)
+
+:: --- BƯỚC 2: CHỌN CHẾ ĐỘ CÀI ---
+:MENU_MODE
+cls
+echo ====================================================
+echo             BUOC 2: CHON CHE DO CAI DAT
+echo       (Dang chon: %verName%)
+echo ====================================================
+echo 1. Cai day du (Full Suite)
+echo 2. Cai rut gon (Chi Word, Excel, PP, Teams, Outlook)
+echo 0. QUAY LAI BUOC 1
+echo ====================================================
+set /p choice_mode="Nhap lua chon (0-2): "
+if "%choice_mode%"=="0" goto MENU_OFFICE
+if "%choice_mode%"=="1" (set "modeName=Full")
+if "%choice_mode%"=="2" (set "modeName=Lite")
+if not defined modeName (goto MENU_MODE)
+
+:: --- BƯỚC 3: CHỌN KIẾN TRÚC ---
+:MENU_BIT
+cls
+echo ====================================================
+echo             BUOC 3: CHON KIEN TRUC (BIT)
+echo ====================================================
+echo 1. Phien ban 64-bit (Khuyen dung)
+echo 2. Phien ban 32-bit (Cho may cu)
+echo 0. QUAY LAI BUOC 2
+echo ====================================================
+set /p choice_bit="Nhap lua chon (0-2): "
+if "%choice_bit%"=="0" goto MENU_MODE
+if "%choice_bit%"=="1" (set "bitVer=64") else (set "bitVer=32")
+
+:: --- PHẦN 4: TẠO FILE CONFIG XML ---
+cls
+echo [+] Dang khoi tao file cau hinh XML...
+(
+echo ^<Configuration^>
+echo   ^<Add OfficeClientEdition="%bitVer%" Channel="%channel%"^>
+echo     ^<Product ID="%prodID%"^>
+echo       ^<Language ID="en-us" /^>
+echo       ^<Language ID="vi-vn" /^>
+if "%choice_mode%"=="2" (
+    echo       ^<ExcludeApp ID="Access" /^>
+    echo       ^<ExcludeApp ID="Groove" /^>
+    echo       ^<ExcludeApp ID="Lync" /^>
+    echo       ^<ExcludeApp ID="OneDrive" /^>
+    echo       ^<ExcludeApp ID="OneNote" /^>
+    echo       ^<ExcludeApp ID="Publisher" /^>
+)
+echo     ^</Product^>
+echo   ^</Add^>
+echo   ^<RemoveMSI /^>
+echo   ^<Display Level="Full" AcceptEULA="TRUE" /^>
+echo   ^<Property Name="AUTOACTIVATE" Value="1" /^>
+echo ^</Configuration^>
+) > configuration.xml
+
+:: --- PHẦN 5: CHẠY CÀI ĐẶT ---
+cls
+echo ====================================================
+echo   DANG TIEN HANH CAI DAT %verName%...
+echo ====================================================
+setup.exe /configure configuration.xml
+
+:: Xóa file tạm
+if exist "configuration.xml" del /f /q "configuration.xml"
+
+echo.
+echo ====================================================
+echo   CAI DAT %verName% THANH CONG! 
+echo   BAN MUON ACTIVE NGAY KHONG?
+echo ====================================================
+echo 1. Co (Yeu cau Internet)
+echo 2. Khong, quay lai Menu chinh
+echo ====================================================
+set /p choice_act="Lua chon cua ban (1-2): "
+if "%choice_act%"=="1" goto :activeMAS
+pause > nul
+goto MENU_OFFICE
+
 :activeMAS
 cls
 echo %Y%=====================================================%Res%
