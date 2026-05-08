@@ -690,11 +690,31 @@ goto menu
 
 :printTest
 cls
-echo %C%Danh sach may in:%Res%
-powershell -command "Get-Printer | Select-Object Name"
+echo =========================================
+echo     %Y%[ DANH SACH MAY IN HIEN CO]%Res%
+echo =========================================
+
+:: Lấy danh sách máy in và đánh số thứ tự
+powershell -command "$printers = Get-Printer | Select-Object Name; for ($i=0; $i -lt $printers.Count; $i++) { write-host ('[' + ($i+1) + '] ' + $printers[$i].Name) }"
+
 echo.
-set /p pname="Nhap ten may in: "
-powershell -command "Start-Process notepad.exe -ArgumentList '/p C:\Windows\win.ini' -Verb PrintTo $pname"
+set /p choice="Nhap SO THU TU may in ban muon chon: "
+
+:: Sử dụng PowerShell để lấy tên máy in dựa trên số thứ tự đã chọn
+for /f "delims=" %%i in ('powershell -command "$printers = Get-Printer | Select-Object -ExpandProperty Name; $printers[%choice%-1]"') do set pname=%%i
+
+if "%pname%"=="" (
+    echo Lua chon khong hop le!
+    pause
+    goto printTest
+)
+
+echo.
+echo Dang gui lenh in thu toi: %pname%
+:: Thuc hien lenh in
+powershell -command "Start-Process notepad.exe -ArgumentList '/pt', 'C:\Windows\win.ini', '%pname%'"
+
+echo Hoan tat!
 pause
 goto menu
 
