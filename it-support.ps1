@@ -37,7 +37,7 @@ echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
 echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
-echo     %C%[ 5. MO NHANH 1 ]%Res%   %C%[ 6. MO NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
+echo     %C%[ 5. MO NHANH 1 ]%Res%         %C%[ 6. MO NHANH 2 ]%Res%      %C%[ 7. CAI DAT ]%Res%            %C%[ 8. LENH NHANH ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Cai OFFICE           %G%--%Res% ---------------
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Conn        %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
@@ -441,7 +441,7 @@ if %errorLevel% == 0 (
     echo Doi mat khau cho user %username% thanh cong!
 ) else (
     echo Co loi xay ra (Sai ten user hoac khong du quyen).
-)
+) & goto menu
 pause
 goto menu
 
