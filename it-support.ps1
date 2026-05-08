@@ -583,10 +583,10 @@ set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
 echo Dang thuc hien TraceRoute den %target% qua cong %port%...
-echo (Vui long cho trong giay lat...)
+echo (Luu y: Qua trinh nay co the mat 30-60 giay...)
 
-:: Chay TraceRoute va hien thi trang thai cuoi cung
-powershell -Command "$result = Test-NetConnection -ComputerName %target% -Port %port% -TraceRoute -WarningAction SilentlyContinue; if ($result.TcpTestSucceeded) { Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green } else { Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red }; Write-Host '--- Chi tiet Trace ---'; $result.TraceRoute"
+:: Fix loi: Hien thi tung chặng va ket luan cuoi cung
+powershell -Command "$t = Test-NetConnection -ComputerName '%target%' -Port %port% -TraceRoute -ErrorAction SilentlyContinue; if($t.TraceRoute){Write-Host '--- Chi tiet duong di ---'; $t.TraceRoute | ForEach-Object { $_ }}; if($t.TcpTestSucceeded){Write-Host 'KET QUA CUOI CUNG: OPEN (TRUE)' -ForegroundColor Green}else{Write-Host 'KET QUA CUOI CUNG: CLOSE (FAIL)' -ForegroundColor Red}"
 
 echo.
 pause
