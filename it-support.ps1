@@ -129,7 +129,7 @@ if not exist "setup.exe" (
 set "prodID="
 set "channel=Current"
 echo ====================================================
-echo             BUOC 1: CHON PHIEN BAN OFFICE
+echo        %Y%[ BUOC 1: CHON PHIEN BAN OFFICE]%Res%
 echo ====================================================
 echo 1. Office 365 (Retail)
 echo 2. Office 2024 (Retail)
@@ -388,7 +388,7 @@ goto menu
 :wuchange
 cls
 echo =========================================
-echo       QUAN LY WINDOWS UPDATE (REG)
+echo   %Y%[ QUAN LY WINDOWS UPDATE (REG)]%Res%
 echo =========================================
 echo [1] TAT HAN Windows Update (Registry)
 echo [2] MO LAI Windows Update
@@ -436,7 +436,7 @@ goto menu
 :Navigation
 cls
 echo =======================================================
-echo              HE THONG QUAN LY MANG TU DONG
+echo         %Y%[ HE THONG QUAN LY MANG TU DONG]%Res%
 echo =======================================================
 echo 1. Xem thong tin IP chi tiet
 echo 2. Lam moi mang (FlushDNS + Renew)
@@ -469,10 +469,11 @@ goto Navigation
 
 :selectCard
 cls
-echo [ DANH SACH CARD MANG DANG KET NOI ]
+echo  %Y%[ DANH SACH CARD MANG DANG KET NOI ]%Res%
 echo -------------------------------------------------------
 set i=0
-for /f "tokens=*" %%a in ('powershell -Command "Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -ExpandProperty Name"') do (
+:: Sử dụng "delims=" để lấy trọn vẹn tên card kể cả khi có khoảng trắng
+for /f "delims=" %%a in ('powershell -Command "Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -ExpandProperty Name"') do (
     set /a i+=1
     set "card!i!=%%a"
     echo !i!. %%a
@@ -485,12 +486,18 @@ if %i%==0 (
 
 echo -------------------------------------------------------
 set /p csel="Chon so thu tu card mang: "
-set "interface=!card%csel%!"
+
+:: Lấy giá trị từ mảng ảo card!i! dựa trên số người dùng nhập
+set "interface="
+for /l %%j in (1,1,%i%) do (
+    if "%csel%"=="%%j" set "interface=!card%%j!"
+)
 
 if "!interface!"=="" (
     echo [!] Lua chon khong hop le.
     pause & goto selectCard
 )
+goto submenu
 
 :submenu
 cls
@@ -534,12 +541,6 @@ echo [OK] Thao tac hoan tat!
 pause
 goto submenu
 
-
-:flushDNS
-ipconfig /flushdns & ipconfig /renew
-pause
-goto menu
-
 :wifiPass
 cls
 netsh wlan show profiles
@@ -571,7 +572,7 @@ goto menu
 :listUsers
 cls
 echo ======================================================
-echo           DANH SACH USER CHI TIET
+echo          %Y%[ DANH SACH USER CHI TIET]%Res%
 echo ======================================================
 powershell -Command "Get-LocalUser | Select-Object Name, Enabled, Description | Format-Table -AutoSize"
 echo ======================================================
