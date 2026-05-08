@@ -546,6 +546,8 @@ pause
 goto submenu
 
 :checkport
+cls
+echo.
 echo ==========================================
 echo   %Y%[ CONG CU TCPING ^& TRACERTCP]%Res%
 echo ==========================================
