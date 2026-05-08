@@ -104,7 +104,7 @@ goto menu
 :activeMAS
 cls
 echo %Y%=====================================================%Res%
-echo        DANG KET NOI DEN MAY CHU MAS...
+echo       %Y%[ DANG KET NOI DEN MAY CHU MAS...]%Res%
 echo =====================================================%Res%
 echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
