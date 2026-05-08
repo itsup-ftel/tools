@@ -58,7 +58,7 @@ if /i "%opt%"=="5" goto listapp
 if /i "%opt%"=="6" goto 
 if /i "%opt%"=="7" goto cleanJunk
 if /i "%opt%"=="8" goto repairSys
-if /i "%opt%"=="9" goto killTasks
+if /i "%opt%"=="9" goto killTaskres
 if /i "%opt%"=="10" goto wuchange
 if /i "%opt%"=="11" goto resExp
 if /i "%opt%"=="12" goto runTasks
@@ -607,11 +607,48 @@ pause
 goto menu
 
 :runTasks
+cls
+echo ===============================
+echo     %Y%[QUAN LY TAC VU]%Res%
+echo ===============================
+echo 1. Xem danh sach cac tac vu dang chay
+echo 2. Ket thuc mot tac vu (Kill Task)
+echo 3. Thoat ve Menu chinh
+echo ===============================
+set /p choice=Nhap lua chon cua ban (1-3): 
+
+if "%choice%"=="1" goto showList
+if "%choice%"=="2" goto killTask
+if "%choice%"=="3" goto menu
+goto runTasks
+
+:showList
+cls
 tasklist
 pause
-goto menu
+goto runTasks
 
-:killTasks
+:killTask
+cls
+echo --- CAC TAC VU DANG CHAY ---
+tasklist /nh /fo table
+echo --------------------------------------------------
+set /p target=Nhap Ten (vidu: notepad.exe) hoac PID de xoa (hoac 'b' de quay lai): 
+
+if /i "%target%"=="b" goto runTasks
+
+:: Thu kill theo ten, neu loi thi thu kill theo PID
+taskkill /F /IM "%target%" 2>nul || taskkill /F /PID "%target%" 2>nul
+
+if %errorlevel%==0 (
+    echo [OK] Da xoa tac vu thành cong.
+) else (
+    echo [LOI] Khong tim thay hoac khong co quyen xoa.
+)
+pause
+goto runTasks
+
+:killTaskres
 taskkill /f /fi "status eq not responding"
 pause
 goto menu
