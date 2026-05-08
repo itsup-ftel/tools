@@ -453,7 +453,11 @@ goto Navigation
 
 :getIP
 cls
-powershell -Command "Get-NetIPConfiguration | ForEach-Object { [PSCustomObject]@{ 'Interface'=$_.InterfaceAlias; 'Status'=$_.NetAdapter.Status; 'IP'=$_.IPv4Address.IPAddress; 'Gateway'=$_.IPv4DefaultGateway.NextHop } } | Format-Table -AutoSize"
+echo =======================================================
+echo           %Y%[THONG TIN MANG CHI TIET]%Res%
+echo =======================================================
+powershell -Command "Get-NetIPConfiguration | ForEach-Object { [PSCustomObject]@{ 'Interface'=$_.InterfaceAlias; 'IP Address'=$_.IPv4Address.IPAddress; 'Gateway'=$_.IPv4DefaultGateway.NextHop; 'DNS Servers'=$_.DNSServer.ServerAddresses -join ', ' } } | Format-Table -AutoSize"
+echo -------------------------------------------------------
 pause
 goto Navigation
 
