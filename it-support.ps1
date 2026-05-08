@@ -584,9 +584,27 @@ if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
-echo [TRACERTCP] Dang do duong den %target% qua Port %port% (Toi da 30 chang)...
+echo [TRACERTCP] Dang do duong den %target% qua Port %port%...
 echo ------------------------------------------------------------
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$target='%target%'; $port=%port%; for($ttl=1; $ttl -le 30; $ttl++){ $t=Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; $ip=if($t.TraceRoute){$t.TraceRoute[-1]}else{'*'}; Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); if($t.TcpTestSucceeded){ Write-Host '------------------------------------------------------------'; Write-Host ('Da den dich: ' + $target + ':' + $port + ' - KET QUA: OPEN (TRUE)') -ForegroundColor Green; break; } }"
+
+:: Buoc 1: Lay danh sach IP tu tracert thong thuong (ICMP)
+:: Buoc 2: Voi moi IP tim duoc, kiem tra thu cong TCP Port
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$target='%target%'; $port=%port%; ^
+    Write-Host 'Dang thu thap lo trinh...'; ^
+    $route = tracert -d -h 30 $target | Select-String -Pattern '\d{1,3}(\.\d{1,3}){3}'; ^
+    foreach ($line in $route) { ^
+        if ($line -match '(\d{1,3}(\.\d{1,3}){3})') { ^
+            $ip = $matches[1]; ^
+            $t = Test-NetConnection -ComputerName $ip -Port $port -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
+            $status = if($t.TcpTestSucceeded){'OPEN'}else{'CLOSE/FILTERED'}; ^
+            $color = if($t.TcpTestSucceeded){'Green'}else{'Gray'}; ^
+            Write-Host ('Hop: ' + $ip.PadRight(15) + ' | Port ' + $port + ': ') -NoNewline; ^
+            Write-Host $status -ForegroundColor $color; ^
+            if ($ip -eq $target) { break } ^
+        } ^
+    }"
+
 echo.
 echo --- Hoan thanh ---
 pause
