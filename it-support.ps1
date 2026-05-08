@@ -415,10 +415,11 @@ goto menu
 
 :listUsers
 cls
-echo Danh sach cac tai khoan nguoi dung:
-echo -----------------------------------------
-net user
-echo -----------------------------------------
+echo ======================================================
+echo           DANH SACH USER CHI TIET
+echo ======================================================
+powershell -Command "Get-LocalUser | Select-Object Name, Enabled, Description | Format-Table -AutoSize"
+echo ======================================================
 echo.
 echo 1. Ban co muon doi mat khau nguoi dung
 echo 2. Thoat
