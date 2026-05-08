@@ -30,12 +30,12 @@ echo  %G%=======================================================================
 echo.
 echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
-echo     %G%_1.%Res% Xem thong so PC      %G%_7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
-echo     %G%_2.%Res% Kiem tra o cung      %G%_8.%Res% Sua loi SFC/DISM    %G%14.%Res% Chi tiet IP          %G%20.%Res% Xoa ket lenh in
-echo     %G%_3.%Res% Kiem tra RAM         %G%_9.%Res% Dong ung dung treo  %G%15.%Res% Flush DNS/Renew      %G%21.%Res% In trang Test
-echo     %G%_4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% Ping kiem tra        %G%22.%Res% Liet ke d/s in
-echo     %G%_5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
-echo     %G%_6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
+echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Chi tiet IP          %G%20.%Res% Xoa ket lenh in
+echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Flush DNS/Renew      %G%21.%Res% In trang Test
+echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% Ping kiem tra        %G%22.%Res% Liet ke d/s in
+echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
+echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. MO NHANH 1 ]%Res%   %C%[ 6. MO NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
 echo.
