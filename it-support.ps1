@@ -63,7 +63,7 @@ if /i "%opt%"=="10" goto wuchange
 if /i "%opt%"=="11" goto resExp
 if /i "%opt%"=="12" goto runTasks
 if /i "%opt%"=="13" goto getMacSN
-if /i "%opt%"=="14" goto getIP
+if /i "%opt%"=="14" goto Navigation
 if /i "%opt%"=="15" goto flushDNS
 if /i "%opt%"=="16" goto doublePing
 if /i "%opt%"=="17" goto wifiPass
@@ -433,15 +433,107 @@ goto menu
 taskkill /f /im explorer.exe & start explorer.exe
 goto menu
 
-:getIP
+:Navigation
 cls
 echo =======================================================
-echo           DANG LAY THONG TIN MANG CHI TIET
+echo              HE THONG QUAN LY MANG TU DONG
 echo =======================================================
-powershell -Command "Get-NetIPConfiguration | ForEach-Object { [PSCustomObject]@{ 'Interface'=$_.InterfaceAlias; 'IP Address'=$_.IPv4Address.IPAddress; 'Gateway'=$_.IPv4DefaultGateway.NextHop; 'DNS Servers'=$_.DNSServer.ServerAddresses -join ', ' } } | Format-Table -AutoSize"
-echo -------------------------------------------------------
+echo 1. Xem thong tin IP chi tiet
+echo 2. Lam moi mang (FlushDNS + Renew)
+echo 3. Cau hinh IP/DNS (Chon card mang)
+echo 4. Thoat - tro ve menu chinh
+echo =======================================================
+set /p choice="Chon (1-4): "
+
+if %choice%==1 goto getIP
+if %choice%==2 goto refreshNet
+if %choice%==3 goto selectCard
+if %choice%==4 goto menu
+goto Navigation
+
+:getIP
+cls
+powershell -Command "Get-NetIPConfiguration | ForEach-Object { [PSCustomObject]@{ 'Interface'=$_.InterfaceAlias; 'Status'=$_.NetAdapter.Status; 'IP'=$_.IPv4Address.IPAddress; 'Gateway'=$_.IPv4DefaultGateway.NextHop } } | Format-Table -AutoSize"
 pause
-goto menu
+goto Navigation
+
+:refreshNet
+cls
+echo [*] Dang lam moi DNS va IP...
+ipconfig /flushdns
+ipconfig /release
+ipconfig /renew
+echo [OK] Hoan tat!
+pause
+goto Navigation
+
+:selectCard
+cls
+echo [ DANH SACH CARD MANG DANG KET NOI ]
+echo -------------------------------------------------------
+set i=0
+for /f "tokens=*" %%a in ('powershell -Command "Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -ExpandProperty Name"') do (
+    set /a i+=1
+    set "card!i!=%%a"
+    echo !i!. %%a
+)
+
+if %i%==0 (
+    echo [!] Khong tim thay card mang nao dang ket noi.
+    pause & goto Navigation
+)
+
+echo -------------------------------------------------------
+set /p csel="Chon so thu tu card mang: "
+set "interface=!card%csel%!"
+
+if "!interface!"=="" (
+    echo [!] Lua chon khong hop le.
+    pause & goto selectCard
+)
+
+:submenu
+cls
+echo Card dang chon: [ %interface% ]
+echo -------------------------------------------------------
+echo 1. Dat IP Tinh (Static)
+echo 2. Chuyen sang IP Dong (DHCP)
+echo 3. Chi thay doi DNS (Google: 8.8.8.8)
+echo 4. Quay lai Menu chinh
+echo -------------------------------------------------------
+set /p subch="Chon (1-4): "
+
+if %subch%==1 (
+    set /p ip="Nhap IP: "
+    set /p mask="Nhap Subnet Mask (Mac dinh: 255.255.255.0): "
+    set /p gate="Nhap Gateway: "
+    netsh interface ipv4 set address name="%interface%" static !ip! !mask! !gate%
+    goto checkResult
+)
+
+if %subch%==2 (
+    netsh interface ipv4 set address name="%interface%" source=dhcp
+    netsh interface ipv4 set dns name="%interface%" source=dhcp
+    goto checkResult
+)
+
+if %subch%==3 (
+    netsh interface ipv4 set dns name="%interface%" static 8.8.8.8 primary
+    netsh interface ipv4 add dns name="%interface%" 8.8.4.4 index=2
+    goto checkResult
+)
+
+if %subch%==4 goto Navigation
+goto submenu
+
+:checkResult
+echo [*] Dang kiem tra lai thiet lap...
+timeout /t 2 >nul
+powershell -Command "Get-NetIPConfiguration -InterfaceAlias '%interface%' | Select-Object InterfaceAlias, IPv4Address, IPv4DefaultGateway, DNSServer | Format-List"
+echo [OK] Thao tac hoan tat!
+pause
+goto submenu
+
 
 :flushDNS
 ipconfig /flushdns & ipconfig /renew
