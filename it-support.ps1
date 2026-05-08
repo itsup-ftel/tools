@@ -314,7 +314,15 @@ echo %C%[ THAY DOI MAC ADDRESS ]%Res%
 powershell -command "$adapters = Get-NetAdapter; for ($i=0; $i -lt $adapters.Count; $i++) { Write-Host ('{0}. {1} (MAC: {2})' -f ($i+1), $adapters[$i].Name, $adapters[$i].MacAddress) }"
 echo.
 set /p choice="Chon so thu tu card mang: "
-set /p newMac="Nhap MAC moi (12 ky tu, vd 021122334455): "
+
+:: Dung PowerShell de ep nguoi dung nhap dung 12 ky tu hex
+for /f "usebackq tokens=*" %%a in (`powershell -command ^
+    "do {" ^
+    "  $m = Read-Host 'Nhap MAC moi (12 ky tu, vd: 021122334455)'; " ^
+    "  if ($m -match '^[0-9A-Fa-f]{12}$') { $m; $ok=$true } " ^
+    "  else { Write-Host 'Loi: MAC phai du 12 ky tu (0-9, A-F). Hay nhap lai!' -ForegroundColor Red; $ok=$false }" ^
+    "} while (-not $ok)"`) do set "newMac=%%a"
+
 set "task=change"
 goto executeMac
 
