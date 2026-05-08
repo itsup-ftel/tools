@@ -551,8 +551,8 @@ echo.
 echo ==========================================
 echo   %Y%[ CONG CU TCPING ^& TRACERTCP]%Res%
 echo ==========================================
-echo 1. Chay TCPING (Kiem tra Port)
-echo 2. Chay TRACERTCP (TraceRoute qua Port)
+echo 1. Chay TCPING (Check ping qua Port)
+echo 2. Chay TRACERTCP (Check route qua Port)
 echo 3. Thoat ve Menu chinh
 echo ==========================================
 set /p choice="Chon chuc nang (1-3): "
@@ -562,12 +562,18 @@ if "%choice%"=="2" goto TRACERTCP
 if "%choice%"=="3" goto menu
 goto checkport
 
+
 :TCPING
 set /p target="Nhap dia chi (IP hoac Domain): "
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
-echo Dang kiem tra %target% qua cong %port%...
-powershell -Command "Test-NetConnection -ComputerName %target% -Port %port%"
+echo.
+echo Dang kiem tra %target%:%port%...
+
+:: Chay PowerShell va tra ve ket qua rut gon
+powershell -Command "$result = Test-NetConnection -ComputerName %target% -Port %port% -WarningAction SilentlyContinue; if ($result.TcpTestSucceeded) { Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green } else { Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red }"
+
+echo.
 pause
 goto checkport
 
@@ -575,8 +581,14 @@ goto checkport
 set /p target="Nhap dia chi (IP hoac Domain): "
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
+echo.
 echo Dang thuc hien TraceRoute den %target% qua cong %port%...
-powershell -Command "Test-NetConnection -ComputerName %target% -Port %port% -TraceRoute"
+echo (Vui long cho trong giay lat...)
+
+:: Chay TraceRoute va hien thi trang thai cuoi cung
+powershell -Command "$result = Test-NetConnection -ComputerName %target% -Port %port% -TraceRoute -WarningAction SilentlyContinue; if ($result.TcpTestSucceeded) { Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green } else { Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red }; Write-Host '--- Chi tiet Trace ---'; $result.TraceRoute"
+
+echo.
 pause
 goto checkport
 
