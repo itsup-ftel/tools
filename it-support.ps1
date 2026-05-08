@@ -578,29 +578,31 @@ pause
 goto checkport
 
 :TRACERTCP
+set "target="
 set /p target="Nhap dia chi (IP hoac Domain): "
+if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
 echo [TRACERTCP] Dang do duong den %target% qua Port %port%...
 echo (Toi da 30 chang - Vui long cho...)
 echo ------------------------------------------------------------
-
-powershell -Command ^
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$target = '%target%'; $port = %port%; ^
-    for ($ttl=1; $ttl -le 30; $ttl++) { ^
-        $t = Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
-        $ip = if ($t.TraceRoute) { $t.TraceRoute[-1] } else { '*' }; ^
-        Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); ^
-        if ($t.TcpTestSucceeded) { ^
-            Write-Host '------------------------------------------------------------'; ^
-            Write-Host 'Da den dich: ' $target ':' $port ' - KET QUA: OPEN (TRUE)' -ForegroundColor Green; ^
-            break; ^
+    try { ^
+        for ($ttl=1; $ttl -le 30; $ttl++) { ^
+            $t = Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
+            $ip = if ($t.TraceRoute) { $t.TraceRoute[-1] } else { '*' }; ^
+            Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); ^
+            if ($t.TcpTestSucceeded) { ^
+                Write-Host '------------------------------------------------------------'; ^
+                Write-Host ('Da den dich: ' + $target + ':' + $port + ' - KET QUA: OPEN (TRUE)') -ForegroundColor Green; ^
+                break; ^
+            } ^
         } ^
-        if ($ttl -eq 30) { Write-Host '------------------------------------------------------------'; Write-Host 'Ket thuc: Da dat gioi han 30 chang.' -ForegroundColor Yellow } ^
-    }"
-
+    } catch { Write-Host 'Co loi xay ra trong qua trinh chay.' -ForegroundColor Yellow }"
 echo.
+echo --- Hoan thanh ---
 pause
 goto checkport
 
