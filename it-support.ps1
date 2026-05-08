@@ -290,17 +290,14 @@ goto menu
 
 :getMacSN
 cls
-echo %C%[ THONG TIN MAC ADDRESS ]%Res%
+echo %C%[ THONG TIN CARD MANG & MAC ADDRESS ]%Res%
 powershell -command "Get-NetAdapter | Select-Object Name, Status, MacAddress | ft -AutoSize"
 
-echo %C%[ THONG TIN HARDWARE SERIAL NUMBER ]%Res%
+echo %C%[ SERIAL NUMBER ]%Res%
 powershell -command "Get-CimInstance Win32_Bios | Select-Object -ExpandProperty SerialNumber"
 
-echo %C%[ SYSTEM MODEL ]%Res%
-powershell -command "Get-CimInstance Win32_ComputerSystem | Select-Object -ExpandProperty Model"
-
 echo.
-echo %C%[ LUA CHON CHO MAC ]%Res%
+echo %G%[ BAN CO MUON ]%Res%
 echo 1. Thay doi MAC Address (Nhap tay)
 echo 2. Reset MAC ve mac dinh (Goc)
 echo 3. Quay lai Menu chinh
