@@ -64,8 +64,8 @@ if /i "%opt%"=="11" goto resExp
 if /i "%opt%"=="12" goto runTasks
 if /i "%opt%"=="13" goto getMacSN
 if /i "%opt%"=="14" goto Navigation
-if /i "%opt%"=="15" goto checkport
-if /i "%opt%"=="16" goto doublePing
+if /i "%opt%"=="15" goto doublePing
+if /i "%opt%"=="16" goto checkport
 if /i "%opt%"=="17" goto wifiPass
 if /i "%opt%"=="18" goto netReset
 if /i "%opt%"=="19" goto restartSpooler
