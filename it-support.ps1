@@ -584,23 +584,9 @@ if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
-echo [TRACERTCP] Dang do duong den %target% qua Port %port%...
-echo (Toi da 30 chang - Vui long cho...)
+echo [TRACERTCP] Dang do duong den %target% qua Port %port% (Toi da 30 chang)...
 echo ------------------------------------------------------------
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$target = '%target%'; $port = %port%; ^
-    try { ^
-        for ($ttl=1; $ttl -le 30; $ttl++) { ^
-            $t = Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
-            $ip = if ($t.TraceRoute) { $t.TraceRoute[-1] } else { '*' }; ^
-            Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); ^
-            if ($t.TcpTestSucceeded) { ^
-                Write-Host '------------------------------------------------------------'; ^
-                Write-Host ('Da den dich: ' + $target + ':' + $port + ' - KET QUA: OPEN (TRUE)') -ForegroundColor Green; ^
-                break; ^
-            } ^
-        } ^
-    } catch { Write-Host 'Co loi xay ra trong qua trinh chay.' -ForegroundColor Yellow }"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$target='%target%'; $port=%port%; for($ttl=1; $ttl -le 30; $ttl++){ $t=Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; $ip=if($t.TraceRoute){$t.TraceRoute[-1]}else{'*'}; Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); if($t.TcpTestSucceeded){ Write-Host '------------------------------------------------------------'; Write-Host ('Da den dich: ' + $target + ':' + $port + ' - KET QUA: OPEN (TRUE)') -ForegroundColor Green; break; } }"
 echo.
 echo --- Hoan thanh ---
 pause
