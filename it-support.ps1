@@ -30,72 +30,70 @@ echo  %G%=======================================================================
 echo.
 echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
-echo     %G%02.%Res% Xem thong so PC      %G%01.%Res% Don dep rac         %G%12.%Res% Get MAC ^& SN         %G%22.%Res% Restart Spooler
-echo     %G%04.%Res% Kiem tra o cung      %G%03.%Res% Sua loi SFC/DISM    %G%13.%Res% Chi tiet IP          %G%23.%Res% Xoa ket lenh in
-echo     %G%05.%Res% Kiem tra RAM         %G%19.%Res% Dong ung dung treo  %G%14.%Res% Flush DNS/Renew      %G%24.%Res% In trang Test
-echo     %G%21.%Res% Danh sach User       %G%09.%Res% On/Off Win Update   %G%15.%Res% Ping kiem tra        %G%25.%Res% Liet ke d/s in
-echo     %G%26.%Res% App da cai dat       %G%10.%Res% Restart Explorer    %G%16.%Res% Xem Pass Wi-Fi       %G%--%Res% ---------------
-echo     %G%--%Res% -------------------   %G%18.%Res% Liet ke Task        %G%17.%Res% Reset Mang           %G%--%Res% ---------------
+echo     %G%_1.%Res% Xem thong so PC      %G%_7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
+echo     %G%_2.%Res% Kiem tra o cung      %G%_8.%Res% Sua loi SFC/DISM    %G%14.%Res% Chi tiet IP          %G%20.%Res% Xoa ket lenh in
+echo     %G%_3.%Res% Kiem tra RAM         %G%_9.%Res% Dong ung dung treo  %G%15.%Res% Flush DNS/Renew      %G%21.%Res% In trang Test
+echo     %G%_4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% Ping kiem tra        %G%22.%Res% Liet ke d/s in
+echo     %G%_5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
+echo     %G%_6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
-echo     %C%[ 5. TRUY CAP NHANH 1 ]%Res%   %C%[ 6. TRUY CAP NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
+echo     %C%[ 5. MO NHANH 1 ]%Res%   %C%[ 6. MO NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo     %G%31.%Res% Control Panel        %G%35.%Res% Print Management    %G%39.%Res% Cai OFFICE           %G%--%Res% ---------------
-echo     %G%32.%Res% Task Manager         %G%36.%Res% Network Conn        %G%40.%Res% %G%Active WIN/OFFICE%Res%     %G%--%Res% ---------------
-echo     %G%33.%Res% Services (msc)       %G%37.%Res% Registry Editor     %G%--%Res% -------------------   %G%--%Res% ---------------
-echo     %G%34.%Res% Device Manager       %G%38.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
-echo     %G%39.%Res% Windows Settings     %G%30.%Res% Programs and Features          %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Cai OFFICE           %G%--%Res% ---------------
+echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Conn        %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%--%Res% -------------------   %G%--%Res% ---------------
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
 echo  %G%====================================================================================================================%Res%
 set /p opt="  %W%>>> Lua chon cua ban: %Res%"
 
 :: --- DIEU HUONG LOGIC ---
-if /i "%opt%"=="1" goto cleanJunk
-if /i "%opt%"=="01" goto cleanJunk
-if /i "%opt%"=="2" goto systemInfo
-if /i "%opt%"=="02" goto systemInfo
-if /i "%opt%"=="3" goto repairSys
-if /i "%opt%"=="03" goto repairSys
-if /i "%opt%"=="4" goto hardwareInfo
-if /i "%opt%"=="04" goto hardwareInfo
-if /i "%opt%"=="5" goto ramInfo
-if /i "%opt%"=="05" goto ramInfo
-if /i "%opt%"=="6" goto cpuInfo
-if /i "%opt%"=="06" goto cpuInfo
-if /i "%opt%"=="7" goto battery
-if /i "%opt%"=="07" goto battery
-if /i "%opt%"=="8" goto exportSys
-if /i "%opt%"=="08" goto exportSys
-if /i "%opt%"=="9" goto wuchange
-if /i "%opt%"=="09" goto wuchange
-if /i "%opt%"=="10" goto resExp
-if /i "%opt%"=="11" goto 
-if /i "%opt%"=="12" goto getMacSN
-if /i "%opt%"=="13" goto getIP
-if /i "%opt%"=="14" goto flushDNS
-if /i "%opt%"=="15" goto doublePing
-if /i "%opt%"=="16" goto wifiPass
-if /i "%opt%"=="17" goto netReset
-if /i "%opt%"=="18" goto runTasks
-if /i "%opt%"=="19" goto killTasks
-if /i "%opt%"=="20" goto killChrome
-if /i "%opt%"=="21" goto listUsers
-if /i "%opt%"=="22" goto restartSpooler
-if /i "%opt%"=="23" goto clearQueue
-if /i "%opt%"=="24" goto printTest
-if /i "%opt%"=="25" goto listPrinters
-if /i "%opt%"=="26" goto listapp
-if /i "%opt%"=="30" start Appwiz.cpl & goto menu
-if /i "%opt%"=="31" start control & goto menu
-if /i "%opt%"=="32" start taskmgr & goto menu
-if /i "%opt%"=="33" start services.msc & goto menu
-if /i "%opt%"=="34" start devmgmt.msc & goto menu
-if /i "%opt%"=="35" start printmanagement.msc & goto menu
-if /i "%opt%"=="36" start ncpa.cpl & goto menu
-if /i "%opt%"=="37" start regedit & goto menu
-if /i "%opt%"=="38" start wf.msc & goto menu
-if /i "%opt%"=="39" goto MENU_OFFICE
-if /i "%opt%"=="40" goto activeMAS
+if /i "%opt%"=="1" goto systemInfo
+if /i "%opt%"=="2" goto hddInfo
+if /i "%opt%"=="3" goto ramInfo
+if /i "%opt%"=="4" goto listUsers
+if /i "%opt%"=="5" goto listapp
+if /i "%opt%"=="6" goto 
+if /i "%opt%"=="7" goto cleanJunk
+if /i "%opt%"=="8" goto repairSys
+if /i "%opt%"=="9" goto killTasks
+if /i "%opt%"=="10" goto wuchange
+if /i "%opt%"=="11" goto resExp
+if /i "%opt%"=="12" goto runTasks
+if /i "%opt%"=="13" goto getMacSN
+if /i "%opt%"=="14" goto getIP
+if /i "%opt%"=="15" goto flushDNS
+if /i "%opt%"=="16" goto doublePing
+if /i "%opt%"=="17" goto wifiPass
+if /i "%opt%"=="18" goto netReset
+if /i "%opt%"=="19" goto restartSpooler
+if /i "%opt%"=="20" goto clearQueue
+if /i "%opt%"=="21" goto printTest
+if /i "%opt%"=="22" goto listPrinters
+if /i "%opt%"=="23" goto 
+if /i "%opt%"=="24" goto 
+if /i "%opt%"=="25" goto control & goto menu
+if /i "%opt%"=="26" goto taskmgr & goto menu
+if /i "%opt%"=="27" start services.msc & goto menu
+if /i "%opt%"=="28" start devmgmt.msc & goto menu
+if /i "%opt%"=="29" start ms-settings: & goto menu
+if /i "%opt%"=="30" start printmanagement.msc & goto menu
+if /i "%opt%"=="31" start ncpa.cpl & goto menu
+if /i "%opt%"=="32" start regedit & goto menu
+if /i "%opt%"=="33" start wf.msc & goto menu
+if /i "%opt%"=="34" start Appwiz.cpl & goto menu
+if /i "%opt%"=="35" goto MENU_OFFICE
+if /i "%opt%"=="36" goto activeMAS
+if /i "%opt%"=="37" goto
+if /i "%opt%"=="38" goto
+if /i "%opt%"=="39" goto
+if /i "%opt%"=="40" goto
+if /i "%opt%"=="41" goto
+if /i "%opt%"=="42" goto
+if /i "%opt%"=="43" goto
+if /i "%opt%"=="44" goto
 if /i "%opt%"=="r" goto restart
 if /i "%opt%"=="s" goto shutdown
 if /i "%opt%"=="0" exit
@@ -266,7 +264,7 @@ powershell -command "Get-CimInstance -ClassName Win32_PhysicalMemory | Format-Ta
 pause
 goto menu
 
-:hardwareInfo
+:hddInfo
 cls
 echo %C%==================================================%Res%
 echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
