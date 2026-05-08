@@ -582,11 +582,23 @@ set /p target="Nhap dia chi (IP hoac Domain): "
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
-echo Dang thuc hien TraceRoute den %target% qua cong %port%...
-echo (Luu y: Qua trinh nay co the mat 30-60 giay...)
+echo [TRACERTCP] Dang do duong den %target% qua Port %port%...
+echo (Toi da 30 chang - Vui long cho...)
+echo ------------------------------------------------------------
 
-:: Fix loi: Hien thi tung chặng va ket luan cuoi cung
-powershell -Command "$t = Test-NetConnection -ComputerName '%target%' -Port %port% -TraceRoute -ErrorAction SilentlyContinue; if($t.TraceRoute){Write-Host '--- Chi tiet duong di ---'; $t.TraceRoute | ForEach-Object { $_ }}; if($t.TcpTestSucceeded){Write-Host 'KET QUA CUOI CUNG: OPEN (TRUE)' -ForegroundColor Green}else{Write-Host 'KET QUA CUOI CUNG: CLOSE (FAIL)' -ForegroundColor Red}"
+powershell -Command ^
+    "$target = '%target%'; $port = %port%; ^
+    for ($ttl=1; $ttl -le 30; $ttl++) { ^
+        $t = Test-NetConnection -ComputerName $target -Port $port -Hops $ttl -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
+        $ip = if ($t.TraceRoute) { $t.TraceRoute[-1] } else { '*' }; ^
+        Write-Host ('Hop ' + $ttl.ToString().PadRight(3) + ': ' + $ip); ^
+        if ($t.TcpTestSucceeded) { ^
+            Write-Host '------------------------------------------------------------'; ^
+            Write-Host 'Da den dich: ' $target ':' $port ' - KET QUA: OPEN (TRUE)' -ForegroundColor Green; ^
+            break; ^
+        } ^
+        if ($ttl -eq 30) { Write-Host '------------------------------------------------------------'; Write-Host 'Ket thuc: Da dat gioi han 30 chang.' -ForegroundColor Yellow } ^
+    }"
 
 echo.
 pause
