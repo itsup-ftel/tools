@@ -290,7 +290,7 @@ goto menu
 
 :getMacSN
 cls
-echo %C%[ THONG TIN CARD MANG & MAC ADDRESS ]%Res%
+echo %C%[ THONG TIN CARD MANG, MAC ADDRESS ]%Res%
 powershell -command "Get-NetAdapter | Select-Object Name, Status, MacAddress | ft -AutoSize"
 
 echo %C%[ SERIAL NUMBER ]%Res%
