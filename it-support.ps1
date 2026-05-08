@@ -435,7 +435,13 @@ goto menu
 
 :getIP
 cls
-ipconfig /all
+echo =======================================================
+echo           DANG LAY THONG TIN MANG CHI TIET
+echo =======================================================
+powershell -Command "Get-NetIPAddress -AddressFamily IPv4 | Select-Object InterfaceAlias, IPAddress, PrefixLength | Format-Table -AutoSize"
+echo -------------------------------------------------------
+echo Chi tiet DNS va Gateway:
+powershell -Command "Get-NetIPConfiguration | Select-Object InterfaceAlias, IPv4Address, IPv4DefaultGateway, DNSServer | Format-List"
 pause
 goto menu
 
