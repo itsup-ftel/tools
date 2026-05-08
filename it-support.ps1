@@ -40,10 +40,10 @@ echo.
 echo     %C%[ 5. TRUY CAP NHANH 1 ]%Res%   %C%[ 6. TRUY CAP NHANH 2 ]%Res%   %C%[ 7. CAI DAT ]%Res%          %C%[ 8. LENH NHANH ]%Res%
 echo.
 echo     %G%31.%Res% Control Panel        %G%35.%Res% Print Management    %G%39.%Res% Cai OFFICE           %G%--%Res% ---------------
-echo     %G%32.%Res% Task Manager         %G%36.%Res% Network Conn        %G%40.%Res% %G%Active WIN/OFF%Res%     %G%--%Res% ---------------
+echo     %G%32.%Res% Task Manager         %G%36.%Res% Network Conn        %G%40.%Res% %G%Active WIN/OFFICE%Res%     %G%--%Res% ---------------
 echo     %G%33.%Res% Services (msc)       %G%37.%Res% Registry Editor     %G%--%Res% -------------------   %G%--%Res% ---------------
 echo     %G%34.%Res% Device Manager       %G%38.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
-echo     %G%39.%Res% Windows Settings     %G%41.%Res% Appwiz.cpl          %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%39.%Res% Windows Settings     %G%30.%Res% Programs and Features          %G%--%Res% -------------------   %G%--%Res% ---------------
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
 echo  %G%====================================================================================================================%Res%
@@ -85,6 +85,7 @@ if /i "%opt%"=="23" goto clearQueue
 if /i "%opt%"=="24" goto printTest
 if /i "%opt%"=="25" goto listPrinters
 if /i "%opt%"=="26" goto listapp
+if /i "%opt%"=="30" start Appwiz.cpl & goto menu
 if /i "%opt%"=="31" start control & goto menu
 if /i "%opt%"=="32" start taskmgr & goto menu
 if /i "%opt%"=="33" start services.msc & goto menu
