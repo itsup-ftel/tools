@@ -28,7 +28,7 @@ echo  %G%=======================================================================
 echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo  %G%====================================================================================================================%Res%
 echo.
-echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
+echo     %Y%[ 1. HE THONG ]%Res%          %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 3. MANG ^& INTERNET ]%Res%   %Y%[ 4. MAY IN ]%Res%
 echo.
 echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
@@ -37,7 +37,7 @@ echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
 echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
-echo     %C%[ 5. MO NHANH 1 ]%Res%         %C%[ 6. MO NHANH 2 ]%Res%      %C%[ 7. CAI DAT ]%Res%            %C%[ 8. FIX LOI NHANH ]%Res%
+echo     %C%[ 5. MO NHANH 1 ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI NHANH ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%--%Res% ---------------
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
