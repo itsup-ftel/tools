@@ -290,15 +290,69 @@ goto menu
 
 :getMacSN
 cls
-echo %C%[ MAC ADDRESS INFO ]%Res%
-getmac /v /fo list
-echo.
-echo %C%[ HARDWARE SERIAL NUMBER ]%Res%
+echo %C%[ THONG TIN MAC ADDRESS ]%Res%
+powershell -command "Get-NetAdapter | Select-Object Name, Status, MacAddress | ft -AutoSize"
+
+echo %C%[ THONG TIN HARDWARE SERIAL NUMBER ]%Res%
 powershell -command "Get-CimInstance Win32_Bios | Select-Object -ExpandProperty SerialNumber"
+
 echo %C%[ SYSTEM MODEL ]%Res%
 powershell -command "Get-CimInstance Win32_ComputerSystem | Select-Object -ExpandProperty Model"
+
+echo.
+echo %C%[ LUA CHON CHO MAC ]%Res%
+echo 1. Thay doi MAC Address (Nhap tay)
+echo 2. Reset MAC ve mac dinh (Goc)
+echo 3. Quay lai Menu chinh
+set /p subOpt="Nhap lua chon (1-3): "
+
+if "%subOpt%"=="1" goto changeMac
+if "%subOpt%"=="2" goto resetMac
+if "%subOpt%"=="3" goto menu
+goto getMacSN
+
+:changeMac
+cls
+echo %C%[ THAY DOI MAC ADDRESS ]%Res%
+powershell -command "$adapters = Get-NetAdapter; for ($i=0; $i -lt $adapters.Count; $i++) { Write-Host ('{0}. {1} (MAC: {2})' -f ($i+1), $adapters[$i].Name, $adapters[$i].MacAddress) }"
+echo.
+set /p choice="Chon so thu tu card mang: "
+set /p newMac="Nhap MAC moi (12 ky tu, vd 021122334455): "
+set "task=change"
+goto executeMac
+
+:resetMac
+cls
+echo %C%[ RESET MAC ADDRESS VE MAC DINH ]%Res%
+powershell -command "$adapters = Get-NetAdapter; for ($i=0; $i -lt $adapters.Count; $i++) { Write-Host ('{0}. {1} (MAC: {2})' -f ($i+1), $adapters[$i].Name, $adapters[$i].MacAddress) }"
+echo.
+set /p choice="Chon so thu tu card mang muon Reset: "
+set "newMac="
+set "task=reset"
+goto executeMac
+
+:executeMac
+echo Dang thuc thi, vui long cho...
+powershell -command ^
+    "$choice = %choice% - 1;" ^
+    "$adapters = Get-NetAdapter;" ^
+    "if ($choice -ge 0 -and $choice -lt $adapters.Count) {" ^
+    "   $adapter = $adapters[$choice];" ^
+    "   $regPath = 'HKLM:\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}\' + $adapter.DeviceID.PadLeft(4,'0');" ^
+    "   if ('%task%' -eq 'change') {" ^
+    "       Set-ItemProperty -Path $regPath -Name 'NetworkAddress' -Value '%newMac%' -ErrorAction SilentlyContinue;" ^
+    "       Write-Host '--- Da thiet lap MAC moi ---' -ForegroundColor Cyan;" ^
+    "   } else {" ^
+    "       Remove-ItemProperty -Path $regPath -Name 'NetworkAddress' -ErrorAction SilentlyContinue;" ^
+    "       Write-Host '--- Da xoa MAC tuy chinh (ve Mac dinh) ---' -ForegroundColor Cyan;" ^
+    "   }" ^
+    "   Write-Host 'Dang khoi dong lai card mang...';" ^
+    "   Disable-NetAdapter -Name $adapter.Name -Confirm:$false;" ^
+    "   Enable-NetAdapter -Name $adapter.Name -Confirm:$false;" ^
+    "   Write-Host '--- HOAN TAT ---' -ForegroundColor Green;" ^
+    "} else { Write-Host '--- LOI: Lua chon sai ---' -ForegroundColor Red; }"
 pause
-goto menu
+goto getMacSN
 
 :cleanJunk
 cls
