@@ -579,34 +579,23 @@ goto checkport
 
 :TRACERTCP
 set "target="
-set /p target="Nhap dia chi (IP hoac Domain): "
+set /p target="Nhap IP hoac Domain: "
 if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
 echo.
-echo [TRACERTCP] Dang do duong den %target% qua Port %port%...
+echo [TRACERTCP] Dang do duong den %target%...
+echo (Luu y: Hien thi IP tung chang truoc, sau do moi check Port dich)
 echo ------------------------------------------------------------
 
-:: Buoc 1: Lay danh sach IP tu tracert thong thuong (ICMP)
-:: Buoc 2: Voi moi IP tim duoc, kiem tra thu cong TCP Port
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$target='%target%'; $port=%port%; ^
-    Write-Host 'Dang thu thap lo trinh...'; ^
-    $route = tracert -d -h 30 $target | Select-String -Pattern '\d{1,3}(\.\d{1,3}){3}'; ^
-    foreach ($line in $route) { ^
-        if ($line -match '(\d{1,3}(\.\d{1,3}){3})') { ^
-            $ip = $matches[1]; ^
-            $t = Test-NetConnection -ComputerName $ip -Port $port -WarningAction SilentlyContinue -ErrorAction SilentlyContinue; ^
-            $status = if($t.TcpTestSucceeded){'OPEN'}else{'CLOSE/FILTERED'}; ^
-            $color = if($t.TcpTestSucceeded){'Green'}else{'Gray'}; ^
-            Write-Host ('Hop: ' + $ip.PadRight(15) + ' | Port ' + $port + ': ') -NoNewline; ^
-            Write-Host $status -ForegroundColor $color; ^
-            if ($ip -eq $target) { break } ^
-        } ^
-    }"
+:: Buoc 1: Dung tracert he thong de lay lo trinh (tranh loi tham so PowerShell)
+tracert -d -h 30 %target%
 
 echo.
-echo --- Hoan thanh ---
+echo ------------------------------------------------------------
+echo [CHECK CUOI CUNG] Trang thai Port dich %port%:
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$t=Test-NetConnection -ComputerName '%target%' -Port %port% -ErrorAction SilentlyContinue; if($t.TcpTestSucceeded){Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green}else{Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red}"
+echo.
 pause
 goto checkport
 
