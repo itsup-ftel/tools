@@ -671,10 +671,6 @@ taskkill /f /fi "status eq not responding"
 pause
 goto menu
 
-:killChrome
-taskkill /f /im chrome.exe /t
-goto menu
-
 :listUsers
 cls
 echo ======================================================
