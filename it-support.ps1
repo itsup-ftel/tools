@@ -39,9 +39,9 @@ echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.
 echo.
 echo     %C%[ 5. MO NHANH 1 ]%Res%         %C%[ 6. MO NHANH 2 ]%Res%      %C%[ 7. CAI DAT ]%Res%            %C%[ 8. LENH NHANH ]%Res%
 echo.
-echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Cai OFFICE           %G%--%Res% ---------------
+echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%--%Res% ---------------
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
-echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%35.%Res% Tool PDF Editor      %G%--%Res% ---------------
 echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%--%Res% -------------------   %G%--%Res% ---------------
 echo.
