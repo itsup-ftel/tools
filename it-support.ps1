@@ -32,8 +32,8 @@ echo     %Y%[ 1. HE THONG ]%Res%           %Y%[ 2. PHAN CUNG ]%Res%        %Y%[ 
 echo.
 echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
-echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Flush DNS/Renew      %G%21.%Res% In trang Test
-echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% Ping kiem tra        %G%22.%Res% Liet ke d/s in
+echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
+echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
 echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
 echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
@@ -64,7 +64,7 @@ if /i "%opt%"=="11" goto resExp
 if /i "%opt%"=="12" goto runTasks
 if /i "%opt%"=="13" goto getMacSN
 if /i "%opt%"=="14" goto Navigation
-if /i "%opt%"=="15" goto flushDNS
+if /i "%opt%"=="15" goto checkport
 if /i "%opt%"=="16" goto doublePing
 if /i "%opt%"=="17" goto wifiPass
 if /i "%opt%"=="18" goto netReset
@@ -393,7 +393,7 @@ echo =========================================
 echo [1] TAT HAN Windows Update (Registry)
 echo [2] MO LAI Windows Update
 echo [3] RESET Windows Update
-echo [0] TRO LAI MENU CHINH
+echo [0] Thoat ve Menu chinh
 echo =========================================
 
 set /p choice="Nhap lua chon cua ban (0-2): "
@@ -510,7 +510,7 @@ echo -------------------------------------------------------
 echo 1. Dat IP Tinh (Static)
 echo 2. Chuyen sang IP Dong (DHCP)
 echo 3. Chi thay doi DNS (Google: 8.8.8.8)
-echo 4. Quay lai Menu chinh
+echo 4. Thoat ve Menu chinh
 echo -------------------------------------------------------
 set /p subch="Chon (1-4): "
 
@@ -544,6 +544,39 @@ powershell -Command "Get-NetIPConfiguration -InterfaceAlias '%interface%' | Sele
 echo [OK] Thao tac hoan tat!
 pause
 goto submenu
+
+:checkport
+echo ==========================================
+echo   %Y%[ CONG CU TCPING ^& TRACERTCP]%Res%
+echo ==========================================
+echo 1. Chay TCPING (Kiem tra Port)
+echo 2. Chay TRACERTCP (TraceRoute qua Port)
+echo 3. Thoat ve Menu chinh
+echo ==========================================
+set /p choice="Chon chuc nang (1-3): "
+
+if "%choice%"=="1" goto TCPING
+if "%choice%"=="2" goto TRACERTCP
+if "%choice%"=="3" goto menu
+goto checkport
+
+:TCPING
+set /p target="Nhap dia chi (IP hoac Domain): "
+set /p port="Nhap Port (mac dinh 80): "
+if "%port%"=="" set port=80
+echo Dang kiem tra %target% qua cong %port%...
+powershell -Command "Test-NetConnection -ComputerName %target% -Port %port%"
+pause
+goto checkport
+
+:TRACERTCP
+set /p target="Nhap dia chi (IP hoac Domain): "
+set /p port="Nhap Port (mac dinh 80): "
+if "%port%"=="" set port=80
+echo Dang thuc hien TraceRoute den %target% qua cong %port%...
+powershell -Command "Test-NetConnection -ComputerName %target% -Port %port% -TraceRoute"
+pause
+goto checkport
 
 :wifiPass
 cls
