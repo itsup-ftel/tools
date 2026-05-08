@@ -414,7 +414,33 @@ taskkill /f /im chrome.exe /t
 goto menu
 
 :listUsers
+cls
+echo Danh sach cac tai khoan nguoi dung:
+echo -----------------------------------------
 net user
+echo -----------------------------------------
+echo.
+echo 1. Ban co muon doi mat khau nguoi dung
+echo 2. Thoat
+echo -----------------------------------------
+set /p chon="Moi ban chon (1-2): "
+if "%chon%"=="1" goto changePass
+if "%chon%"=="2" goto menu
+goto menu
+
+:changePass
+cls
+echo --- DOI MAT KHAU NGUOI DUNG ---
+set /p username="Nhap ten User muon doi pass: "
+set /p password="Nhap mat khau moi: "
+echo Dang xu ly...
+:: Lenh doi mat khau
+net user "%username%" "%password"
+if %errorLevel% == 0 (
+    echo Doi mat khau cho user %username% thanh cong!
+) else (
+    echo Co loi xay ra (Sai ten user hoac khong du quyen).
+)
 pause
 goto menu
 
