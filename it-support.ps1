@@ -190,7 +190,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        }" ^
     "    }" ^
     "    Write-Host '`n--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache;" ^
+    "    winget --purge-all-download-cache;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT CAI DAT!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 3;" ^
@@ -411,7 +411,7 @@ goto menu
 :ramInfo
 cls
 echo %C%[ THONG TIN PHAN CUNG CHI TIET RAM]%Res%
-powershell -Command "$slots=(Get-WmiObject Win32_PhysicalMemoryArray).MemoryDevices; $used=(Get-WmiObject Win32_PhysicalMemory); $count=($used | Measure-Object).Count; Write-Host '--- TONG QUAN ---' -Fore Cyan; Write-Host 'Tong so khe: $slots | Da dung: $count | Trong: ($slots-$count)'; Write-Host '--- CHI TIET ---' -Fore Cyan; $used | Select-Object @{N='Slot';E={$_.DeviceLocator}}, @{N='Capacity(GB)';E={$_.Capacity/1GB}}, @{N='Speed';E={$_.Speed}}, Manufacturer | Format-Table -AutoSize"
+powershell -Command "$TotalSlots = (Get-WmiObject -Class 'Win32_PhysicalMemoryArray').MemoryDevices; $UsedSlots = Get-WmiObject -Class 'Win32_PhysicalMemory'; $CurrentUsedCount = ($UsedSlots | Measure-Object).Count; $FreeSlots = $TotalSlots - $CurrentUsedCount; Write-Host '`n--- TONG QUAN HE THONG KHE CAM ---' -ForegroundColor Cyan; Write-Host 'Tong so khe ho tro : $TotalSlots'; Write-Host 'So khe da su dung  : $CurrentUsedCount'; Write-Host 'So khe con trong   : $FreeSlots' -ForegroundColor Yellow; Write-Host '`n--- CHI TIET THONG SO RAM ---' -ForegroundColor Cyan; $UsedSlots | Select-Object @{Name='Vi tri (Slot)'; Expression={$_.DeviceLocator}}, @{Name='Dung luong (GB)'; Expression={$_.Capacity / 1GB}}, @{Name='Toc do (Speed)'; Expression={'$($_.Speed) MHz'}}, @{Name='Nha san xuat'; Expression={$_.Manufacturer}}, @{Name='So hieu (Part Number)'; Expression={$_.PartNumber.Trim()}}, @{Name='Loai RAM'; Expression={switch($_.MemoryType){0{'Unknown'} 20{'DDR'} 21{'DDR2'} 24{'DDR3'} 26{'DDR4'} default{'DDR4/DDR5/Other'}}}} | Format-Table -AutoSize; Write-Host '--------------------------------------------------`n'"
 pause
 goto menu
 
