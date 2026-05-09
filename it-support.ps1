@@ -824,31 +824,21 @@ cls
 :: 2. Kiem tra va Tu dong cai dat Winget neu chua co
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
-    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat Winget tu dong...
+    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
         "$progressPreference = 'SilentlyContinue';" ^
-        "Write-Host 'Dang tai App Installer Bundle...' -ForegroundColor Cyan;" ^
         "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
-        "Write-Host 'Dang cai dat...' -ForegroundColor Cyan;" ^
         "Add-AppxPackage -Path .\winget.msixbundle;" ^
-        "Remove-Item .\winget.msixbundle;" ^
-        "Write-Host 'Da cai dat Winget thanh cong!' -ForegroundColor Green;"
-    
-    :: Kiem tra lai sau khi cai
-    winget --version >nul 2>&1
-    if %errorLevel% neq 0 (
-        echo [!] Co loi xay ra khi cai Winget. Vui long kiem tra ket noi mang.
-        pause
-        exit /b
-    )
+        "Remove-Item .\winget.msixbundle;"
+    echo [OK] Da kich hoat Winget.
 )
 
-:: 2. Chay chuong trinh chinh
+:: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
     "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
+    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
     "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
     "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
     "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
@@ -857,7 +847,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
     "@{Name='Google Drive'; ID='Google.Drive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything (Search Tool)'; ID='voidtools.Everything'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'}," ^
     "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
     "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
@@ -865,9 +855,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
-    "@{Name='Core Temp (CPU Temp)'; ID='ALCPU.CoreTemp'}," ^
+    "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
     "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
@@ -879,13 +869,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    Write-Host 'U. CAP NHAT TOAN BO app tren may (Upgrade All)';" ^
     "    Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
     "    Write-Host '----------------------------------';" ^
-    "    $input = Read-Host 'Nhap lua chon (vi du: 1,3 hoac A, U, Q)';" ^
-    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
-    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
-    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
+    "    $choice = Read-Host 'Nhap lua chon';" ^
+    "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
+    "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
+    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
-    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
-    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
+    "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
+    "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
@@ -894,9 +884,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`nDang don dep cache va file tam...' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache >$null 2>&1;" ^
-    "    Write-Host '--- HOAN TAT! ---' -ForegroundColor Green;" ^
+    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI (DON RAC) ---' -ForegroundColor Gray;" ^
+    "    winget --purged-all-download-cache;" ^
+    "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
+    "    Write-Host 'DA XOA FILE TAM VA BO NHO DEM!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 2;" ^
     "}"
 pause
