@@ -167,7 +167,7 @@ cls
 set "setupDir=C:\OfficeInstall"
 if not exist "%setupDir%" mkdir "%setupDir%"
 cd /d "%setupDir%"
-set "setupUrl=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/setup.exe"
+set "setupUrl=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/setup.exe"
 powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; (New-Object Net.WebClient).DownloadFile('%setupUrl%', 'setup.exe')" >nul 2>&1
 
 if not exist "setup.exe" (
@@ -601,13 +601,13 @@ cls
 :: 1. Tai tcping.exe vao System32
 if not exist "C:\Windows\System32\tcping.exe" (
     echo [+] Dang tai tcping.exe vao System32...
-    powershell -Command "Invoke-WebRequest -Uri 'https://elifulkerson.com' -OutFile 'C:\Windows\System32\tcping.exe'"
+    powershell -Command "Start-BitsTransfer -Source 'https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/tcping.exe' -Destination 'C:\Windows\System32\tcping.exe'"
 )
 
 :: 2. Tai tracetcp.exe vao System32
 if not exist "C:\Windows\System32\tracetcp.exe" (
     echo [+] Dang tai tracetcp.exe vao System32...
-    powershell -Command "$tmp = [System.IO.Path]::GetTempFileName(); Invoke-WebRequest -Uri 'https://github.com' -OutFile $tmp; Expand-Archive -Path $tmp -DestinationPath 'C:\Windows\System32' -Force; Remove-Item $tmp"
+    powershell -Command "Start-BitsTransfer -Source 'https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/tracetcp.exe' -Destination 'C:\Windows\System32\tracetcp.exe'"
 )
 echo ==========================================
 echo       CONG CU KIEM TRA KET NOI TCP
