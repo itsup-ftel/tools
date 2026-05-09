@@ -147,12 +147,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANG QUET HE THONG... ---' -ForegroundColor Yellow;" ^
+    "    Write-Host '--- DANG QUET UNG DUNG TREN MAY... ---' -ForegroundColor Yellow;" ^
     "    $installedList = winget list --accept-source-agreements 2>$null | Out-String;" ^
     "    $validChoice = $false;" ^
     "    while(-not $validChoice) {" ^
     "        Clear-Host;" ^
-    "        Write-Host '--- DANH SACH UNG DUNG (OFFICIAL) ---' -ForegroundColor Cyan;" ^
+    "        Write-Host '----- DANH SACH UNG DUNG (OFFICIAL) -----' -ForegroundColor Cyan;" ^
     "        for ($i=0; $i -lt $apps.Count; $i++) {" ^
     "            $displayName = '{0,2}. {1}' -f ($i+1), $apps[$i].Name;" ^
     "            if ($installedList -like \"*$($apps[$i].ID)*\") {" ^
@@ -164,7 +164,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
     "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
-    "        Write-Host 'Q. QUAY LAI MENU CHINH' -ForegroundColor Red;" ^
+    "        Write-Host 'Q. THOAT VE MENU CHINH' -ForegroundColor Red;" ^
     "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
     "        if ($choice -eq 'Q' -or $choice -eq 'q') { return } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
