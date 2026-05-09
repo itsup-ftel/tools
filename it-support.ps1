@@ -821,6 +821,16 @@ goto menu
 
 :installappfree
 cls
+winget --version >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+        "$progressPreference = 'SilentlyContinue';" ^
+        "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
+        "Add-AppxPackage -Path .\winget.msixbundle;" ^
+        "Remove-Item .\winget.msixbundle;"
+    echo [OK] Da kich hoat Winget.
+)
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
