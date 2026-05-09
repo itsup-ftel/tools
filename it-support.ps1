@@ -773,57 +773,37 @@ echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
-    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
-    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'}," ^
-    "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything'; ID='voidtools.Everything'}," ^
-    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
-    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
-    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
-    "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
-    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
-    "@{Name='CrystalDiskInfo (Check o cung)'; ID='CrystalMarkSoftware.CrystalDiskInfo'}," ^
-    "@{Name='CoreTemp (Nhiet do CPU)'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='Advanced IP Scanner (Scan Port)'; ID='Famatech.AdvancedIPScanner'}," ^
-    "@{Name='TreeSize Free (Quet dung luong)'; ID='JAMSoftware.TreeSizeFree'}" ^
+    "@{N='Google Chrome'; I='Google.Chrome'}, @{N='Firefox'; I='Mozilla.Firefox'}," ^
+    "@{N='Coc Coc'; I='ITVN.CocCoc'}, @{N='UniKey'; I='PhamKimLong.UniKey'}," ^
+    "@{N='Zalo'; I='Zalo.Zalo'}, @{N='WeChat'; I='Tencent.WeChat'}," ^
+    "@{N='Synology Chat'; I='Synology.ChatClient'}, @{N='MS Teams'; I='Microsoft.Teams'}," ^
+    "@{N='OneDrive'; I='Microsoft.OneDrive'}, @{N='Google Drive'; I='Google.Drive'}," ^
+    "@{N='Evernote'; I='Evernote.Evernote'}, @{N='Everything'; I='voidtools.Everything'}," ^
+    "@{N='WinRAR'; I='WinRAR.WinRAR'}, @{N='7-Zip'; I='7zip.7zip'}," ^
+    "@{N='Notepad++'; I='Notepad++.Notepad++'}, @{N='Foxit Reader'; I='Foxit.FoxitReader'}," ^
+    "@{N='PDF24 Creator'; I='PDF24.PDF24Creator'}, @{N='K-Lite Codec'; I='CodecGuide.K-LiteCodecPack.Full'}," ^
+    "@{N='UltraViewer'; I='UltraViewer.UltraViewer'}, @{N='Kaspersky Plus'; I='Kaspersky.Kaspersky'}," ^
+    "@{N='CrystalDiskInfo'; I='CrystalMarkSoftware.CrystalDiskInfo'}, @{N='CoreTemp'; I='ALCPU.CoreTemp'}," ^
+    "@{N='Advanced IP Scanner'; I='Famatech.AdvancedIPScanner'}, @{N='TreeSize Free'; I='JAMSoftware.TreeSizeFree'}" ^
     ");" ^
     "while($true) {" ^
-    "    Clear-Host;" ^
-    "    echo \"$env:C--- MENU CAI DAT & CAP NHAT ---$env:Res\";" ^
-    "    for ($i=0; $i -lt $apps.Count; $i++) { echo (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
-    "    echo '----------------------------------';" ^
-    "    echo \"$env:G A. Cai dat/Nang cap TAT CA danh sach$env:Res\";" ^
-    "    echo \"$env:Y U. CAP NHAT TOAN BO app tren may (Upgrade All)$env:Res\";" ^
-    "    echo \"$env:R Q. THOAT CHUONG TRINH$env:Res\";" ^
-    "    echo '----------------------------------';" ^
-    "    $input = Read-Host 'Nhap lua chon cua ban';" ^
-    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
-    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
-    "        echo \"`n$env:Y Dang cap nhat tat ca app...$env:Res\";" ^
-    "        winget upgrade --all --silent --accept-package-agreements;" ^
-    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
-    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
-    "    if ($targets) {" ^
-    "        foreach ($app in $targets) { if ($app) { " ^
-    "            echo \"`n$env:Y Dang xu ly: $($app.Name)...$env:Res\";" ^
-    "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "        } }" ^
-    "    };" ^
-    "    echo \"`n$env:C Dang don dep file tam va logs...$env:Res\";" ^
-    "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $path) { Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "    echo \"$env:G --- HOAN TAT! Quay lai menu sau 2 giay...$env:Res\";" ^
-    "    Start-Sleep -Seconds 2;" ^
+    "  Clear-Host;" ^
+    "  echo '%C%   ========================= DANH SACH UNG DUNG (Winget) =========================%Res%';" ^
+    "  $half = [math]::Ceiling($apps.Count / 2);" ^
+    "  for ($i=0; $i -lt $half; $i++) {" ^
+    "    $l = '{0,2}. {1}' -f ($i+1), $apps[$i].N;" ^
+    "    $rIdx = $i + $half;" ^
+    "    if ($rIdx -lt $apps.Count) { $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N; echo ($l.PadRight(45) + $r) } else { echo $l }" ^
+    "  };" ^
+    "  echo '%C%   -------------------------------------------------------------------------------%Res%';" ^
+    "  echo '      %G%A. Cai TAT CA%Res%  |  %Y%U. Cap nhat ALL may%Res%  |  %R%Q. THOAT%Res%';" ^
+    "  $ans = Read-Host '   Chon so (vd: 1,3,5)'; if ($ans -eq 'q') { break };" ^
+    "  $t = @(); if ($ans -eq 'a') { $t = $apps } elseif ($ans -eq 'u') { echo \"`n%Y%[!] Dang quet nang cap...%Res%\"; winget upgrade --all --silent --accept-package-agreements } " ^
+    "  else { try { foreach ($idx in $ans.Split(',')) { $t += $apps[$idx.Trim()-1] } } catch {} };" ^
+    "  foreach ($a in $t) { if ($a) { echo \"`n%Y%[>] Dang cai: $($a.N)...%Res%\"; winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements } };" ^
+    "  echo \"`n%C%[!] Dang don dep logs...%Res%\";" ^
+    "  winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
+    "  echo '%G%[OK] Xong! Quay lai menu...%Res%'; Start-Sleep 2" ^
     "}"
 pause
 goto menu
