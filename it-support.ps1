@@ -121,7 +121,6 @@ if "%choice%"=="4" goto :monitor
 if "%choice%"=="5" goto menu
 goto :bitlocker
 
-
 :status
 echo.
 echo --- TRANG THAI BITLOCKER ---
@@ -282,7 +281,7 @@ echo   CAI DAT %verName% THANH CONG!
 echo   BAN MUON ACTIVE NGAY KHONG?
 echo ====================================================
 echo 1. Co (Yeu cau Internet)
-echo 2. Khong, quay lai Menu chinh
+echo 2. Khong, thoat ve menu chinh
 echo ====================================================
 set /p choice_act="Lua chon cua ban (1-2): "
 if "%choice_act%"=="1" goto :activeMAS else goto MENU_OFFICE
@@ -355,7 +354,7 @@ echo.
 echo %G%[ BAN CO MUON ]%Res%
 echo 1. Thay doi MAC Address (Nhap tay)
 echo 2. Reset MAC ve mac dinh (Goc)
-echo 3. Quay lai Menu chinh
+echo 3. Thoat ve menu chinh
 set /p subOpt="Nhap lua chon (1-3): "
 
 if "%subOpt%"=="1" goto changeMac
@@ -496,7 +495,7 @@ echo =======================================================
 echo 1. Xem thong tin IP chi tiet
 echo 2. Lam moi mang (FlushDNS + Renew)
 echo 3. Cau hinh IP/DNS (Chon card mang)
-echo 4. Thoat - tro ve menu chinh
+echo 4. Thoat ve menu chinh
 echo =======================================================
 set /p choice="Chon (1-4): "
 
