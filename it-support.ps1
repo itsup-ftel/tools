@@ -164,7 +164,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
     "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
-    "        Write-Host 'Q. THOAT VE MENU CHINH' -ForegroundColor Red;" ^
+    "        Write-Host 'Q. QUAY LAI MENU CHINH' -ForegroundColor Red;" ^
     "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
     "        if ($choice -eq 'Q' -or $choice -eq 'q') { return } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
@@ -188,13 +188,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
     "            $isInstalled = winget list --id $app.ID -e --accept-source-agreements 2>$null;" ^
     "            if ($isInstalled -match $app.ID) {" ^
-    "                Write-Host \" -> Da co. Dang check Update $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
     "                $res = winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements 2>$null;" ^
     "                if ($res -match 'No applicable update found') { Write-Host '   -> Ung dung da o phien ban moi nhat.' -ForegroundColor Blue } else { Write-Host '   -> Cap nhat thanh cong!' -ForegroundColor Green }" ^
     "            } else {" ^
-    "                Write-Host \" -> Chua co, dang tai va cai dat $($app.Name)...\" -ForegroundColor Red;" ^
+    "                Write-Host '   -> Chua co, dang cai dat...' -ForegroundColor Red;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                Write-Host \" Da cai dat $($app.Name) hoan tat !\" -ForegroundColor Green;" ^
+    "                Write-Host '   -> Da cai dat hoan tat!' -ForegroundColor Green;" ^
     "            }" ^
     "        }" ^
     "        Write-Host 'Xoa rac va lam moi danh sach...';" ^
