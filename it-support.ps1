@@ -149,7 +149,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    $validChoice = $false;" ^
     "    while(-not $validChoice) {" ^
     "        Clear-Host;" ^
-    "        Write-Host '--- QUAN LY UNG DUNG (10h15) ---' -ForegroundColor Cyan;" ^
+    "        Write-Host '--- QUAN LY UNG DUNG (10h21) ---' -ForegroundColor Cyan;" ^
     "        for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
