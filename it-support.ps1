@@ -129,10 +129,22 @@ pause
 goto :bitlocker
 
 :disable_one
-set /p drive="Nhap ky tu o dia muon tat (vi du C:): "
+set "drive="
+set /p drive="Nhap ky tu o dia (Vi du C hoac C:): "
+if "%drive%"=="" goto :bitlocker
+
+:: Sua loi: Tu dong them dau hai cham neu nguoi dung chi nhap chu cai
+if "%drive:~-1%" NEQ ":" set "drive=%drive%:"
+
+echo [!] Dang tat BitLocker cho o %drive%...
+:: Sua loi: Su dung dau ngoat kep bao quanh bien de PowerShell hieu dung tham so
 powershell -command "Disable-BitLocker -MountPoint '%drive%'"
-echo.
-echo [!] Da gui lenh giai ma cho o %drive%.
+
+if %errorLevel% == 0 (
+    echo [OK] Da gui lenh giai ma thanh cong.
+) else (
+    echo [LOI] Khong the tat BitLocker. Kiem tra lai ten o dia hoac quyen Admin.
+)
 pause
 goto :bitlocker
 
