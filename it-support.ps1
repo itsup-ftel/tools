@@ -816,13 +816,35 @@ goto menu
 
 :installappfree
 cls
-echo =========================================
-echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
-echo =========================================
-set "APPS_LIST=Google Chrome|Google.Chrome;Firefox|Mozilla.Firefox;Coc Coc|ITVN.CocCoc;UniKey|PhamKimLong.UniKey;Zalo|Zalo.Zalo;WeChat|Tencent.WeChat;Synology Chat|Synology.ChatClient;MS Teams|Microsoft.Teams;OneDrive|Microsoft.OneDrive;Google Drive|Google.Drive;Evernote|Evernote.Evernote;Everything|voidtools.Everything;WinRAR|WinRAR.WinRAR;7-Zip|7zip.7zip;Notepad++|Notepad++.Notepad++;Foxit Reader|Foxit.FoxitReader;PDF24 Creator|PDF24.PDF24Creator;K-Lite Codec Full|CodecGuide.K-LiteCodecPack.Full;UltraViewer|UltraViewer.UltraViewer;Kaspersky Plus|Kaspersky.Kaspersky;CrystalDiskInfo|CrystalMarkSoftware.CrystalDiskInfo;CoreTemp|ALCPU.CoreTemp;Advanced IP Scanner|Famatech.AdvancedIPScanner;TreeSize Free|JAMSoftware.TreeSizeFree"
+echo %Y%[!] Dang kiem tra Winget...%Res%
+winget --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo %R%[!] Khong tim thay Winget. Dang tien hanh tai va cai dat...%Res%
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+        "$progressPreference = 'SilentlyContinue';" ^
+        "iwr https://github.com -OutFile winget.msixbundle;" ^
+        "Add-AppxPackage winget.msixbundle;" ^
+        "Remove-Item winget.msixbundle;"
+    echo %G%[OK] Da cai xong Winget. Vui long chay lai script!%Res%
+    pause
+    exit
+)
+
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$raw = '%APPS_LIST%';" ^
-    "$apps = $raw.Split(';') | ForEach-Object { $s = $_.Split('|'); [PSCustomObject]@{Name=$s[0]; ID=$s[1]} };" ^
+    "$apps = @(" ^
+    "@{Name='Google Chrome';ID='Google.Chrome'};@{Name='Firefox';ID='Mozilla.Firefox'};" ^
+    "@{Name='Coc Coc';ID='ITVN.CocCoc'};@{Name='UniKey';ID='PhamKimLong.UniKey'};" ^
+    "@{Name='Zalo';ID='Zalo.Zalo'};@{Name='WeChat';ID='Tencent.WeChat'};" ^
+    "@{Name='Synology Chat';ID='Synology.ChatClient'};@{Name='MS Teams';ID='Microsoft.Teams'};" ^
+    "@{Name='OneDrive';ID='Microsoft.OneDrive'};@{Name='Google Drive';ID='Google.Drive'};" ^
+    "@{Name='Evernote';ID='Evernote.Evernote'};@{Name='Everything';ID='voidtools.Everything'};" ^
+    "@{Name='WinRAR';ID='WinRAR.WinRAR'};@{Name='7-Zip';ID='7zip.7zip'};" ^
+    "@{Name='Notepad++';ID='Notepad++.Notepad++'};@{Name='Foxit PDF Reader';ID='Foxit.FoxitReader'};" ^
+    "@{Name='PDF24 Creator';ID='PDF24.PDF24Creator'};@{Name='K-Lite Codec Full';ID='CodecGuide.K-LiteCodecPack.Full'};" ^
+    "@{Name='UltraViewer';ID='UltraViewer.UltraViewer'};@{Name='Kaspersky Plus';ID='Kaspersky.Kaspersky'};" ^
+    "@{Name='CrystalDiskInfo';ID='CrystalMarkSoftware.CrystalDiskInfo'};@{Name='CoreTemp';ID='ALCPU.CoreTemp'};" ^
+    "@{Name='Advanced IP Scanner';ID='Famatech.AdvancedIPScanner'};@{Name='TreeSize Free';ID='JAMSoftware.TreeSizeFree'}" ^
+    ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
     "    echo \"$env:C   ================================ DANH SACH UNG DUNG (Winget) ================================   $env:Res\";" ^
@@ -841,24 +863,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    echo \"      $env:G A. Cai TAT CA $env:Res | $env:Y U. Update ALL $env:Res | $env:R Q. THOAT $env:Res\";" ^
     "    echo \"$env:C   --------------------------------------------------------------------------------------------   $env:Res\";" ^
     "    $input = Read-Host '   Nhap lua chon';" ^
-    "    if ($input -eq 'q') { break };" ^
+    "    if ($input -eq 'q') { break } " ^
     "    $targets = $null;" ^
-    "    if ($input -eq 'a') { $targets = $apps }" ^
+    "    if ($input -eq 'a') { $targets = $apps } " ^
     "    elseif ($input -eq 'u') {" ^
-    "        echo \"`n$env:Y   [!] Dang nang cap tat ca...$env:Res\";" ^
+    "        echo \"`n$env:Y   [!] Dang quet va cap nhat tat ca app tren may...$env:Res\";" ^
     "        winget upgrade --all --silent --accept-package-agreements;" ^
     "    } else {" ^
     "        try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { }" ^
     "    };" ^
     "    if ($targets) {" ^
-    "        foreach ($app in $targets) { if ($app) {" ^
+    "        foreach ($app in $targets) { if ($app) { " ^
     "            echo \"`n$env:Y   [>] Dang xu ly: $($app.Name)...$env:Res\";" ^
     "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "        } }" ^
     "    };" ^
-    "    echo \"`n$env:C   [*] Dang don dep file tam...$env:Res\";" ^
-    "    winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "    echo \"$env:G   [OK] Xong! Quay lai menu...$env:Res\";" ^
+    "    echo \"`n$env:C   [*] Dang don dep logs...$env:Res\";" ^
+    "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $path) { Remove-Item -Path \"$path\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
+    "    echo \"$env:G   [OK] Hoan tat! Quay lai menu...$env:Res\";" ^
     "    Start-Sleep -Seconds 2;" ^
     "}"
 pause
