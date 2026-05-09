@@ -104,7 +104,7 @@ goto menu
 :bitlocker
 cls
 echo ======================================================
-echo           CONG CU QUAN LY BITLOCKER
+echo           %Y%[ CONG CU QUAN LY BITLOCKER]%Res%
 echo ======================================================
 echo 1. Kiem tra trang thai BitLocker tat ca o dia
 echo 2. Tat Bitlocker cho 1 o dia cu the (Vi du: C:)
@@ -121,6 +121,7 @@ if "%choice%"=="4" goto :monitor
 if "%choice%"=="5" goto menu
 goto :bitlocker
 
+
 :status
 echo.
 echo --- TRANG THAI BITLOCKER ---
@@ -133,25 +134,19 @@ set "drive="
 set /p drive="Nhap ky tu o dia (Vi du C hoac C:): "
 if "%drive%"=="" goto :bitlocker
 
-:: Sua loi: Tu dong them dau hai cham neu nguoi dung chi nhap chu cai
+:: Tu dong them dau hai cham neu thieu
 if "%drive:~-1%" NEQ ":" set "drive=%drive%:"
 
-echo [!] Dang tat BitLocker cho o %drive%...
-:: Sua loi: Su dung dau ngoat kep bao quanh bien de PowerShell hieu dung tham so
-powershell -command "Disable-BitLocker -MountPoint '%drive%'"
-
-if %errorLevel% == 0 (
-    echo [OK] Da gui lenh giai ma thanh cong.
-) else (
-    echo [LOI] Khong the tat BitLocker. Kiem tra lai ten o dia hoac quyen Admin.
-)
+echo [!] Dang kiem tra o %drive%...
+:: Kiem tra trang thai truoc khi tat de tranh loi 0x80310008
+powershell -command "$v = Get-BitLockerVolume -MountPoint '%drive%'; if ($v.ProtectionStatus -eq 'On') { Disable-BitLocker -MountPoint '%drive%'; Write-Host '[OK] Da bat dau giai ma o %drive%.' -ForegroundColor Green } else { Write-Host '[!] O %drive% hien dang TAT BitLocker, khong can giai ma.' -ForegroundColor Yellow }"
 pause
 goto :bitlocker
 
 :disable_all
 echo.
-echo [!] Dang tat BitLocker cho tat ca cac o dia dang bao ve...
-powershell -command "$vols = Get-BitLockerVolume | Where-Object { $_.ProtectionStatus -eq 'On' }; if ($vols) { Disable-BitLocker -MountPoint $vols; Write-Host 'Da kich hoat giai ma.' -ForegroundColor Green } else { Write-Host 'Khong co o dia nao dang bat.' -ForegroundColor Yellow }"
+echo [!] Dang kiem tra tat ca cac o dia...
+powershell -command "$vols = Get-BitLockerVolume | Where-Object { $_.ProtectionStatus -eq 'On' }; if ($vols) { Disable-BitLocker -MountPoint $vols; Write-Host '[OK] Da kich hoat giai ma cho cac o dang bat.' -ForegroundColor Green } else { Write-Host '[!] Khong tim thay o dia nao dang bat BitLocker.' -ForegroundColor Yellow }"
 pause
 goto :bitlocker
 
@@ -160,7 +155,6 @@ echo.
 echo --- DANG THEO DOI (Nhan Ctrl+C de dung) ---
 powershell -command "while($true) { Clear-Host; Write-Host '--- Tien trinh giai ma (Nhan Ctrl+C de thoat) ---'; Get-BitLockerVolume | Select-Object MountPoint, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize; Start-Sleep -Seconds 5 }"
 goto :bitlocker
-
 
 :activeMAS
 cls
