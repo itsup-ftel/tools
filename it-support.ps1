@@ -821,54 +821,84 @@ goto menu
 
 :installappfree
 cls
-
-:: 2. Kiem tra Winget
+:: 2. Kiem tra va Tu dong cai dat Winget neu chua co
 winget --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo %Y%[!] Dang tai va cai dat Winget...%Res%
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "iwr https://github.com -OutFile w.msixbundle; Add-AppxPackage w.msixbundle; Remove-Item w.msixbundle"
-    echo %G%[OK] Da cai xong Winget. Vui long mo lai file!%Res%
-    pause & exit
+if %errorLevel% neq 0 (
+    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat Winget tu dong...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+        "$progressPreference = 'SilentlyContinue';" ^
+        "Write-Host 'Dang tai App Installer Bundle...' -ForegroundColor Cyan;" ^
+        "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
+        "Write-Host 'Dang cai dat...' -ForegroundColor Cyan;" ^
+        "Add-AppxPackage -Path .\winget.msixbundle;" ^
+        "Remove-Item .\winget.msixbundle;" ^
+        "Write-Host 'Da cai dat Winget thanh cong!' -ForegroundColor Green;"
+    
+    :: Kiem tra lai sau khi cai
+    winget --version >nul 2>&1
+    if %errorLevel% neq 0 (
+        echo [!] Co loi xay ra khi cai Winget. Vui long kiem tra ket noi mang.
+        pause
+        exit /b
+    )
 )
 
-:: 3. Chay PowerShell (Dinh dang 2 cot, tu dong don dep)
+:: 2. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{N='Google Chrome'; I='Google.Chrome'};@{N='Firefox'; I='Mozilla.Firefox'};" ^
-    "@{N='Coc Coc'; I='ITVN.CocCoc'};@{N='UniKey'; I='PhamKimLong.UniKey'};" ^
-    "@{N='Zalo'; I='Zalo.Zalo'};@{N='WeChat'; I='Tencent.WeChat'};" ^
-    "@{N='Synology Chat'; I='Synology.ChatClient'};@{N='MS Teams'; I='Microsoft.Teams'};" ^
-    "@{N='OneDrive'; I='Microsoft.OneDrive'};@{N='Google Drive'; I='Google.Drive'};" ^
-    "@{N='Evernote'; I='Evernote.Evernote'};@{N='Everything'; I='voidtools.Everything'};" ^
-    "@{N='WinRAR'; I='WinRAR.WinRAR'};@{N='7-Zip'; I='7zip.7zip'};" ^
-    "@{N='Notepad++'; I='Notepad++.Notepad++'};@{N='Foxit Reader'; I='Foxit.FoxitReader'};" ^
-    "@{N='PDF24 Creator'; I='PDF24.PDF24Creator'};@{N='K-Lite Codec Full'; I='CodecGuide.K-LiteCodecPack.Full'};" ^
-    "@{N='UltraViewer'; I='UltraViewer.UltraViewer'};@{N='Kaspersky Plus'; I='Kaspersky.Kaspersky'};" ^
-    "@{N='CrystalDiskInfo'; I='CrystalMarkSoftware.CrystalDiskInfo'};@{N='CoreTemp'; I='ALCPU.CoreTemp'};" ^
-    "@{N='Advanced IP Scan'; I='Famatech.AdvancedIPScanner'};@{N='TreeSize Free'; I='JAMSoftware.TreeSizeFree'}" ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
+    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
+    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
+    "@{Name='Everything (Search Tool)'; ID='voidtools.Everything'}," ^
+    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
+    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
+    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
+    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
+    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
+    "@{Name='Core Temp (CPU Temp)'; ID='ALCPU.CoreTemp'}," ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    echo \"$env:C   ======================== DANH SACH UNG DUNG (Winget) ========================   $env:Res\";" ^
-    "    $half = [math]::Ceiling($apps.Count / 2);" ^
-    "    for ($i=0; $i -lt $half; $i++) {" ^
-    "        $l = '{0,2}. {1}' -f ($i+1), $apps[$i].N;" ^
-    "        $rIdx = $i + $half;" ^
-    "        if ($rIdx -lt $apps.Count) { $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N; echo ($l.PadRight(45) + $r) } else { echo $l }" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
+    "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "    Write-Host '----------------------------------';" ^
+    "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
+    "    Write-Host 'U. CAP NHAT TOAN BO app tren may (Upgrade All)';" ^
+    "    Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
+    "    Write-Host '----------------------------------';" ^
+    "    $input = Read-Host 'Nhap lua chon (vi du: 1,3 hoac A, U, Q)';" ^
+    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
+    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
+    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
+    "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
+    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
+    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
+    "    if ($targets) {" ^
+    "        foreach ($app in $targets) { " ^
+    "            if ($app) { " ^
+    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "            } " ^
+    "        }" ^
     "    };" ^
-    "    echo \"$env:C   -----------------------------------------------------------------------------   $env:Res\";" ^
-    "    echo \"      $env:G A. Cai TAT CA $env:Res | $env:Y U. Update ALL May $env:Res | $env:R Q. THOAT $env:Res\";" ^
-    "    echo \"$env:C   -----------------------------------------------------------------------------   $env:Res\";" ^
-    "    $ans = Read-Host '   Nhap lua chon (vi du: 1,3,5)'; if ($ans -eq 'q') { break };" ^
-    "    $t = @(); if ($ans -eq 'a') { $t = $apps } " ^
-    "    elseif ($ans -eq 'u') { echo \"`n$env:Y   [!] Dang quet nang cap...$env:Res\"; winget upgrade --all --silent --accept-package-agreements } " ^
-    "    else { try { foreach ($idx in $ans.Split(',')) { $t += $apps[$idx.Trim()-1] } } catch {} };" ^
-    "    foreach ($a in $t) { if ($a) { echo \"`n$env:Y   [>] Dang xu ly: $($a.N)...$env:Res\"; winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements } };" ^
-    "    echo \"`n$env:C   [*] Dang don dep logs...$env:Res\";" ^
-    "    winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "    echo \"`n$env:G   [OK] Hoan tat! Quay lai menu...$env:Res\"; Start-Sleep 2;" ^
+    "    Write-Host '`nDang don dep cache va file tam...' -ForegroundColor Gray;" ^
+    "    winget --purged-all-download-cache >$null 2>&1;" ^
+    "    Write-Host '--- HOAN TAT! ---' -ForegroundColor Green;" ^
+    "    Start-Sleep -Seconds 2;" ^
     "}"
-
 pause
 goto menu
 
