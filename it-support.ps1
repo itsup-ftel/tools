@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -0-------------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -9-------------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -821,19 +821,6 @@ goto menu
 
 :installappfree
 cls
-:: 2. Kiem tra va Tu dong cai dat Winget
-winget --version >nul 2>&1
-if %errorLevel% neq 0 (
-    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-        "$progressPreference = 'SilentlyContinue';" ^
-        "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
-        "Add-AppxPackage -Path .\winget.msixbundle;" ^
-        "Remove-Item .\winget.msixbundle;"
-    echo [OK] Da kich hoat Winget.
-)
-
-:: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
@@ -870,32 +857,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
     "    Write-Host '----------------------------------';" ^
     "    $choice = Read-Host 'Nhap lua chon';" ^
-    "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
+    "    if ($choice -eq 'Q' -or $choice -choice -eq 'q') { break } " ^
     "    $targets = $null;" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
-    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
+    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
     "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
     "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
-    "                $check = winget list --id $app.ID -e 2>$null;" ^
-    "                if ($check -match $app.ID) {" ^
-    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
-    "                } else {" ^
-    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
-    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                }" ^
+    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
+    "    Write-Host '`n--- DANG XOA BO NHO DEM VA FILE CAI DAT TAM ---' -ForegroundColor Gray;" ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
+    "    Write-Host 'DA XOA FILE CAI DAT DA TAI!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 5;" ^
     "}"
 pause
