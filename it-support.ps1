@@ -149,7 +149,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    $validChoice = $false;" ^
     "    while(-not $validChoice) {" ^
     "        Clear-Host;" ^
-    "        Write-Host '--- QUAN LY UNG DUNG (10h9) ---' -ForegroundColor Cyan;" ^
+    "        Write-Host '--- QUAN LY UNG DUNG (10h15) ---' -ForegroundColor Cyan;" ^
     "        for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
@@ -168,7 +168,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            };" ^
     "            $validChoice = $true;" ^
     "        } catch {" ^
-    "            Write-Host 'Lua chon khong hop le!' -ForegroundColor Red;" ^
+    "            Write-Host 'Lua chon khong hop le! Vui long nhap lai.' -ForegroundColor Red;" ^
     "            Start-Sleep -Seconds 2;" ^
     "        }" ^
     "    }" ^
@@ -177,16 +177,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    } else {" ^
     "        foreach ($app in $targets) {" ^
     "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "            $sourceCheck = winget show --id $app.ID 2>$null;" ^
-    "            if (-not $sourceCheck) {" ^
-    "                Write-Host \"   [!] LOI: Khong tim thay source tai cho ID: $($app.ID) trong kho Winget!\" -ForegroundColor Red;" ^
-    "                continue;" ^
-    "            }" ^
     "            $list = winget list --id $app.ID -e 2>$null;" ^
     "            if ($list -match $app.ID) {" ^
     "                $updateInfo = winget upgrade --id $app.ID 2>$null;" ^
     "                if ($updateInfo -match 'No applicable update found' -or $updateInfo -match 'Khong tim thay ban cap nhat') {" ^
-    "                    Write-Host '   -> Ung dung da o phien ban moi nhat.' -ForegroundColor Green;" ^
+    "                    Write-Host '   -> Ung dung dang o phien ban moi nhat.' -ForegroundColor Green;" ^
     "                } else {" ^
     "                    $confirm = Read-Host \"   -> Da co ban moi! Ban co muon cap nhat $($app.Name) khong? (Y/N)\";" ^
     "                    if ($confirm -eq 'Y' -or $confirm -eq 'y') {" ^
