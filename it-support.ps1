@@ -594,8 +594,6 @@ echo [OK] Thao tac hoan tat!
 pause
 goto submenu
 
-
-
 :checkport
 cls
 :: 1. Tai tcping.exe vao System32
@@ -609,8 +607,9 @@ if not exist "C:\Windows\System32\tracetcp.exe" (
     echo [+] Dang tai tracetcp.exe vao System32...
     powershell -Command "Start-BitsTransfer -Source 'https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/tracetcp.exe' -Destination 'C:\Windows\System32\tracetcp.exe'"
 )
+cls
 echo ==========================================
-echo       CONG CU KIEM TRA KET NOI TCP
+echo     %Y%[CONG CU KIEM TRA KET NOI TCP]%Res%
 echo ==========================================
 echo 1. Chay TCPING (Ping lien tuc)
 echo 2. Chay TRACERTCP (Do duong tung chang)
@@ -820,19 +819,6 @@ cls
 echo =========================================
 echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
-@echo off
-setlocal enabledelayedexpansion
-title Bo cong cu Cai dat & Cap nhat App tu dong V9
-
-:: 1. Dinh nghia ma mau ANSI
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
-set "G=%ESC%[92m"
-set "Y=%ESC%[93m"
-set "C=%ESC%[96m"
-set "R=%ESC%[91m"
-set "Res=%ESC%[0m"
-
-:: 2. Vao menu cai dat App
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
