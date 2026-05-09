@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -1-------------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -0-------------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -838,8 +838,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
     "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'; AltID='ITVN.CocCoc'}," ^
-    "@{Name='UniKey'; ID='UniKey.UniKey'; AltID='PhamKimLong.UniKey'}," ^
+    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
+    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
     "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
     "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
     "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
@@ -855,14 +855,14 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'; AltID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo.Standard'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (TE) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
     "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
@@ -880,28 +880,23 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nKiem tra: $($app.Name)... \" -NoNewline -ForegroundColor Gray;" ^
-    "                $isInstalled = winget list --id $app.ID -e 2>$null;" ^
-    "                if ($app.AltID -and -not $isInstalled) { $isInstalled = winget list --id $app.AltID -e 2>$null }" ^
-    "                if ($isInstalled) {" ^
-    "                    Write-Host '[ DA CAI DAT ]' -ForegroundColor Green;" ^
+    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
+    "                $check = winget list --id $app.ID -e 2>$null;" ^
+    "                if ($check -match $app.ID) {" ^
+    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
     "                } else {" ^
-    "                    Write-Host '[ CHUA CO ]' -ForegroundColor Yellow;" ^
-    "                    Write-Host \"Dang thu tai ID: $($app.ID)...\" -ForegroundColor Cyan;" ^
-    "                    $process = winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                    if ($LASTEXITCODE -ne 0 -and $app.AltID) {" ^
-    "                        Write-Host \"Loi ID chính. Dang thu ID du phong: $($app.AltID)...\" -ForegroundColor DarkYellow;" ^
-    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                    }" ^
+    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
+    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
+    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "                }" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG XOA BO NHO DEM VA FILE CAI DAT TAM ---' -ForegroundColor Gray;" ^
+    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Start-Sleep -Seconds 5;" ^
     "}"
 pause
 goto menu
