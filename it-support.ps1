@@ -821,7 +821,7 @@ goto menu
 
 :installappfree
 cls
-:: 2. Kiem tra va Tu dong cai dat Winget neu chua co
+:: 2. Kiem tra va Tu dong cai dat Winget
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
     echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
@@ -852,7 +852,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
     "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
     "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
@@ -871,24 +871,32 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    Write-Host '----------------------------------';" ^
     "    $choice = Read-Host 'Nhap lua chon';" ^
     "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
+    "    $targets = $null;" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
-    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
+    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
     "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
     "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
-    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
+    "                $check = winget list --id $app.ID -e 2>$null;" ^
+    "                if ($check -match $app.ID) {" ^
+    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
+    "                } else {" ^
+    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
+    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
+    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                }" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI (DON RAC) ---' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache;" ^
+    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
+    "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'DA XOA FILE TAM VA BO NHO DEM!' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 2;" ^
+    "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
+    "    Start-Sleep -Seconds 3;" ^
     "}"
 pause
 goto menu
