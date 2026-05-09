@@ -855,7 +855,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
     "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
@@ -896,7 +896,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Start-Sleep -Seconds 5;" ^
     "}"
 pause
 goto menu
