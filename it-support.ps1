@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -123------------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -13------------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -114,33 +114,58 @@ if %errorLevel% neq 0 (
         "Remove-Item .\winget.msixbundle;"
     echo [OK] Da kich hoat Winget.
 )
+@echo off
+title Bo cong cu Cai dat & Cap nhat App tu dong V16
+setlocal enabledelayedexpansion
+
+:: 1. Kiem tra quyen Admin
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] Vui long chay script nay voi quyen Administrator!
+    pause
+    exit /b
+)
+
+:: 2. Kiem tra va Tu dong cai dat Winget
+winget --version >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+        "$progressPreference = 'SilentlyContinue';" ^
+        "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
+        "Add-AppxPackage -Path .\winget.msixbundle;" ^
+        "Remove-Item .\winget.msixbundle;"
+)
+
+:: Lam moi nguon tai de tranh treo
+winget source update >nul 2>&1
 
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
-    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'; AltID='Google.Chrome.Dev'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'; AltID='Mozilla.Firefox.ESR'}," ^
+    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'; AltID='ITVN.CocCoc'}," ^
+    "@{Name='UniKey'; ID='UniKey.UniKey'; AltID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'; AltID='Zalo.Zalo.Desktop'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'; AltID='Tencent.WeChat.Global'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'; AltID='Synology.Chat'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'; AltID='Microsoft.Teams.Classic'}," ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'; AltID='Google.GoogleDrive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything'; ID='voidtools.Everything'}," ^
-    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'; AltID='voidtools.Everything.Alpha'}," ^
+    "@{Name='WinRAR'; ID='RARLab.WinRAR'; AltID='WinRAR.WinRAR'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'; AltID='7zip.7zip.Alpha'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
-    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'; AltID='Foxit.Reader'}," ^
+    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'; AltID='PDF24.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'; AltID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
@@ -162,24 +187,28 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
-    "                $check = winget list --id $app.ID -e 2>$null;" ^
-    "                if ($check -match $app.ID) {" ^
-    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
+    "                Write-Host \"`nDang xu ly: $($app.Name)... \" -ForegroundColor Yellow;" ^
+    "                $check = winget list --id $app.ID -e 2>$null | Out-String;" ^
+    "                if ($check.Contains($app.ID)) {" ^
+    "                    Write-Host '-> Da co tren may. Bo qua.' -ForegroundColor Green;" ^
     "                } else {" ^
-    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
-    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                    Write-Host '-> Dang cai dat...' -ForegroundColor Cyan;" ^
+    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                    if ($LASTEXITCODE -ne 0 -and $app.AltID) {" ^
+    "                        Write-Host '-> Thu ID du phong...' -ForegroundColor DarkYellow;" ^
+    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                    }" ^
     "                }" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
+    "    Write-Host '`n--- DANG DON DEP CACHE ---' -ForegroundColor Gray;" ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Write-Host 'HOAN TAT!' -ForegroundColor Green;" ^
+    "    Start-Sleep -Seconds 2;" ^
     "}"
+
 pause
 goto menu
 
