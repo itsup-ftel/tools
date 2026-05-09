@@ -545,59 +545,86 @@ echo [OK] Thao tac hoan tat!
 pause
 goto submenu
 
-:checkport
+@echo off
+setlocal enabledelayedexpansion
 cls
-echo.
+
+:: 1. Kiem tra quyen Admin
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] BAN PHAI CHAY FILE NAY BANG QUYEN ADMIN.
+    pause
+    exit
+)
+
+:: 2. Tu dong tai tcping.exe neu chua co
+if not exist "tcping.exe" (
+    echo [!] Khong tim thay tcping.exe. Dang tai ve...
+    curl -L -o tcping.exe https://elifulkerson.com
+)
+
+:: 3. Tu dong tai tracetcp.exe neu chua co
+if not exist "tracetcp.exe" (
+    echo [!] Khong tim thay tracetcp.exe. Dang tai ve...
+    curl -L -o tracetcp.zip https://github.com
+    powershell -Command "Expand-Archive -Path tracetcp.zip -DestinationPath . -Force"
+    del tracetcp.zip
+)
+
+:checkport
 echo ==========================================
-echo   %Y%[ CONG CU TCPING ^& TRACERTCP]%Res%
+echo       CONG CU KIEM TRA KET NOI TCP
 echo ==========================================
-echo 1. Chay TCPING (Check ping qua Port)
-echo 2. Chay TRACERTCP (Check route qua Port)
-echo 3. Thoat ve Menu chinh
+echo 1. Chay TCPING (Ping lien tuc)
+echo 2. Chay TRACERTCP (Do duong tung chang)
+echo 3. CHAY DONG THOI CA 2 (2 Cua so moi)
+echo 4. Thoat ve Menu chinh
 echo ==========================================
-set /p choice="Chon chuc nang (1-3): "
+set "choice="
+set /p choice="Chon chuc nang (1-4): "
 
 if "%choice%"=="1" goto TCPING
 if "%choice%"=="2" goto TRACERTCP
-if "%choice%"=="3" goto menu
+if "%choice%"=="3" goto RUNBOTH
+if "%choice%"=="4" goto menu
 goto checkport
 
-
 :TCPING
-set /p target="Nhap dia chi (IP hoac Domain): "
+set "target="
+set /p target="Nhap IP/Domain: "
+if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
-echo.
-echo Dang kiem tra %target%:%port%...
-
-:: Chay PowerShell va tra ve ket qua rut gon
-powershell -Command "$result = Test-NetConnection -ComputerName %target% -Port %port% -WarningAction SilentlyContinue; if ($result.TcpTestSucceeded) { Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green } else { Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red }"
-
-echo.
+tcping.exe -t %target% %port%
 pause
 goto checkport
 
 :TRACERTCP
 set "target="
-set /p target="Nhap IP hoac Domain: "
+set /p target="Nhap IP/Domain: "
 if not defined target goto checkport
 set /p port="Nhap Port (mac dinh 80): "
 if "%port%"=="" set port=80
-echo.
-echo [TRACERTCP] Dang do duong den %target%...
-echo (Luu y: Hien thi IP tung chang truoc, sau do moi check Port dich)
-echo ------------------------------------------------------------
-
-:: Buoc 1: Dung tracert he thong de lay lo trinh (tranh loi tham so PowerShell)
-tracert -d -h 30 %target%
-
-echo.
-echo ------------------------------------------------------------
-echo [CHECK CUOI CUNG] Trang thai Port dich %port%:
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$t=Test-NetConnection -ComputerName '%target%' -Port %port% -ErrorAction SilentlyContinue; if($t.TcpTestSucceeded){Write-Host 'KET QUA: OPEN (TRUE)' -ForegroundColor Green}else{Write-Host 'KET QUA: CLOSE (FAIL)' -ForegroundColor Red}"
-echo.
+tracetcp.exe %target%:%port% -m 30
 pause
 goto checkport
+
+:RUNBOTH
+set "target="
+set /p target="Nhap IP/Domain: "
+if not defined target goto checkport
+set /p port="Nhap Port (mac dinh 80): "
+if "%port%"=="" set port=80
+
+echo [!] Dang mo 2 cua so moi...
+:: Mo cua so 1 cho TCPING
+start "TCPING - %target%:%port%" cmd /k "tcping.exe -t %target% %port%"
+:: Mo cua so 2 cho TRACERTCP
+start "TRACETCP - %target%:%port%" cmd /k "tracetcp.exe %target%:%port% -m 30"
+
+echo [+] Da kich hoat xong.
+pause
+goto menu
 
 :wifiPass
 cls
@@ -756,20 +783,6 @@ cls
 echo =========================================
 echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
-@echo off
-setlocal enabledelayedexpansion
-mode con: cols=120 lines=30
-title Bo cong cu Cai dat App V10 - Fixed
-
-:: 1. Định nghĩa màu ANSI cho phần CMD
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
-set "G=%ESC%[92m"
-set "Y=%ESC%[93m"
-set "C=%ESC%[96m"
-set "R=%ESC%[91m"
-set "Res=%ESC%[0m"
-
-:: 2. Chạy trực tiếp bằng PowerShell (viết dưới dạng Script Block để tránh lỗi dấu nháy)
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{N='Google Chrome'; I='Google.Chrome'}, @{N='Firefox'; I='Mozilla.Firefox'}," ^
