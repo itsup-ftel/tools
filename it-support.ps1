@@ -147,33 +147,37 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (9h51) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- QUAN LY UNG DUNG (10h) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
-    "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
-    "    Write-Host 'U. CAP NHAT TOAN BO app tren may (Upgrade All)';" ^
-    "    Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
-    "    Write-Host '----------------------------------';" ^
-    "    $choice = Read-Host 'Nhap lua chon';" ^
-    "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
+    "    Write-Host 'Nhập số (vd: 1,4,5), chữ A (Tất cả), chữ U (Update hết máy) hoặc Q (Thoát)';" ^
+    "    $choice = Read-Host 'Lua chon cua ban';" ^
+    "    if ($choice -eq 'Q' -or $choice -eq 'q') { break };" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
-    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
+    "        Write-Host '`nDang kiem tra cap nhat toan bo he thong...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
+    "        continue;" ^
     "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
     "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
-    "        foreach ($app in $targets) { " ^
-    "            if ($app) { " ^
-    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "        foreach ($app in $targets) {" ^
+    "            if (-not $app) { continue };" ^
+    "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
+    "            $check = winget list --id $app.ID -e;" ^
+    "            if ($check -match $app.ID) {" ^
+    "                Write-Host \"[!] App da co tren may. Dang kiem tra ban cap nhat...\" -ForegroundColor Yellow;" ^
+    "                winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements;" ^
+    "            } else {" ^
+    "                Write-Host \"[+] App chua co. Dang tien hanh tai va cai dat...\" -ForegroundColor Green;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "            } " ^
+    "            }" ^
     "        }" ^
-    "    };" ^
-    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI (DON RAC) ---' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache;" ^
-    "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'DA XOA FILE TAM VA BO NHO DEM!' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 5;" ^
+    "        Write-Host '`n--- DANG DON DEP HE THONG ---' -ForegroundColor Gray;" ^
+    "        winget --purged-all-download-cache;" ^
+    "        Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
+    "        Write-Host 'HOAN TAT: Da cai dat/cap nhat va don rac!' -ForegroundColor Green;" ^
+    "        Start-Sleep -Seconds 3;" ^
+    "    }" ^
     "}"
 pause
 goto menu
