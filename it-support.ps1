@@ -35,7 +35,7 @@ echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
 echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
-echo      %G%6.%Res% App                  %G%12.%Res% Liet ke Task        %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%6.%Res% App                  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. MO NHANH 1 ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI NHANH ]%Res%
 echo.
@@ -793,47 +793,36 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
     "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}," ^
-    "@{Name='CoreTemp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='Advanced IP Scanner'; ID='Famatech.AdvancedIPScanner'}," ^
-    "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}" ^
+    "@{Name='CrystalDiskInfo (Check o cung)'; ID='CrystalMarkSoftware.CrystalDiskInfo'}," ^
+    "@{Name='CoreTemp (Nhiet do CPU)'; ID='ALCPU.CoreTemp'}," ^
+    "@{Name='Advanced IP Scanner (Scan Port)'; ID='Famatech.AdvancedIPScanner'}," ^
+    "@{Name='TreeSize Free (Quet dung luong)'; ID='JAMSoftware.TreeSizeFree'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    echo \"$env:C   ================================ DANH SACH UNG DUNG (Winget) ================================   $env:Res\";" ^
-    "    echo '';" ^
-    "    $half = [math]::Ceiling($apps.Count / 2);" ^
-    "    for ($i=0; $i -lt $half; $i++) {" ^
-    "        $left = '{0,2}. {1}' -f ($i+1), $apps[$i].Name;" ^
-    "        $rightIndex = $i + $half;" ^
-    "        if ($rightIndex -lt $apps.Count) {" ^
-    "            $right = '{0,2}. {1}' -f ($rightIndex+1), $apps[$rightIndex].Name;" ^
-    "            echo ($left.PadRight(50) + $right);" ^
-    "        } else { echo $left }" ^
-    "    };" ^
-    "    echo '';" ^
-    "    echo \"$env:C   --------------------------------------------------------------------------------------------   $env:Res\";" ^
-    "    echo \"      $env:G A. Cai/Upgrade TAT CA $env:Res | $env:Y U. Update ALL May $env:Res | $env:R Q. THOAT $env:Res\";" ^
-    "    echo \"$env:C   --------------------------------------------------------------------------------------------   $env:Res\";" ^
-    "    $input = Read-Host '   Nhap lua chon cua ban (vi du: 1,3,10)'; " ^
+    "    echo \"$env:C--- MENU CAI DAT & CAP NHAT ---$env:Res\";" ^
+    "    for ($i=0; $i -lt $apps.Count; $i++) { echo (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "    echo '----------------------------------';" ^
+    "    echo \"$env:G A. Cai dat/Nang cap TAT CA danh sach$env:Res\";" ^
+    "    echo \"$env:Y U. CAP NHAT TOAN BO app tren may (Upgrade All)$env:Res\";" ^
+    "    echo \"$env:R Q. THOAT CHUONG TRINH$env:Res\";" ^
+    "    echo '----------------------------------';" ^
+    "    $input = Read-Host 'Nhap lua chon cua ban';" ^
     "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
-    "    $targets = $null;" ^
-    "    if ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
-    "    elseif ($input -eq 'U' -or $input -eq 'u') {" ^
-    "        echo \"`n$env:Y   [!] Dang quet va cap nhat tat ca app tren may...$env:Res\";" ^
+    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
+    "        echo \"`n$env:Y Dang cap nhat tat ca app...$env:Res\";" ^
     "        winget upgrade --all --silent --accept-package-agreements;" ^
-    "    } else {" ^
-    "        try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { }" ^
-    "    };" ^
+    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
+    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { if ($app) { " ^
-    "            echo \"`n$env:Y   [>] Dang xu ly: $($app.Name)...$env:Res\";" ^
+    "            echo \"`n$env:Y Dang xu ly: $($app.Name)...$env:Res\";" ^
     "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "        } }" ^
     "    };" ^
-    "    echo \"`n$env:C   [*] Dang don dep file tam va logs...$env:Res\";" ^
+    "    echo \"`n$env:C Dang don dep file tam va logs...$env:Res\";" ^
     "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $path) { Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "    echo \"$env:G   [OK] Hoan tat! Quay lai menu...$env:Res\";" ^
+    "    echo \"$env:G --- HOAN TAT! Quay lai menu sau 2 giay...$env:Res\";" ^
     "    Start-Sleep -Seconds 2;" ^
     "}"
 pause
