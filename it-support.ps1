@@ -166,7 +166,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
     "        Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
     "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
-    "        if ($choice -eq 'Q' -or $choice -eq 'q') { exit } " ^
+    "        if ($choice -eq 'Q' -or $choice -eq 'q') { return } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
     "        if ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps; $validChoice = $true; break } " ^
     "        try {" ^
