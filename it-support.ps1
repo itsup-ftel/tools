@@ -772,20 +772,15 @@ echo =========================================
 echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$apps = @(" ^
-    "@{N='Google Chrome'; I='Google.Chrome'}, @{N='Firefox'; I='Mozilla.Firefox'}," ^
-    "@{N='Coc Coc'; I='ITVN.CocCoc'}, @{N='UniKey'; I='PhamKimLong.UniKey'}," ^
-    "@{N='Zalo'; I='Zalo.Zalo'}, @{N='WeChat'; I='Tencent.WeChat'}," ^
-    "@{N='Synology Chat'; I='Synology.ChatClient'}, @{N='MS Teams'; I='Microsoft.Teams'}," ^
-    "@{N='OneDrive'; I='Microsoft.OneDrive'}, @{N='Google Drive'; I='Google.Drive'}," ^
-    "@{N='Evernote'; I='Evernote.Evernote'}, @{N='Everything'; I='voidtools.Everything'}," ^
-    "@{N='WinRAR'; I='WinRAR.WinRAR'}, @{N='7-Zip'; I='7zip.7zip'}," ^
-    "@{N='Notepad++'; I='Notepad++.Notepad++'}, @{N='Foxit Reader'; I='Foxit.FoxitReader'}," ^
-    "@{N='PDF24 Creator'; I='PDF24.PDF24Creator'}, @{N='K-Lite Codec'; I='CodecGuide.K-LiteCodecPack.Full'}," ^
-    "@{N='UltraViewer'; I='UltraViewer.UltraViewer'}, @{N='Kaspersky Plus'; I='Kaspersky.Kaspersky'}," ^
-    "@{N='CrystalDiskInfo'; I='CrystalMarkSoftware.CrystalDiskInfo'}, @{N='CoreTemp'; I='ALCPU.CoreTemp'}," ^
-    "@{N='Advanced IP Scanner'; I='Famatech.AdvancedIPScanner'}, @{N='TreeSize Free'; I='JAMSoftware.TreeSizeFree'}" ^
+    "$list = @(" ^
+    "'Google Chrome|Google.Chrome', 'Firefox|Mozilla.Firefox', 'Coc Coc|ITVN.CocCoc', 'UniKey|PhamKimLong.UniKey'," ^
+    "'Zalo|Zalo.Zalo', 'WeChat|Tencent.WeChat', 'Synology Chat|Synology.ChatClient', 'MS Teams|Microsoft.Teams'," ^
+    "'OneDrive|Microsoft.OneDrive', 'Google Drive|Google.Drive', 'Evernote|Evernote.Evernote', 'Everything|voidtools.Everything'," ^
+    "'WinRAR|WinRAR.WinRAR', '7-Zip|7zip.7zip', 'Notepad++|Notepad++.Notepad++', 'Foxit Reader|Foxit.FoxitReader'," ^
+    "'PDF24 Creator|PDF24.PDF24Creator', 'K-Lite Codec|CodecGuide.K-LiteCodecPack.Full', 'UltraViewer|UltraViewer.UltraViewer', 'Kaspersky Plus|Kaspersky.Kaspersky'," ^
+    "'CrystalDiskInfo|CrystalMarkSoftware.CrystalDiskInfo', 'CoreTemp|ALCPU.CoreTemp', 'Advanced IP Scan|Famatech.AdvancedIPScanner', 'TreeSize Free|JAMSoftware.TreeSizeFree'" ^
     ");" ^
+    "$apps = foreach($i in $list){ $s=$i.Split('|'); [PSCustomObject]@{N=$s[0]; I=$s[1]} };" ^
     "while($true) {" ^
     "  Clear-Host;" ^
     "  echo '%C%   ========================= DANH SACH UNG DUNG (Winget) =========================%Res%';" ^
@@ -793,14 +788,22 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "  for ($i=0; $i -lt $half; $i++) {" ^
     "    $l = '{0,2}. {1}' -f ($i+1), $apps[$i].N;" ^
     "    $rIdx = $i + $half;" ^
-    "    if ($rIdx -lt $apps.Count) { $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N; echo ($l.PadRight(45) + $r) } else { echo $l }" ^
+    "    if ($rIdx -lt $apps.Count) {" ^
+    "       $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N;" ^
+    "       echo ($l.PadRight(45) + $r);" ^
+    "    } else { echo $l }" ^
     "  };" ^
     "  echo '%C%   -------------------------------------------------------------------------------%Res%';" ^
     "  echo '      %G%A. Cai TAT CA%Res%  |  %Y%U. Cap nhat ALL may%Res%  |  %R%Q. THOAT%Res%';" ^
+    "  echo '   -------------------------------------------------------------------------------';" ^
     "  $ans = Read-Host '   Chon so (vd: 1,3,5)'; if ($ans -eq 'q') { break };" ^
-    "  $t = @(); if ($ans -eq 'a') { $t = $apps } elseif ($ans -eq 'u') { echo \"`n%Y%[!] Dang quet nang cap...%Res%\"; winget upgrade --all --silent --accept-package-agreements } " ^
-    "  else { try { foreach ($idx in $ans.Split(',')) { $t += $apps[$idx.Trim()-1] } } catch {} };" ^
-    "  foreach ($a in $t) { if ($a) { echo \"`n%Y%[>] Dang cai: $($a.N)...%Res%\"; winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements } };" ^
+    "  $t = @(); if ($ans -eq 'a') { $t = $apps } " ^
+    "  elseif ($ans -eq 'u') { echo \"`n%Y%[!] Dang quet nang cap...%Res%\"; winget upgrade --all --silent --accept-package-agreements } " ^
+    "  else { foreach ($idx in $ans.Split(',')) { if($idx.Trim() -match '^\d+$') { $t += $apps[$idx.Trim()-1] } } };" ^
+    "  foreach ($a in $t) { if ($a) { " ^
+    "    echo \"`n%Y%[>] Dang xu ly: $($a.N)...%Res%\"; " ^
+    "    winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements " ^
+    "  } };" ^
     "  echo \"`n%C%[!] Dang don dep logs...%Res%\";" ^
     "  winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
     "  echo '%G%[OK] Xong! Quay lai menu...%Res%'; Start-Sleep 2" ^
