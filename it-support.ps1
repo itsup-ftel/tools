@@ -41,8 +41,8 @@ echo     %C%[ 5. MO NHANH 1 ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%--%Res% ---------------
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
-echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%35.%Res% Tool PDF Editor      %G%--%Res% ---------------
-echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Ung dung mien phi    %G%--%Res% ---------------
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Tool PDF Editor      %G%--%Res% ---------------
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%--%Res% -------------------   %G%--%Res% ---------------
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
@@ -86,7 +86,7 @@ if /i "%opt%"=="33" start wf.msc & goto menu
 if /i "%opt%"=="34" start Appwiz.cpl & goto menu
 if /i "%opt%"=="35" goto MENU_OFFICE
 if /i "%opt%"=="36" goto activeMAS
-if /i "%opt%"=="37" goto
+if /i "%opt%"=="37" goto installappfree
 if /i "%opt%"=="38" goto
 if /i "%opt%"=="39" goto
 if /i "%opt%"=="40" goto
@@ -748,6 +748,62 @@ goto menu
 cls
 echo %C%[ CHI TIET MAY IN ]%Res%
 powershell -command "Get-Printer | Select-Object Name, DriverName, PortName, Shared"
+pause
+goto menu
+
+:installappfree
+cls
+echo =========================================
+echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
+echo =========================================
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$apps = @(" ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
+    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
+    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
+    "@{Name='Everything (Search Tool)'; ID='voidtools.Everything'}," ^
+    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
+    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
+    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
+    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
+    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}" ^
+    ");" ^
+    "Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
+    "for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "Write-Host '----------------------------------';" ^
+    "Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
+    "Write-Host 'U. CAP NHAT TOAN BO app tren may (Upgrade All)';" ^
+    "Write-Host 'C. DON RAC he thong sau khi cai xong';" ^
+    "Write-Host '----------------------------------';" ^
+    "$input = Read-Host 'Nhap lua chon (vi du: 1,3,20 hoac A, U, C)';" ^
+    "if ($input -eq 'U' -or $input -eq 'u') {" ^
+    "    Write-Host '`nDang quet va cap nhat tat ca phan mem...' -ForegroundColor Magenta;" ^
+    "    winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
+    "} elseif ($input -eq 'C' -or $input -eq 'c') {" ^
+    "    Write-Host '`nDang don dep file tam va thung rac...' -ForegroundColor Green;" ^
+    "    cleanmgr /sagerun:1;" ^
+    "} elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
+    "else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { Write-Host 'Loi nhap lieu!' -ForegroundColor Red } };" ^
+    "if ($targets) {" ^
+    "    foreach ($app in $targets) { " ^
+    "        if ($app) { " ^
+    "            Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "        } " ^
+    "    }" ^
+    "};" ^
+    "Write-Host '`n--- HOAN THANH ---' -ForegroundColor Green;"
 pause
 goto menu
 
