@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----3432-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----432-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -190,7 +190,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        }" ^
     "    }" ^
     "    Write-Host '`n--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
-    "    winget --purge-all-download-cache;" ^
+    "    winget cache reset --force;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT CAI DAT!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 3;" ^
@@ -411,7 +411,7 @@ goto menu
 :ramInfo
 cls
 echo %C%[ THONG TIN PHAN CUNG CHI TIET RAM]%Res%
-powershell -Command "$TotalSlots = (Get-WmiObject -Class 'Win32_PhysicalMemoryArray').MemoryDevices; $UsedSlots = Get-WmiObject -Class 'Win32_PhysicalMemory'; $CurrentUsedCount = ($UsedSlots | Measure-Object).Count; $FreeSlots = $TotalSlots - $CurrentUsedCount; Write-Host '`n--- TONG QUAN HE THONG KHE CAM ---' -ForegroundColor Cyan; Write-Host 'Tong so khe ho tro : $TotalSlots'; Write-Host 'So khe da su dung  : $CurrentUsedCount'; Write-Host 'So khe con trong   : $FreeSlots' -ForegroundColor Yellow; Write-Host '`n--- CHI TIET THONG SO RAM ---' -ForegroundColor Cyan; $UsedSlots | Select-Object @{Name='Vi tri (Slot)'; Expression={$_.DeviceLocator}}, @{Name='Dung luong (GB)'; Expression={$_.Capacity / 1GB}}, @{Name='Toc do (Speed)'; Expression={'$($_.Speed) MHz'}}, @{Name='Nha san xuat'; Expression={$_.Manufacturer}}, @{Name='So hieu (Part Number)'; Expression={$_.PartNumber.Trim()}}, @{Name='Loai RAM'; Expression={switch($_.MemoryType){0{'Unknown'} 20{'DDR'} 21{'DDR2'} 24{'DDR3'} 26{'DDR4'} default{'DDR4/DDR5/Other'}}}} | Format-Table -AutoSize; Write-Host '--------------------------------------------------`n'"
+powershell -Command "$m = Get-CimInstance Win32_PhysicalMemory; $a = Get-CimInstance Win32_PhysicalMemoryArray; $used = ($m | Measure-Object).Count; $total = $a.MemoryDevices; Write-Host '`n[ HE THONG KHE CAM ]' -Fore Cyan; Write-Host ('Tong: ' + $total + ' | Da cam: ' + $used + ' | Trong: ' + ($total - $used)) -Fore Yellow; Write-Host '`n[ CHI TIET TUNG THANH ]' -Fore Cyan; $m | Select-Object @{N='Khe (Slot)';E={$_.DeviceLocator}}, @{N='Dung luong (GB)';E={$_.Capacity/1GB}}, @{N='Toc do (MHz)';E={$_.ConfiguredClockSpeed}}, @{N='Hang';E={$_.Manufacturer}}, @{N='Seri';E={$_.PartNumber.Trim()}} | Format-Table -AutoSize"
 pause
 goto menu
 
