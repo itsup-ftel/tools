@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -2-------------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -3-------------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -836,29 +836,29 @@ if %errorLevel% neq 0 (
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
-    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'; AltID='Google.Chrome.Dev'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'; AltID='Mozilla.Firefox.ESR'}," ^
+    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'; AltID='ITVN.CocCoc'}," ^
+    "@{Name='UniKey'; ID='UniKey.UniKey'; AltID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'; AltID='Zalo.Zalo.Desktop'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'; AltID='Tencent.WeChat.Global'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'; AltID='Synology.Chat'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'; AltID='Microsoft.Teams.Classic'}," ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'; AltID='Google.GoogleDrive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything'; ID='voidtools.Everything'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'; AltID='voidtools.Everything.Alpha'}," ^
     "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'; AltID='7zip.7zip.Alpha'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
-    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'; AltID='Foxit.Reader'}," ^
+    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'; AltID='PDF24.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'; AltID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo.Standard'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
