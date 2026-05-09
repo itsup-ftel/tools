@@ -833,10 +833,6 @@ if %errorLevel% neq 0 (
     echo [OK] Da kich hoat Winget.
 )
 
-:: 2. Lam moi nguon tai de tranh loi "Source not found"
-echo Dang lam moi danh sach nguon tai (Winget Source)...
-winget source reset --force >nul 2>&1
-
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
