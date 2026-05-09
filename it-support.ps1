@@ -33,9 +33,9 @@ echo.
 echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
-echo      %G%4.%Res% Danh sach User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
+echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
 echo      %G%5.%Res% App da cai dat       %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ---------------
-echo      %G%6.%Res% App                  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%6.%Res% Kiem tra Bitlocker   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. MO NHANH 1 ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
 echo.
@@ -55,7 +55,7 @@ if /i "%opt%"=="2" goto hddInfo
 if /i "%opt%"=="3" goto ramInfo
 if /i "%opt%"=="4" goto listUsers
 if /i "%opt%"=="5" goto listapp
-if /i "%opt%"=="6" goto 
+if /i "%opt%"=="6" goto bitlocker
 if /i "%opt%"=="7" goto cleanJunk
 if /i "%opt%"=="8" goto repairSys
 if /i "%opt%"=="9" goto killTaskres
