@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ------10-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ------100-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -149,13 +149,23 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    $validChoice = $false;" ^
     "    while(-not $validChoice) {" ^
     "        Clear-Host;" ^
+    "        Write-Host '--- DANG QUET HE THONG... ---' -ForegroundColor Yellow;" ^
+    "        $installedList = winget list --accept-source-agreements | Out-String;" ^
+    "        Clear-Host;" ^
     "        Write-Host '--- DANH SACH UNG DUNG (OFFICIAL) ---' -ForegroundColor Cyan;" ^
-    "        for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "        Write-Host '([✔] : Ung dung da co tren may)' -ForegroundColor Green;" ^
+    "        for ($i=0; $i -lt $apps.Count; $i++) {" ^
+    "            if ($installedList -like \"*$($apps[$i].ID)*\") {" ^
+    "                Write-Host (('{0,2}. [✔] {1}' -f ($i+1), $apps[$i].Name)) -ForegroundColor Green;" ^
+    "            } else {" ^
+    "                Write-Host (('{0,2}. [  ] {1}' -f ($i+1), $apps[$i].Name));" ^
+    "            }" ^
+    "        };" ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
     "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
     "        Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
-        "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
+    "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
     "        if ($choice -eq 'Q' -or $choice -eq 'q') { exit } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
     "        if ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps; $validChoice = $true; break } " ^
@@ -168,8 +178,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            };" ^
     "            $validChoice = $true;" ^
     "        } catch {" ^
-    "            Write-Host 'Lua chon khong hop le! Vui long nhap lai so trong danh sach.' -ForegroundColor Red;" ^
-    "            Start-Sleep -Seconds 3;" ^
+    "            Write-Host 'Lua chon khong hop le!' -ForegroundColor Red;" ^
+    "            Start-Sleep -Seconds 2;" ^
     "        }" ^
     "    }" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
@@ -178,19 +188,24 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    } else {" ^
     "        foreach ($app in $targets) {" ^
     "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "            $isInstalled = winget list --id $app.ID -e 2>$null;" ^
+    "            $isInstalled = winget list --id $app.ID -e --accept-source-agreements 2>$null;" ^
     "            if ($isInstalled -match $app.ID) {" ^
-    "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
-    "                winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                Write-Host '   -> Da co. Dang kiem tra phien ban moi...' -ForegroundColor Yellow;" ^
+    "                $updateResult = winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements 2>$null;" ^
+    "                if ($updateResult -match 'No available upgrade found') {" ^
+    "                    Write-Host '   -> Ung dung da o phien ban moi nhat!' -ForegroundColor Blue;" ^
+    "                } else {" ^
+    "                    Write-Host \"   -> Nang cap $($app.Name) thanh cong!\" -ForegroundColor Green;" ^
+    "                }" ^
     "            } else {" ^
-    "                Write-Host \" Chua co, dang tai va cai dat $($app.Name)...\" -ForegroundColor Red;" ^
+    "                Write-Host \"   -> Chua co, dang tai va cai dat...\" -ForegroundColor Red;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                Write-Host \" Da cai dat $($app.Name) hoan tat!\" -ForegroundColor Green;" ^
+    "                Write-Host \"   -> Da cai dat $($app.Name) hoan tat!\" -ForegroundColor Green;" ^
     "            }" ^
     "        }" ^
     "    }" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'Xoa rac va quay lai menu!' -ForegroundColor Green;" ^
+    "    Write-Host '`nXoa rac va quay lai menu!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
