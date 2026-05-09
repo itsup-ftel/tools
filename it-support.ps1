@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% --------76-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ------5176-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -156,7 +156,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
     "        Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
     "        Write-Host '----------------------------------';" ^
-    "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
+    "        $choice = Read-Host 'Nhap lua chon cua ban:';" ^
     "        if ($choice -eq 'Q' -or $choice -eq 'q') { exit } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
     "        if ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps; $validChoice = $true; break } " ^
@@ -181,18 +181,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
     "            $isInstalled = winget list --id $app.ID -e 2>$null;" ^
     "            if ($isInstalled -match $app.ID) {" ^
-    "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
+    "                Write-Host \" -> Da co. Dang check Update $($app.Name)...\" -ForegroundColor Yellow;" ^
     "                winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements;" ^
     "            } else {" ^
-    "                Write-Host \" Chua co, dang tai va cai dat $($app.Name)...\" -ForegroundColor Green;" ^
+    "                Write-Host \" -> Chua co, dang tai va cai dat $($app.Name)...\" -ForegroundColor Red;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "                Write-Host \" Da cai dat $($app.Name) hoan tat!\" -ForegroundColor Green;" ^
     "            }" ^
     "        }" ^
     "    }" ^
-    "    Write-Host '`--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT - DANG !' -ForegroundColor Green;" ^
+    "    Write-Host 'Da don rac hoan tat - Tro ve Menu!' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
@@ -410,8 +409,8 @@ goto menu
 
 :ramInfo
 cls
-echo %C%[ THONG TIN PHAN CUNG CHI TIET RAM]%Res%
-powershell -Command "$m = Get-CimInstance Win32_PhysicalMemory; $a = Get-CimInstance Win32_PhysicalMemoryArray; $used = ($m | Measure-Object).Count; $total = $a.MemoryDevices; Write-Host '`n[*][ KIEM TRA KHE CAM RAM ]' -Fore Cyan; Write-Host ('Tong: ' + $total + ' | Da cam: ' + $used + ' | Trong: ' + ($total - $used)) -Fore Yellow; Write-Host '`n[*][ CHI TIET TUNG THANH ]' -Fore Cyan; $m | Select-Object @{N='Khe (Slot)';E={$_.DeviceLocator}}, @{N='Dung luong (GB)';E={$_.Capacity/1GB}}, @{N='Toc do (MHz)';E={$_.ConfiguredClockSpeed}}, @{N='Hang';E={$_.Manufacturer}}, @{N='Seri';E={$_.PartNumber.Trim()}} | Format-Table -AutoSize"
+echo %C%[ THONG TIN RAM]%Res%
+powershell -Command "$m = Get-CimInstance Win32_PhysicalMemory; $a = Get-CimInstance Win32_PhysicalMemoryArray; $used = ($m | Measure-Object).Count; $total = $a.MemoryDevices; Write-Host '[ KIEM TRA KHE CAM RAM ]' -Fore Cyan; Write-Host ('Tong: ' + $total + ' | Da cam: ' + $used + ' | Trong: ' + ($total - $used)) -Fore Yellow; Write-Host '[ CHI TIET TUNG THANH ]' -Fore Cyan; $m | Select-Object @{N='Khe (Slot)';E={$_.DeviceLocator}}, @{N='Dung luong (GB)';E={$_.Capacity/1GB}}, @{N='Toc do (MHz)';E={$_.ConfiguredClockSpeed}}, @{N='Hang';E={$_.Manufacturer}}, @{N='Seri';E={$_.PartNumber.Trim()}} | Format-Table -AutoSize"
 pause
 goto menu
 
