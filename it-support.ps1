@@ -905,7 +905,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
 goto menu
