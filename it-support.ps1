@@ -133,7 +133,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Google Drive'; ID='Google.Drive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
     "@{Name='Everything'; ID='voidtools.Everything'}," ^
-    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='WinRAR'; ID='RARLab.WinRAR'}," ^
     "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
     "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
