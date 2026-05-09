@@ -411,7 +411,7 @@ goto menu
 :ramInfo
 cls
 echo %C%[ THONG TIN PHAN CUNG CHI TIET RAM]%Res%
-powershell -command "Get-CimInstance -ClassName Win32_PhysicalMemory | Format-Table Manufacturer, SerialNumber, ConfiguredClockSpeed, Capacity, DeviceLocator -AutoSize"
+powershell -Command "$slots=(Get-WmiObject Win32_PhysicalMemoryArray).MemoryDevices; $used=(Get-WmiObject Win32_PhysicalMemory); $count=($used | Measure-Object).Count; Write-Host '--- TONG QUAN ---' -Fore Cyan; Write-Host 'Tong so khe: $slots | Da dung: $count | Trong: ($slots-$count)'; Write-Host '--- CHI TIET ---' -Fore Cyan; $used | Select-Object @{N='Slot';E={$_.DeviceLocator}}, @{N='Capacity(GB)';E={$_.Capacity/1GB}}, @{N='Speed';E={$_.Speed}}, Manufacturer | Format-Table -AutoSize"
 pause
 goto menu
 
