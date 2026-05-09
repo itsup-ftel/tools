@@ -116,7 +116,6 @@ if %errorLevel% neq 0 (
 )
 
 :: 2. Lam moi nguon tai de tranh treo
-winget cache reset --force
 winget source update >nul 2>&1
 
 :: 3. Chay chuong trinh chinh
@@ -150,7 +149,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    $validChoice = $false;" ^
     "    while(-not $validChoice) {" ^
     "        Clear-Host;" ^
-    "        Write-Host '--- DANH SACH UNG DUNG (OK) ---' -ForegroundColor Cyan;" ^
+    "        Write-Host '--- DANH SACH UNG DUNG (OFFICIAL) ---' -ForegroundColor Cyan;" ^
     "        for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "        Write-Host '----------------------------------';" ^
     "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
@@ -158,7 +157,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'Q. THOAT CHUONG TRINH' -ForegroundColor Red;" ^
     "        Write-Host '----------------------------------';" ^
     "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
-    "        if ($choice -eq 'Q' -or $choice -eq 'q') { exit } " ^
+    "        if ($choice -eq 'Q' -or $choice -eq 'q') { goto menu } " ^
     "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
     "        if ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps; $validChoice = $true; break } " ^
     "        try {" ^
@@ -193,7 +192,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    }" ^
     "    Write-Host '`--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT CAI DAT!' -ForegroundColor Green;" ^
+    "    Write-Host 'HOAN TAT - DANG !' -ForegroundColor Green;" ^
     "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
