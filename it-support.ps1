@@ -103,7 +103,7 @@ goto menu
 
 :installappfree
 cls
-:: 2. Kiem tra va Tu dong cai dat/Cap nhat Winget
+:: 1. Kiem tra va Tu dong cai dat/Cap nhat Winget
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
     echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
@@ -115,39 +115,39 @@ if %errorLevel% neq 0 (
     echo [OK] Da kich hoat Winget.
 )
 
-:: Lam moi nguon tai de tranh treo
+:: 2. Lam moi nguon tai de tranh treo
 winget source update >nul 2>&1
 
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'; AltID='Google.Chrome.Dev'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'; AltID='Mozilla.Firefox.ESR'}," ^
-    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'; AltID='ITVN.CocCoc'}," ^
-    "@{Name='UniKey'; ID='UniKey.UniKey'; AltID='PhamKimLong.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'; AltID='Zalo.Zalo.Desktop'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'; AltID='Tencent.WeChat.Global'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'; AltID='Synology.Chat'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'; AltID='Microsoft.Teams.Classic'}," ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
+    "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
+    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'; AltID='Google.GoogleDrive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything'; ID='voidtools.Everything'; AltID='voidtools.Everything.Alpha'}," ^
-    "@{Name='WinRAR'; ID='RARLab.WinRAR'; AltID='WinRAR.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'; AltID='7zip.7zip.Alpha'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'}," ^
+    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
-    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'; AltID='Foxit.Reader'}," ^
-    "@{Name='PDF24 Creator'; ID='geeksoftwareGmbH.PDF24Creator'; AltID='PDF24.PDF24Creator'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
+    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'; AltID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (9h51) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
     "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
@@ -156,40 +156,27 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    Write-Host '----------------------------------';" ^
     "    $choice = Read-Host 'Nhap lua chon';" ^
     "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
-    "    $targets = $null;" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
-    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
+    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
     "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
     "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nDang xu ly: $($app.Name)... \" -ForegroundColor Yellow;" ^
-    "                $check = winget list --id $app.ID -e 2>$null | Out-String;" ^
-    "                if ($check.Contains($app.ID)) {" ^
-    "                    Write-Host '-> Da co tren may. Bo qua.' -ForegroundColor Green;" ^
-    "                } else {" ^
-    "                    Write-Host '-> Dang cai dat...' -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
-    "                    if ($LASTEXITCODE -ne 0 -and $app.AltID) {" ^
-    "                        Write-Host '-> Thu ID du phong...' -ForegroundColor DarkYellow;" ^
-    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
-    "                    }" ^
-    "                }" ^
+    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG DON DEP CACHE ---' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache >$null 2>&1;" ^
+    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI (DON RAC) ---' -ForegroundColor Gray;" ^
+    "    winget --purged-all-download-cache;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT!' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 2;" ^
+    "    Write-Host 'DA XOA FILE TAM VA BO NHO DEM!' -ForegroundColor Green;" ^
+    "    Start-Sleep -Seconds 5;" ^
     "}"
-
 pause
 goto menu
-
 
 :bitlocker
 cls
