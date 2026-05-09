@@ -756,70 +756,53 @@ cls
 echo =========================================
 echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
+@echo off
+setlocal enabledelayedexpansion
+mode con: cols=120 lines=30
+title Bo cong cu Cai dat App V10 - Fixed
+
+:: 1. Định nghĩa màu ANSI cho phần CMD
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
+set "G=%ESC%[92m"
+set "Y=%ESC%[93m"
+set "C=%ESC%[96m"
+set "R=%ESC%[91m"
+set "Res=%ESC%[0m"
+
+:: 2. Chạy trực tiếp bằng PowerShell (viết dưới dạng Script Block để tránh lỗi dấu nháy)
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
-    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
-    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
-    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'}," ^
-    "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything'; ID='voidtools.Everything'}," ^
-    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
-    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
-    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
-    "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
-    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
-    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}," ^
-    "@{Name='CoreTemp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='Advanced IP Scanner'; ID='Famatech.AdvancedIPScanner'}," ^
-    "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}" ^
+    "@{N='Google Chrome'; I='Google.Chrome'}, @{N='Firefox'; I='Mozilla.Firefox'}," ^
+    "@{N='Coc Coc'; I='ITVN.CocCoc'}, @{N='UniKey'; I='PhamKimLong.UniKey'}," ^
+    "@{N='Zalo'; I='Zalo.Zalo'}, @{N='WeChat'; I='Tencent.WeChat'}," ^
+    "@{N='Synology Chat'; I='Synology.ChatClient'}, @{N='MS Teams'; I='Microsoft.Teams'}," ^
+    "@{N='OneDrive'; I='Microsoft.OneDrive'}, @{N='Google Drive'; I='Google.Drive'}," ^
+    "@{N='Evernote'; I='Evernote.Evernote'}, @{N='Everything'; I='voidtools.Everything'}," ^
+    "@{N='WinRAR'; I='WinRAR.WinRAR'}, @{N='7-Zip'; I='7zip.7zip'}," ^
+    "@{N='Notepad++'; I='Notepad++.Notepad++'}, @{N='Foxit Reader'; I='Foxit.FoxitReader'}," ^
+    "@{N='PDF24 Creator'; I='PDF24.PDF24Creator'}, @{N='K-Lite Codec'; I='CodecGuide.K-LiteCodecPack.Full'}," ^
+    "@{N='UltraViewer'; I='UltraViewer.UltraViewer'}, @{N='Kaspersky Plus'; I='Kaspersky.Kaspersky'}," ^
+    "@{N='CrystalDiskInfo'; I='CrystalMarkSoftware.CrystalDiskInfo'}, @{N='CoreTemp'; I='ALCPU.CoreTemp'}," ^
+    "@{N='Advanced IP Scanner'; I='Famatech.AdvancedIPScanner'}, @{N='TreeSize Free'; I='JAMSoftware.TreeSizeFree'}" ^
     ");" ^
     "while($true) {" ^
-    "    Clear-Host;" ^
-    "    echo \"$env:C   ================================ DANH SACH UNG DUNG (Winget) ================================   $env:Res\";" ^
-    "    echo '';" ^
-    "    $half = [math]::Ceiling($apps.Count / 2);" ^
-    "    for ($i=0; $i -lt $half; $i++) {" ^
-    "        $left = '{0,2}. {1}' -f ($i+1), $apps[$i].Name;" ^
-    "        $rightIndex = $i + $half;" ^
-    "        if ($rightIndex -lt $apps.Count) {" ^
-    "            $right = '{0,2}. {1}' -f ($rightIndex+1), $apps[$rightIndex].Name;" ^
-    "            echo ($left.PadRight(50) + $right);" ^
-    "        } else { echo $left }" ^
-    "    };" ^
-    "    echo '';" ^
-    "    echo \"$env:C   --------------------------------------------------------------------------------------------   $env:Res\";" ^
-    "    echo \"      $env:G A. Cai/Upgrade TAT CA $env:Res | $env:Y U. Update ALL May $env:Res | $env:R Q. THOAT $env:Res\";" ^
-    "    echo \"$env:C   --------------------------------------------------------------------------------------------   $env:Res\";" ^
-    "    $input = Read-Host '   Nhap lua chon cua ban (vi du: 1,3,10)'; " ^
-    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
-    "    $targets = $null;" ^
-    "    if ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
-    "    elseif ($input -eq 'U' -or $input -eq 'u') {" ^
-    "        echo \"`n$env:Y   [!] Dang quet va cap nhat tat ca app tren may...$env:Res\";" ^
-    "        winget upgrade --all --silent --accept-package-agreements;" ^
-    "    } else {" ^
-    "        try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { }" ^
-    "    };" ^
-    "    if ($targets) {" ^
-    "        foreach ($app in $targets) { if ($app) { " ^
-    "            echo \"`n$env:Y   [>] Dang xu ly: $($app.Name)...$env:Res\";" ^
-    "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "        } }" ^
-    "    };" ^
-    "    echo \"`n$env:C   [*] Dang don dep file tam va logs...$env:Res\";" ^
-    "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $path) { Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "    echo \"$env:G   [OK] Hoan tat! Quay lai menu...$env:Res\";" ^
-    "    Start-Sleep -Seconds 2;" ^
+    "  Clear-Host;" ^
+    "  Write-Host '   ========================= DANH SACH UNG DUNG (Winget) =========================' -Fore Cyan;" ^
+    "  $half = [math]::Ceiling($apps.Count / 2);" ^
+    "  for ($i=0; $i -lt $half; $i++) {" ^
+    "    $l = '{0,2}. {1}' -f ($i+1), $apps[$i].N;" ^
+    "    $rIdx = $i + $half;" ^
+    "    if ($rIdx -lt $apps.Count) { $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N; Write-Host ($l.PadRight(45) + $r) } else { Write-Host $l }" ^
+    "  };" ^
+    "  Write-Host '   -------------------------------------------------------------------------------' -Fore Cyan;" ^
+    "  Write-Host '      A. Cai TAT CA  |  U. Cap nhat ALL may  |  Q. THOAT' -Fore Yellow;" ^
+    "  $ans = Read-Host '   Chon so (vd: 1,3,5)'; if ($ans -eq 'q') { break };" ^
+    "  $t = @(); if ($ans -eq 'a') { $t = $apps } elseif ($ans -eq 'u') { winget upgrade --all --silent --accept-package-agreements } " ^
+    "  else { foreach ($idx in $ans.Split(',')) { $t += $apps[$idx.Trim()-1] } };" ^
+    "  foreach ($a in $t) { if ($a) { Write-Host \"`n[>] Dang cai: $($a.N)\" -Fore Yellow; winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements } };" ^
+    "  Write-Host \"`n[!] Dang don dep...\" -Fore Cyan;" ^
+    "  winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
+    "  Write-Host 'Done! Quay lai menu...'; Start-Sleep 2" ^
     "}"
 pause
 goto menu
