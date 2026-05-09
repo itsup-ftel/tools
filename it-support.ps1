@@ -821,17 +821,21 @@ goto menu
 
 :installappfree
 cls
-:: 2. Kiem tra va Tu dong cai dat Winget
+:: 1. Kiem tra va Tu dong cai dat/Cap nhat Winget
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
     echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
         "$progressPreference = 'SilentlyContinue';" ^
-        "Invoke-WebRequest -Uri https://github.com -OutFile .\winget.msixbundle;" ^
+        "Invoke-WebRequest -Uri https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle -OutFile .\winget.msixbundle;" ^
         "Add-AppxPackage -Path .\winget.msixbundle;" ^
         "Remove-Item .\winget.msixbundle;"
     echo [OK] Da kich hoat Winget.
 )
+
+:: 2. Lam moi nguon tai de tranh loi "Source not found"
+echo Dang lam moi danh sach nguon tai (Winget Source)...
+winget source reset --force >nul 2>&1
 
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
@@ -848,7 +852,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Google Drive'; ID='Google.Drive'; AltID='Google.GoogleDrive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
     "@{Name='Everything'; ID='voidtools.Everything'; AltID='voidtools.Everything.Alpha'}," ^
-    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='WinRAR'; ID='RARLab.WinRAR'; AltID='WinRAR.WinRAR'}," ^
     "@{Name='7-Zip'; ID='7zip.7zip'; AltID='7zip.7zip.Alpha'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
     "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'; AltID='Foxit.Reader'}," ^
@@ -858,11 +862,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky.Plus'; AltID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo.Standard'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'; AltID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (Official) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (OFFICIAL) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
     "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
@@ -880,23 +884,28 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
-    "                $check = winget list --id $app.ID -e 2>$null;" ^
-    "                if ($check -match $app.ID) {" ^
-    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
+    "                Write-Host \"`nKiem tra: $($app.Name)... \" -NoNewline -ForegroundColor Gray;" ^
+    "                $isInstalled = winget list --id $app.ID -e 2>$null;" ^
+    "                if ($app.AltID -and -not $isInstalled) { $isInstalled = winget list --id $app.AltID -e 2>$null }" ^
+    "                if ($isInstalled) {" ^
+    "                    Write-Host '[ DA CAI DAT ]' -ForegroundColor Green;" ^
     "                } else {" ^
-    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
-    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                    Write-Host '[ CHUA CO ]' -ForegroundColor Yellow;" ^
+    "                    Write-Host \"Dang thu tai ID: $($app.ID)...\" -ForegroundColor Cyan;" ^
+    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                    if ($LASTEXITCODE -ne 0 -and $app.AltID) {" ^
+    "                        Write-Host \"Loi ID chinh. Dang thu ID du phong: $($app.AltID)...\" -ForegroundColor DarkYellow;" ^
+    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                    }" ^
     "                }" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
+    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI VA CACHE ---' -ForegroundColor Gray;" ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 5;" ^
+    "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
 goto menu
