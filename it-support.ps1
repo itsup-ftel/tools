@@ -124,7 +124,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
     "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
     "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
-    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
+    "@{Name='UniKey'; ID='UniKey.UniKey'}," ^
     "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
     "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
     "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
@@ -143,7 +143,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalMarkSoftware.CrystalDiskInfo'}" ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'}" ^
     ");" ^
     "while($true) {" ^
     "    $validChoice = $false;" ^
