@@ -771,42 +771,72 @@ cls
 echo =========================================
 echo    %Y%[ CAI DAT UNG DUNG MIEN PHI]%Res%
 echo =========================================
+@echo off
+setlocal enabledelayedexpansion
+title Bo cong cu Cai dat & Cap nhat App tu dong V9
+
+:: 1. Dinh nghia ma mau ANSI
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set ESC=%%b
+set "G=%ESC%[92m"
+set "Y=%ESC%[93m"
+set "C=%ESC%[96m"
+set "R=%ESC%[91m"
+set "Res=%ESC%[0m"
+
+:: 2. Vao menu cai dat App
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$list = @(" ^
-    "'Google Chrome|Google.Chrome', 'Firefox|Mozilla.Firefox', 'Coc Coc|ITVN.CocCoc', 'UniKey|PhamKimLong.UniKey'," ^
-    "'Zalo|Zalo.Zalo', 'WeChat|Tencent.WeChat', 'Synology Chat|Synology.ChatClient', 'MS Teams|Microsoft.Teams'," ^
-    "'OneDrive|Microsoft.OneDrive', 'Google Drive|Google.Drive', 'Evernote|Evernote.Evernote', 'Everything|voidtools.Everything'," ^
-    "'WinRAR|WinRAR.WinRAR', '7-Zip|7zip.7zip', 'Notepad++|Notepad++.Notepad++', 'Foxit Reader|Foxit.FoxitReader'," ^
-    "'PDF24 Creator|PDF24.PDF24Creator', 'K-Lite Codec|CodecGuide.K-LiteCodecPack.Full', 'UltraViewer|UltraViewer.UltraViewer', 'Kaspersky Plus|Kaspersky.Kaspersky'," ^
-    "'CrystalDiskInfo|CrystalMarkSoftware.CrystalDiskInfo', 'CoreTemp|ALCPU.CoreTemp', 'Advanced IP Scan|Famatech.AdvancedIPScanner', 'TreeSize Free|JAMSoftware.TreeSizeFree'" ^
+    "$apps = @(" ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
+    "@{Name='Coc Coc'; ID='ITVN.CocCoc'}," ^
+    "@{Name='UniKey'; ID='PhamKimLong.UniKey'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'}," ^
+    "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
+    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
+    "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
+    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
+    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
+    "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='CrystalDiskInfo (Check o cung)'; ID='CrystalMarkSoftware.CrystalDiskInfo'}," ^
+    "@{Name='CoreTemp (Nhiet do CPU)'; ID='ALCPU.CoreTemp'}," ^
+    "@{Name='Advanced IP Scanner (Scan Port)'; ID='Famatech.AdvancedIPScanner'}," ^
+    "@{Name='TreeSize Free (Quet dung luong)'; ID='JAMSoftware.TreeSizeFree'}" ^
     ");" ^
-    "$apps = foreach($i in $list){ $s=$i.Split('|'); [PSCustomObject]@{N=$s[0]; I=$s[1]} };" ^
     "while($true) {" ^
-    "  Clear-Host;" ^
-    "  echo '%C%   ========================= DANH SACH UNG DUNG (Winget) =========================%Res%';" ^
-    "  $half = [math]::Ceiling($apps.Count / 2);" ^
-    "  for ($i=0; $i -lt $half; $i++) {" ^
-    "    $l = '{0,2}. {1}' -f ($i+1), $apps[$i].N;" ^
-    "    $rIdx = $i + $half;" ^
-    "    if ($rIdx -lt $apps.Count) {" ^
-    "       $r = '{0,2}. {1}' -f ($rIdx+1), $apps[$rIdx].N;" ^
-    "       echo ($l.PadRight(45) + $r);" ^
-    "    } else { echo $l }" ^
-    "  };" ^
-    "  echo '%C%   -------------------------------------------------------------------------------%Res%';" ^
-    "  echo '      %G%A. Cai TAT CA%Res%  |  %Y%U. Cap nhat ALL may%Res%  |  %R%Q. THOAT%Res%';" ^
-    "  echo '   -------------------------------------------------------------------------------';" ^
-    "  $ans = Read-Host '   Chon so (vd: 1,3,5)'; if ($ans -eq 'q') { break };" ^
-    "  $t = @(); if ($ans -eq 'a') { $t = $apps } " ^
-    "  elseif ($ans -eq 'u') { echo \"`n%Y%[!] Dang quet nang cap...%Res%\"; winget upgrade --all --silent --accept-package-agreements } " ^
-    "  else { foreach ($idx in $ans.Split(',')) { if($idx.Trim() -match '^\d+$') { $t += $apps[$idx.Trim()-1] } } };" ^
-    "  foreach ($a in $t) { if ($a) { " ^
-    "    echo \"`n%Y%[>] Dang xu ly: $($a.N)...%Res%\"; " ^
-    "    winget install --id $a.I -e --silent --accept-package-agreements --accept-source-agreements " ^
-    "  } };" ^
-    "  echo \"`n%C%[!] Dang don dep logs...%Res%\";" ^
-    "  winget --info | Select-String 'Logs:' | ForEach-Object { $p = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $p) { Remove-Item \"$p\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
-    "  echo '%G%[OK] Xong! Quay lai menu...%Res%'; Start-Sleep 2" ^
+    "    Clear-Host;" ^
+    "    echo \"$env:C--- MENU CAI DAT & CAP NHAT ---$env:Res\";" ^
+    "    for ($i=0; $i -lt $apps.Count; $i++) { echo (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "    echo '----------------------------------';" ^
+    "    echo \"$env:G A. Cai dat/Nang cap TAT CA danh sach$env:Res\";" ^
+    "    echo \"$env:Y U. CAP NHAT TOAN BO app tren may (Upgrade All)$env:Res\";" ^
+    "    echo \"$env:R Q. THOAT CHUONG TRINH$env:Res\";" ^
+    "    echo '----------------------------------';" ^
+    "    $input = Read-Host 'Nhap lua chon cua ban';" ^
+    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
+    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
+    "        echo \"`n$env:Y Dang cap nhat tat ca app...$env:Res\";" ^
+    "        winget upgrade --all --silent --accept-package-agreements;" ^
+    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
+    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
+    "    if ($targets) {" ^
+    "        foreach ($app in $targets) { if ($app) { " ^
+    "            echo \"`n$env:Y Dang xu ly: $($app.Name)...$env:Res\";" ^
+    "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "        } }" ^
+    "    };" ^
+    "    echo \"`n$env:C Dang don dep file tam va logs...$env:Res\";" ^
+    "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1].Trim(); if (Test-Path $path) { Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
+    "    echo \"$env:G --- HOAN TAT! Quay lai menu sau 2 giay...$env:Res\";" ^
+    "    Start-Sleep -Seconds 2;" ^
     "}"
 pause
 goto menu
