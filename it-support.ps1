@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----432-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----5432-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -116,6 +116,7 @@ if %errorLevel% neq 0 (
 )
 
 :: 2. Lam moi nguon tai de tranh treo
+winget cache reset --force
 winget source update >nul 2>&1
 
 :: 3. Chay chuong trinh chinh
@@ -184,16 +185,16 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
     "                winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements;" ^
     "            } else {" ^
-    "                Write-Host '   -> Chua co. Dang tai va cai dat...' -ForegroundColor Green;" ^
+    "                Write-Host '   -> Chua co. Dang tai va cai dat  $($app.Name)...' -ForegroundColor Green;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                Write-Host '   Da cai dat  $($app.Name) hoan tat!' -ForegroundColor Green;" ^
     "            }" ^
     "        }" ^
     "    }" ^
-    "    Write-Host '`n--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
-    "    winget cache reset --force;" ^
+    "    Write-Host '`--- DANG DON RAC & CACHE ---' -ForegroundColor Gray;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT CAI DAT!' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Start-Sleep -Seconds 4;" ^
     "}"
 pause
 goto menu
