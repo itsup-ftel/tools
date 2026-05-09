@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -0-------------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% -8-------------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -892,10 +892,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "                } else {" ^
     "                    Write-Host '[ CHUA CO ]' -ForegroundColor Yellow;" ^
     "                    Write-Host \"Dang thu tai ID: $($app.ID)...\" -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "                    if ($LASTEXITCODE -ne 0 -and $app.AltID) {" ^
     "                        Write-Host \"Loi ID chinh. Dang thu ID du phong: $($app.AltID)...\" -ForegroundColor DarkYellow;" ^
-    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements --source winget;" ^
+    "                        winget install --id $app.AltID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "                    }" ^
     "                }" ^
     "            } " ^
@@ -905,7 +905,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    winget --purged-all-download-cache >$null 2>&1;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
     "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 4;" ^
+    "    Start-Sleep -Seconds 3;" ^
     "}"
 pause
 goto menu
