@@ -862,7 +862,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (TE) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
     "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
