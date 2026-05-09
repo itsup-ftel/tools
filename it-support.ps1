@@ -769,7 +769,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
     "@{Name='Google Drive'; ID='Google.Drive'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
-    "@{Name='Everything (Search Tool)'; ID='voidtools.Everything'}," ^
+    "@{Name='Everything'; ID='voidtools.Everything'}," ^
     "@{Name='WinRAR'; ID='WinRAR.WinRAR'}," ^
     "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
@@ -779,31 +779,33 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
     "@{Name='Kaspersky Plus'; ID='Kaspersky.Kaspersky'}" ^
     ");" ^
-    "Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
-    "for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
-    "Write-Host '----------------------------------';" ^
-    "Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
-    "Write-Host 'U. CAP NHAT TOAN BO app tren may (Upgrade All)';" ^
-    "Write-Host 'C. DON RAC he thong sau khi cai xong';" ^
-    "Write-Host '----------------------------------';" ^
-    "$input = Read-Host 'Nhap lua chon (vi du: 1,3,20 hoac A, U, C)';" ^
-    "if ($input -eq 'U' -or $input -eq 'u') {" ^
-    "    Write-Host '`nDang quet va cap nhat tat ca phan mem...' -ForegroundColor Magenta;" ^
-    "    winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
-    "} elseif ($input -eq 'C' -or $input -eq 'c') {" ^
-    "    Write-Host '`nDang don dep file tam va thung rac...' -ForegroundColor Green;" ^
-    "    cleanmgr /sagerun:1;" ^
-    "} elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
-    "else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { Write-Host 'Loi nhap lieu!' -ForegroundColor Red } };" ^
-    "if ($targets) {" ^
-    "    foreach ($app in $targets) { " ^
-    "        if ($app) { " ^
-    "            Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "while($true) {" ^
+    "    Clear-Host;" ^
+    "    echo \"$env:C--- MENU CAI DAT & CAP NHAT ---$env:Res\";" ^
+    "    for ($i=0; $i -lt $apps.Count; $i++) { echo (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
+    "    echo '----------------------------------';" ^
+    "    echo \"$env:G A. Cai dat/Nang cap TAT CA danh sach$env:Res\";" ^
+    "    echo \"$env:Y U. CAP NHAT TOAN BO app tren may (Upgrade All)$env:Res\";" ^
+    "    echo \"$env:R Q. Thoat - tro ve Menu chinh$env:Res\";" ^
+    "    echo '----------------------------------';" ^
+    "    $input = Read-Host 'Nhap lua chon cua ban';" ^
+    "    if ($input -eq 'Q' -or $input -eq 'q') { break } " ^
+    "    if ($input -eq 'U' -or $input -eq 'u') {" ^
+    "        echo \"`n$env:Y Dang cap nhat tat ca app...$env:Res\";" ^
+    "        winget upgrade --all --silent --accept-package-agreements;" ^
+    "    } elseif ($input -eq 'A' -or $input -eq 'a') { $targets = $apps } " ^
+    "    else { try { $indices = $input.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
+    "    if ($targets) {" ^
+    "        foreach ($app in $targets) { if ($app) { " ^
+    "            echo \"`n$env:Y Dang xu ly: $($app.Name)...$env:Res\";" ^
     "            winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "        } " ^
-    "    }" ^
-    "};" ^
-    "Write-Host '`n--- HOAN THANH ---' -ForegroundColor Green;"
+    "        } }" ^
+    "    };" ^
+    "    echo \"`n$env:C Dang don dep file tam thoi...$env:Res\";" ^
+    "    winget --info | Select-String 'Logs:' | ForEach-Object { $path = $_.ToString().Split(': ')[-1]; if (Test-Path $path) { Remove-Item -Path \"$path\\*\" -Recurse -Force -ErrorAction SilentlyContinue } };" ^
+    "    echo \"$env:G --- HOAN TAT! Quay lai menu sau 2 giay...$env:Res\";" ^
+    "    Start-Sleep -Seconds 2;" ^
+    "}"
 pause
 goto menu
 
