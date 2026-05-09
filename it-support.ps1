@@ -147,7 +147,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
-    "    Write-Host '--- DANH SACH UNG DUNG (Winget) ---' -ForegroundColor Cyan;" ^
+    "    Write-Host '--- DANH SACH UNG DUNG (hjhg) ---' -ForegroundColor Cyan;" ^
     "    for ($i=0; $i -lt $apps.Count; $i++) { Write-Host (('{0,2}. {1}' -f ($i+1), $apps[$i].Name)) };" ^
     "    Write-Host '----------------------------------';" ^
     "    Write-Host 'A. Cai dat/Nang cap TAT CA danh sach';" ^
@@ -156,35 +156,28 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    Write-Host '----------------------------------';" ^
     "    $choice = Read-Host 'Nhap lua chon';" ^
     "    if ($choice -eq 'Q' -or $choice -eq 'q') { break } " ^
-    "    $targets = $null;" ^
     "    if ($choice -eq 'U' -or $choice -eq 'u') {" ^
-    "        Write-Host '`nDang quet va cap nhat tat ca...' -ForegroundColor Magenta;" ^
+    "        Write-Host '`nDang cap nhat tat ca app...' -ForegroundColor Magenta;" ^
     "        winget upgrade --all --silent --accept-package-agreements --accept-source-agreements;" ^
     "    } elseif ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps } " ^
     "    else { try { $indices = $choice.Split(',').Trim(); $targets = foreach ($idx in $indices) { $apps[$idx-1] } } catch { $targets = $null } };" ^
     "    if ($targets) {" ^
     "        foreach ($app in $targets) { " ^
     "            if ($app) { " ^
-    "                Write-Host \"`nKiem tra: $($app.Name)...\" -NoNewline -ForegroundColor Gray;" ^
-    "                $check = winget list --id $app.ID -e 2>$null;" ^
-    "                if ($check -match $app.ID) {" ^
-    "                    Write-Host ' [ DA CAI DAT ]' -ForegroundColor Green;" ^
-    "                } else {" ^
-    "                    Write-Host ' [ CHUA CO ]' -ForegroundColor Yellow;" ^
-    "                    Write-Host \"Dang tai va cai dat $($app.Name)...\" -ForegroundColor Cyan;" ^
-    "                    winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
-    "                }" ^
+    "                Write-Host \"`nDang xu ly: $($app.Name)...\" -ForegroundColor Yellow;" ^
+    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
     "            } " ^
     "        }" ^
     "    };" ^
-    "    Write-Host '`n--- DANG DON DEP CACHE VA FILE CAI DAT DA TAI ---' -ForegroundColor Gray;" ^
-    "    winget --purged-all-download-cache >$null 2>&1;" ^
+    "    Write-Host '`n--- DANG XOA FILE CAI DAT DA TAI (DON RAC) ---' -ForegroundColor Gray;" ^
+    "    winget --purged-all-download-cache;" ^
     "    Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
-    "    Write-Host 'HOAN TAT! He thong da sach se.' -ForegroundColor Green;" ^
-    "    Start-Sleep -Seconds 3;" ^
+    "    Write-Host 'DA XOA FILE TAM VA BO NHO DEM!' -ForegroundColor Green;" ^
+    "    Start-Sleep -Seconds 2;" ^
     "}"
 pause
 goto menu
+
 
 :bitlocker
 cls
