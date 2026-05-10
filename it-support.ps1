@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h0-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h16-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -304,17 +304,21 @@ if %userChoice%==0 goto menu /b
 :CheckBeforeDownload
 cls
 echo:     ==^> Dang kiem tra trang thai he thong...
-set "installed=0"
-if exist "%path64%\Acrobat.exe" set "installed=1"
-if exist "%path32%\Acrobat.exe" set "installed=1"
-
-if "%installed%"=="1" (
-    echo.
+if exist "%path64%\Acrobat.exe" (
     echo:     [THONG BAO] Adobe Acrobat da duoc cai dat san tren may tinh.
     echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
     timeout /t 3 >nul
     goto DownloadPatch
 )
+
+if exist "%path32%\Acrobat.exe" (
+    echo:     [THONG BAO] Adobe Acrobat da duoc cai dat san tren may tinh.
+    echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
+    timeout /t 3 >nul
+    goto DownloadPatch
+)
+echo:     - Khong tim thay ban cai dat nao. Chuan bi tai xuong...
+timeout /t 2 >nul
 goto DownloadInstall
 
 :DownloadInstall
