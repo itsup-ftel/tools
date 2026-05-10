@@ -295,7 +295,7 @@ set "userChoice=%errorlevel%"
 if %userChoice%==1 goto DownloadInstall
 if %userChoice%==2 goto RunGenP
 if %userChoice%==3 goto ExtraSecurity
-if %userChoice%==0 goto menu
+if %userChoice%==0 goto return
 
 :DownloadInstall
 cls
