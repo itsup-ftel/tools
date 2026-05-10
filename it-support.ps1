@@ -299,7 +299,7 @@ if %userChoice%==1 goto DownloadInstall
 if %userChoice%==2 goto DownloadPatch
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
-if %userChoice%==0 goto menu /b
+if %userChoice%==0 goto menu
 
 :CheckBeforeDownload
 cls
