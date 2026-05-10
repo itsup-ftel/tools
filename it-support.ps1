@@ -87,7 +87,7 @@ if /i "%opt%"=="34" start Appwiz.cpl & goto menu
 if /i "%opt%"=="35" goto MENU_OFFICE
 if /i "%opt%"=="36" goto activeMAS
 if /i "%opt%"=="37" goto installappfree
-if /i "%opt%"=="38" goto
+if /i "%opt%"=="38" goto acrobat
 if /i "%opt%"=="39" goto
 if /i "%opt%"=="40" goto
 if /i "%opt%"=="41" goto
@@ -270,6 +270,12 @@ echo.
 :: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
 :: powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/All-In-One-Version-KL/MAS_AIO.cmd | iex"
+goto menu
+
+:acrobat
+cls
+:: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/Acrobatpro.ps1 | iex"
 goto menu
 
 :MENU_OFFICE
