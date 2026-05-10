@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h35-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h44-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -394,7 +394,7 @@ echo.
 choice /C:12340 /N
 set "userChoice=%errorlevel%"
 
-if %userChoice%==1 goto DownloadInstall
+if %userChoice%==1 goto CheckBeforeDownload
 if %userChoice%==2 goto DownloadPatch
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
@@ -403,28 +403,21 @@ if %userChoice%==0 goto menu
 :CheckBeforeDownload
 cls
 echo:     ==^> Dang kiem tra trang thai he thong...
-if exist "%path64%\Acrobat.exe" (
-    echo:     Adobe Acrobat da duoc cai dat san tren may tinh.
-    echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
-    timeout /t 3 >nul
-    goto DownloadPatch
-)
-
-if exist "%path32%\Acrobat.exe" (
-    echo:     Adobe Acrobat da duoc cai dat san tren may tinh.
-    echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
-    timeout /t 3 >nul
-    goto DownloadPatch
-)
-echo:     - Khong tim thay ban cai dat nao. Chuan bi tai xuong...
-timeout /t 2 >nul
+if exist "%path64%\Acrobat.exe" (set "finalPath=%path64%" & goto FoundExisting)
+if exist "%path32%\Acrobat.exe" (set "finalPath=%path32%" & goto FoundExisting)
 goto DownloadInstall
+
+:FoundExisting
+echo:     Adobe Acrobat da duoc cai dat san tai: %finalPath%
+echo:     Script se tu dong chuyen sang buoc KICH HOAT sau 3 giay...
+timeout /t 3 >nul
+goto DownloadPatch
 
 :DownloadInstall
 if exist "%source%" rmdir /s /q "%source%"
 md "%source%"
 cls
-echo:     %W%[==^> Dang tai Adobe Acrobat DC...]%Res%
+echo:     [==^> Dang tai Adobe Acrobat DC (x64)...]
 curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
 
 if not exist "%source%\Acrobat.zip" (
@@ -432,73 +425,88 @@ if not exist "%source%\Acrobat.zip" (
     pause & goto acrobat
 )
 
-:: --- PHAN XU LY ANTIVIRUS MANH TAY ---
-echo:     %C%[==^> Dang tam tat Windows Defender de tranh loi giai nen...]%Res%
+echo:     [==^> Dang tam tat Windows Defender va loai tru thu muc tam...]
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
-:: -------------------------------------
 
-echo:     %W%[==^> Dang giai nen Adobe Acrobat (Vui long doi)...]%Res%
+echo:     [==^> Dang giai nen Adobe Acrobat...]
 powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
 del /f "%source%\Acrobat.zip"
 
-echo:     %C%[==^> Dang cai dat, vui long uncheck genuine service -> nhan next ->finish...]%Res%
+echo:     [==^> Dang cai dat (Silent Mode)...]
 start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
 goto DownloadPatch
 
-
 :DownloadPatch
 cls
-if not exist "%path64%\Acrobat.exe" if not exist "%path32%\Acrobat.exe" (
-    echo [LOI] Khong tim thay Adobe Acrobat. Vui long cai dat truoc.
-    pause & goto acrobat
-)
-
 if not exist "%source%" md "%source%"
-echo:     %W%[==^> Dang tai file Patch...]%Res%
-curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com
+echo:     [==^> Dang tai file Patch tu GitHub...]
+curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
 
-:: --- Tam thoi tat quet de xu ly file Patch ---
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 timeout /t 2 /nobreak >nul
 
 echo:     ==^> Dang giai nen Patch...
 powershell -Command "Expand-Archive -Path '%source%\Patch.zip' -DestinationPath '%source%' -Force"
-del /f "%source%\Patch.zip"
 
 :ProcessPatch
-echo:     %R%[==^> Dang dong cac tien trinh Adobe...]%Res%
-powershell -Command "Stop-Process -Name 'Acrobat*', 'Adobe*' -Force -ErrorAction SilentlyContinue"
+echo:     [==^> Dang dung triet de cac tien trinh Adobe...]
+powershell -Command "Stop-Process -Name 'Acrobat*', 'Adobe*', 'AcroTray*' -Force -ErrorAction SilentlyContinue"
+timeout /t 2 >nul
 
 for %%P in ("%path64%" "%path32%") do (
     if exist "%%~P\Acrobat.exe" (
         echo    - Dang xu ly tai: %%~P
         
-        :: --- BUOC QUAN TRONG: Them thu muc cai dat vao loai tru Antivirus ---
-        echo    - Dang them %%~P vao danh sach loai tru Antivirus...
+        :: 1. Them thu muc cai dat vao Exclusion
         powershell -Command "Add-MpPreference -ExclusionPath '%%~P'" >nul 2>&1
         
+        :: 2. Chiếm quyền file để tránh lỗi copy
+        takeown /f "%%~P\Acrobat.dll" /a >nul 2>&1
+        icacls "%%~P\Acrobat.dll" /grant administrators:F >nul 2>&1
+
+        :: 3. Copy Patch de file
         for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do (
             if exist "%%~P\%%F" if not exist "%%~P\%%F.bak" copy "%%~P\%%F" "%%~P\%%F.bak" >nul
-            if exist "%source%\%%F" xcopy /y "%source%\%%F" "%%~P\" >nul
+            if exist "%source%\%%F" xcopy /y /h /r "%source%\%%F" "%%~P\" >nul
         )
-        if exist "%%~P\Adobe Crash Processor.exe" move /y "%%~P\Adobe Crash Processor.exe" "%%~P\Adobe Crash Processor.exe.bak" >nul
+        
+        :: 4. Chan Firewall (Inbound & Outbound)
+        echo    - Dang thiet lap Firewall Rules...
+        netsh advfirewall firewall delete rule name="Block_Acrobat_Out" >nul 2>&1
+        netsh advfirewall firewall delete rule name="Block_Acrobat_In" >nul 2>&1
+        netsh advfirewall firewall add rule name="Block_Acrobat_Out" dir=out program="%%~P\Acrobat.exe" action=block >nul 2>&1
+        netsh advfirewall firewall add rule name="Block_Acrobat_In" dir=in program="%%~P\Acrobat.exe" action=block >nul 2>&1
     )
 )
 
-:: ... (Giữ nguyên phần DisableUpdater và AddHosts của bạn) ...
+:DisableUpdater
+echo:     [==^> Dang vo hieu hoa dich vu cap nhat...]
+sc config "AdobeARMservice" start= disabled >nul 2>&1
+sc stop "AdobeARMservice" >nul 2>&1
+schtasks /change /tn "AdobeGCInvoker-1.0" /disable >nul 2>&1 2>nul
 
-:: --- KHOI PHUC ANTIVIRUS VA DON DEP ---
-echo:     %W%[==^> Dang bat lai bao ve va don dep...]%Res%
+:AddHosts
+echo:     [==^> Dang cap nhat file Hosts...]
+set "hostsURL=https://githubusercontent.com"
+set "tempHosts=%TEMP%\adobe_hosts.txt"
+curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
+if not exist "%tempHosts%" (
+    (echo 127.0.0.1 192.150.14.69 & echo 127.0.0.1 192.150.18.101) > "%tempHosts%"
+)
+powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
+
+:Cleanup
+echo:     [==^> Dang bat lai bao ve va don dep...]
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
-:: Chi xoa loai tru cua thu muc TAM (%source%), giu lai loai tru cua thu muc CAI DAT
 powershell -Command "Remove-MpPreference -ExclusionPath '%source%'" >nul 2>&1
+if exist "%tempHosts%" del /f "%tempHosts%"
 rmdir /s /q "%source%"
-:: --------------------------------------
 
 echo:     ________________________________________________________________________
-echo:                          %G%[HOAN THANH KICH HOAT!]%Res%
+echo:                          HOAN THANH KICH HOAT!
+echo:     (Luu y: Thu muc cai dat da duoc loai tru khoi Windows Defender)
 echo:     ________________________________________________________________________
 echo.
 pause
