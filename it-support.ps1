@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----16h15-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----16h24-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -273,7 +273,7 @@ goto menu
 
 :acrobat
 cls
-title Acrobat x64 Activator - AdobeGenP Method
+title Acrobat x64 - AdobeGenP Active
 mode 85, 35
 set "ver=2026"
 set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
@@ -285,7 +285,7 @@ echo:                  [ACROBAT DC PRO - KICH HOAT: GENP]
 echo:     ________________________________________________________________________ 
 echo:         [1] FULL: Tai, Cai dat ^& Mo GenP
 echo:         [2] Chi mo AdobeGenP (Neu da cai san Acrobat)
-echo:         [3] Chặn Firewall ^& Update Hosts (Sau khi Patch xong)
+echo:         [3] Chan Firewall ^& Update Hosts (Sau khi Patch xong)
 echo:         [0] Thoat
 echo:     ________________________________________________________________________ 
 echo.
@@ -311,7 +311,7 @@ goto RunGenP
 cls
 echo:     [==^> Dang chuan bi AdobeGenP...]
 if not exist "%source%" md "%source%"
-:: Link tai GenP 3.4.13 (Phien ban on dinh)
+:: Link tai GenP moi nhat (Phien ban on dinh)
 curl --ssl-no-revoke --progress-bar -L -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
 
 echo:     [==^> Tam tat Antivirus de chay GenP...]
@@ -329,7 +329,7 @@ echo:     3. Nhan nut "Patch" (bieu tuong vien thuoc) va cho chay xong.
 echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
 echo:     ________________________________________________________________________
 timeout /t 5
-start "" "%source%\GenP\Resources\GenP-v4.0.4.exe"
+start "" "%source%\GenP\GenP-v4.0.4.exe"
 pause
 goto ExtraSecurity
 
@@ -359,7 +359,7 @@ rmdir /s /q "%source%"
 del /f "%tempHosts%" >nul 2>&1
 
 echo:     ________________________________________________________________________
-echo:                          HOAN THANH KICH HOAT TRIET DE!
+echo:                      HOAN THANH KICH HOAT ADOBE TRIET DE!
 echo:     ________________________________________________________________________
 pause
 goto acrobat
