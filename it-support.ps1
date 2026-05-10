@@ -268,7 +268,8 @@ echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
 :: Sua loi: Them goi powershell de CMD co the thuc thi lenh irm
-powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+:: powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/refs/heads/master/MAS/All-In-One-Version-KL/MAS_AIO.cmd | iex"
 goto menu
 
 :MENU_OFFICE
