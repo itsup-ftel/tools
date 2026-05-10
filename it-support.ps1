@@ -281,7 +281,7 @@ set "source=%TEMP%\GenP_Source"
 
 echo:     ________________________________________________________________________
 echo:
-echo:                  [ACROBAT DC PRO - KICH HOAT: GENP]
+echo:              %C%    [ACROBAT DC PRO - KICH HOAT: GENP]%Res%
 echo:     ________________________________________________________________________ 
 echo:         [1] FULL: Tai, Cai dat ^& Mo GenP
 echo:         [2] Chi mo AdobeGenP (Neu da cai san Acrobat)
