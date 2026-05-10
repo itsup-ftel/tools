@@ -305,14 +305,14 @@ if %userChoice%==0 goto menu
 cls
 echo:     ==^> Dang kiem tra trang thai he thong...
 if exist "%path64%\Acrobat.exe" (
-    echo:     [THONG BAO] Adobe Acrobat da duoc cai dat san tren may tinh.
+    echo:     Adobe Acrobat da duoc cai dat san tren may tinh.
     echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
     timeout /t 3 >nul
     goto DownloadPatch
 )
 
 if exist "%path32%\Acrobat.exe" (
-    echo:     [THONG BAO] Adobe Acrobat da duoc cai dat san tren may tinh.
+    echo:     Adobe Acrobat da duoc cai dat san tren may tinh.
     echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
     timeout /t 3 >nul
     goto DownloadPatch
