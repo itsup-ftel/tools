@@ -101,105 +101,6 @@ goto menu
 
 :: --- CAC HAM XU LY ---
 
-
-:saoluuphuchoi
-cls
-set "backupPath=D:\Backup_System"
-set "userProfile=%USERPROFILE%"
-set "localApp=%LOCALAPPDATA%"
-echo %C%================================================================================%Res%
-echo %Y%                  CONG CU SAO LUU ^& PHUC HOI HE THONG%Res%
-echo %C%================================================================================%Res%
-echo.
-echo    %Y%[1]%Res% %W%SAO LUU (Backup) - Dong ung dung, copy du lieu, kiem tra loi%Res%
-echo    %Y%[2]%Res% %W%PHUC HOI (Restore) - Giai nen du lieu ve vi tri mac dinh%Res%
-echo    %Y%[3]%Res% %W%CAU HINH - Thay doi noi luu (Hien tai: %G%%backupPath%%W%)%Res%
-echo    %Y%[4]%Res% %R%THOAT VE MENU CHINH%Res%
-echo.
-echo %C%--------------------------------------------------------------------------------%Res%
-set /p choice="%C%Moi ban chon (1-4): %Res%"
-
-if "%choice%"=="1" goto BACKUP
-if "%choice%"=="2" goto RESTORE
-if "%choice%"=="3" goto SET_PATH
-if "%choice%"=="4" goto menu
-goto saoluuphuchoi
-
-:BACKUP
-cls
-echo %Y%[>>>] DANG TIEN HANH SAO LUU...%Res%
-echo.
-
-:: 1. Buoc tat cac tien trinh dang khoa file
-echo %C%[1/4]%Res% Dang dong cac ung dung dang chay...
-taskkill /F /IM chrome.exe /IM msedge.exe /IM outlook.exe /IM coccoc.exe /IM browser.exe >nul 2>&1
-timeout /t 2 >nul
-echo %G%      [OK] Da giai phong cac file du lieu.%Res%
-
-:: 2. Tao thu muc
-if not exist "%backupPath%" mkdir "%backupPath%"
-
-:: 3. Thuc hien copy (Co kiem tra loi tung buoc)
-echo %C%[2/4]%Res% Dang sao luu thu muc ca nhan...
-set "err="
-xcopy "%userProfile%\Desktop" "%backupPath%\Desktop\" /E /I /H /Y /C /Q || set "err=1"
-xcopy "%userProfile%\Documents" "%backupPath%\Documents\" /E /I /H /Y /C /Q || set "err=1"
-xcopy "%userProfile%\Downloads" "%backupPath%\Downloads\" /E /I /H /Y /C /Q || set "err=1"
-
-echo %C%[3/4]%Res% Dang sao luu du lieu Trinh duyet ^& Mail...
-xcopy "%localApp%\Google\Chrome\User Data\Default" "%backupPath%\Browsers\Chrome\Default\" /E /I /H /Y /C /Q || set "err=1"
-xcopy "%localApp%\Microsoft\Edge\User Data\Default" "%backupPath%\Browsers\Edge\Default\" /E /I /H /Y /C /Q || set "err=1"
-xcopy "%userProfile%\Documents\Outlook Files" "%backupPath%\Mail\Outlook_Files\" /E /I /H /Y /C /Q || set "err=1"
-
-echo %C%[4/4]%Res% Dang trich xuat Driver he thong...
-dism /online /export-driver /destination:"%backupPath%\Drivers" >nul || set "err=1"
-
-:: 4. Ket luan
-echo.
-if defined err (
-    echo %R%================================================================================%Res%
-    echo %R%[CANH BAO] Co mot vai tep tin khong the sao luu. Hay kiem tra lai!%Res%
-    echo %R%================================================================================%Res%
-) else (
-    echo %G%================================================================================%Res%
-    echo %G%[THANH CONG] Tat ca du lieu da an toan tai: %backupPath%%Res%
-    echo %G%================================================================================%Res%
-)
-echo %W%He thong dang mo thu muc de ban kiem tra...%Res%
-start "" "%backupPath%"
-pause
-goto saoluuphuchoi
-
-:RESTORE
-cls
-echo %Y%[<<<] DANG TIEN HANH PHUC HOI DU LIEU...%Res%
-echo.
-if not exist "%backupPath%" (echo %R%[!] Khong tim thay nguon sao luu.%Res% & pause & goto saoluuphuchoi)
-
-echo %C%[*]%Res% Dang dong cac ung dung truoc khi ghi de...
-taskkill /F /IM chrome.exe /IM msedge.exe /IM outlook.exe >nul 2>&1
-
-echo %C%[*]%Res% Dang tra du lieu ve vi tri goc...
-xcopy "%backupPath%\Desktop" "%userProfile%\Desktop\" /E /I /H /Y /C /Q
-xcopy "%backupPath%\Browsers\Chrome\Default" "%localApp%\Google\Chrome\User Data\Default\" /E /I /H /Y /C /Q
-xcopy "%backupPath%\Browsers\Edge\Default" "%localApp%\Microsoft\Edge\User Data\Default\" /E /I /H /Y /C /Q
-
-echo.
-echo %G%[OK] Phuc hoi hoan tat!%Res%
-pause
-goto saoluuphuchoi
-
-:SET_PATH
-cls
-echo %C%--- CAU HINH DUONG DAN LUU TRU ---%Res%
-echo Nhap duong dan moi (Vi du: E:\MyBackup):
-set /p backupPath="%Y%Duong dan: %Res%"
-if not exist "%backupPath%" (
-    echo %W%Thu muc chua ton tai, se duoc tao khi sao luu.%Res%
-)
-goto saoluuphuchoi
-
-
 :installappfree
 cls
 :: 1. Kiem tra va Tu dong cai dat/Cap nhat Winget
@@ -369,187 +270,99 @@ echo.
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
 
+
 :acrobat
 cls
-title Acrobat V%ver% - Developed by CongNV
-mode 82, 30
-set "ver=1.5"
+title Acrobat x64 Activator - AdobeGenP Method
+mode 85, 35
+set "ver=2026"
 set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
-set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
-set "source=%TEMP%\SourceAcrobat"
+set "source=%TEMP%\GenP_Source"
+
 echo:     ________________________________________________________________________
 echo:
-echo:                  %Y%[CAI DAT - KICH HOAT ACROBAT DC PRO]%Res%
-echo:                              developed by -CongNV
+echo:                  [ACROBAT DC PRO - KICH HOAT: GENP]
 echo:     ________________________________________________________________________ 
-echo:         [1] FULL: Tai, Cai dat ^& Kich hoat tu dong
-echo:         [2] Chi Kich hoat (Neu da cai san)
-echo:         [3] Tuy chon mo rong
-echo:         [4] Khoi phuc ve mac dinh
-echo:     ________________________________________________________________________ 
-echo:
-echo:         [0] Thoat ve menu chinh
+echo:         [1] FULL: Tai, Cai dat ^& Mo GenP
+echo:         [2] Chi mo AdobeGenP (Neu da cai san Acrobat)
+echo:         [3] Chặn Firewall ^& Update Hosts (Sau khi Patch xong)
+echo:         [0] Thoat
 echo:     ________________________________________________________________________ 
 echo.
-choice /C:12340 /N
+choice /C:1230 /N
 set "userChoice=%errorlevel%"
 
-if %userChoice%==1 goto CheckBeforeDownload
-if %userChoice%==2 goto DownloadPatch
-if %userChoice%==3 goto ExtraSubmenu
-if %userChoice%==4 goto RestoreDefaultsSubmenu
+if %userChoice%==1 goto DownloadInstall
+if %userChoice%==2 goto RunGenP
+if %userChoice%==3 goto ExtraSecurity
 if %userChoice%==0 goto menu
 
-:CheckBeforeDownload
-cls
-echo:     ==^> Dang kiem tra trang thai he thong...
-if exist "%path64%\Acrobat.exe" (set "finalPath=%path64%" & goto FoundExisting)
-if exist "%path32%\Acrobat.exe" (set "finalPath=%path32%" & goto FoundExisting)
-goto DownloadInstall
-
-:FoundExisting
-echo:     Adobe Acrobat da duoc cai dat san tai: %finalPath%
-echo:     Script se tu dong chuyen sang buoc KICH HOAT sau 3 giay...
-timeout /t 3 >nul
-goto DownloadPatch
-
 :DownloadInstall
-if exist "%source%" rmdir /s /q "%source%"
-md "%source%"
 cls
-echo:     [==^> Dang tai Adobe Acrobat DC (x64)...]
-curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
-
-if not exist "%source%\Acrobat.zip" (
-    echo [LOI] Khong the tai file. Kiem tra mang hoac Antivirus.
-    pause & goto acrobat
-)
-
-echo:     [==^> Dang tam tat Windows Defender va loai tru thu muc tam...]
-powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
-powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
-
-echo:     [==^> Dang giai nen Adobe Acrobat...]
-powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
-del /f "%source%\Acrobat.zip"
-
-echo:     [==^> Dang cai dat (Silent Mode)...]
-start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
-goto DownloadPatch
-
-:DownloadPatch
-cls
+echo:     [==^> Dang tai Adobe Acrobat DC x64...]
 if not exist "%source%" md "%source%"
-echo:     [==^> Dang tai file Patch tu GitHub...]
-curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
+curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+echo:     [==^> Dang giai nen va cai dat...]
+powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
+start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
+goto RunGenP
 
+:RunGenP
+cls
+echo:     [==^> Dang chuan bi AdobeGenP...]
+if not exist "%source%" md "%source%"
+:: Link tai GenP 3.4.13 (Phien ban on dinh)
+curl --ssl-no-revoke --progress-bar -L -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
+
+echo:     [==^> Tam tat Antivirus de chay GenP...]
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
-timeout /t 2 /nobreak >nul
 
-echo:     ==^> Dang giai nen Patch...
-powershell -Command "Expand-Archive -Path '%source%\Patch.zip' -DestinationPath '%source%' -Force"
+echo:     [==^> Dang giai nen GenP...]
+powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
-:ProcessPatch
-echo:     [==^> Dang dung triet de cac tien trinh Adobe...]
-powershell -Command "Stop-Process -Name 'Acrobat*', 'Adobe*', 'AcroTray*' -Force -ErrorAction SilentlyContinue"
-timeout /t 2 >nul
+echo:     ________________________________________________________________________
+echo:     HUONG DAN:
+echo:     1. Cua so GenP se mo len ngay sau day.
+echo:     2. Nhan nut "Search" de GenP tim Acrobat trong may.
+echo:     3. Nhan nut "Patch" (bieu tuong vien thuoc) va cho chay xong.
+echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
+echo:     ________________________________________________________________________
+timeout /t 5
+start "" "%source%\GenP\Resources\AdobeGenP.exe"
+pause
+goto ExtraSecurity
 
-for %%P in ("%path64%" "%path32%") do (
-    if exist "%%~P\Acrobat.exe" (
-        echo    - Dang xu ly tai: %%~P
-        
-        :: 1. Them thu muc cai dat vao Exclusion
-        powershell -Command "Add-MpPreference -ExclusionPath '%%~P'" >nul 2>&1
-        
-        :: 2. Chiếm quyền file để tránh lỗi copy
-        takeown /f "%%~P\Acrobat.dll" /a >nul 2>&1
-        icacls "%%~P\Acrobat.dll" /grant administrators:F >nul 2>&1
+:ExtraSecurity
+cls
+echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
 
-        :: 3. Copy Patch de file
-        for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do (
-            if exist "%%~P\%%F" if not exist "%%~P\%%F.bak" copy "%%~P\%%F" "%%~P\%%F.bak" >nul
-            if exist "%source%\%%F" xcopy /y /h /r "%source%\%%F" "%%~P\" >nul
-        )
-        
-        :: 4. Chan Firewall (Inbound & Outbound)
-        echo    - Dang thiet lap Firewall Rules...
-        netsh advfirewall firewall delete rule name="Block_Acrobat_Out" >nul 2>&1
-        netsh advfirewall firewall delete rule name="Block_Acrobat_In" >nul 2>&1
-        netsh advfirewall firewall add rule name="Block_Acrobat_Out" dir=out program="%%~P\Acrobat.exe" action=block >nul 2>&1
-        netsh advfirewall firewall add rule name="Block_Acrobat_In" dir=in program="%%~P\Acrobat.exe" action=block >nul 2>&1
-    )
-)
+:: 1. Chan Firewall
+echo     - Dang thiet lap Firewall Rules cho Acrobat...
+netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
 
-:DisableUpdater
-echo:     [==^> Dang vo hieu hoa dich vu cap nhat...]
-sc config "AdobeARMservice" start= disabled >nul 2>&1
-sc stop "AdobeARMservice" >nul 2>&1
-schtasks /change /tn "AdobeGCInvoker-1.0" /disable >nul 2>&1 2>nul
-
-:AddHosts
-echo:     [==^> Dang cap nhat file Hosts...]
-set "hostsURL=https://githubusercontent.com"
+:: 2. Chan Hosts
+echo     - Dang cap nhat danh sach Hosts...
+set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
 curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
-if not exist "%tempHosts%" (
-    (echo 127.0.0.1 192.150.14.69 & echo 127.0.0.1 192.150.18.101) > "%tempHosts%"
-)
-powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
+powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
 
-:Cleanup
-echo:     [==^> Dang bat lai bao ve va don dep...]
+:: 3. Loai tru thu muc khoi Defender
+echo     - Dang them thu muc cai dat vao danh sach loai tru...
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe'" >nul 2>&1
+
+:: 4. Don dep
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
-powershell -Command "Remove-MpPreference -ExclusionPath '%source%'" >nul 2>&1
-if exist "%tempHosts%" del /f "%tempHosts%"
 rmdir /s /q "%source%"
+del /f "%tempHosts%" >nul 2>&1
 
 echo:     ________________________________________________________________________
-echo:                          HOAN THANH KICH HOAT!
-echo:     (Luu y: Thu muc cai dat da duoc loai tru khoi Windows Defender)
+echo:                          HOAN THANH KICH HOAT TRIET DE!
 echo:     ________________________________________________________________________
-echo.
 pause
 goto acrobat
-
-
-:ExtraSubmenu
-cls
-echo [1] Sao luu file | [2] Tat Updater | [3] Tat CollabSync | [0] Quay lai
-choice /C:1230 /N
-if %errorlevel%==1 (
-    for %%P in ("%path64%" "%path32%") do if exist "%%~P\Acrobat.exe" (for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do copy "%%~P\%%F" "%%~P\%%F.bak" >nul)
-    echo Da sao luu. & pause & goto ExtraSubmenu
-)
-if %errorlevel%==2 goto DisableUpdater
-if %errorlevel%==3 (
-    for %%P in ("%path64%" "%path32%") do if exist "%%~P\AdobeCollabSync.exe" move /y "%%~P\AdobeCollabSync.exe" "%%~P\AdobeCollabSync.exe.bak" >nul
-    echo Da chan CollabSync. & pause & goto ExtraSubmenu
-)
-if %errorlevel%==4 goto acrobat
-
-:RestoreDefaultsSubmenu
-cls
-echo [1] Khoi phuc file goc | [2] Bat Updater | [3] Bat Crash/Collab | [0] Quay lai
-choice /C:1230 /N
-if %errorlevel%==1 (
-    for %%P in ("%path64%" "%path32%") do if exist "%%~P\Acrobat.exe" (for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do if exist "%%~P\%%F.bak" copy /y "%%~P\%%F.bak" "%%~P\%%F" & del "%%~P\%%F.bak")
-    echo Da khoi phuc. & pause & goto RestoreDefaultsSubmenu
-)
-if %errorlevel%==2 (
-    sc config "AdobeARMservice" start= auto & sc start "AdobeARMservice"
-    echo Da bat Updater. & pause & goto RestoreDefaultsSubmenu
-)
-if %errorlevel%==3 (
-    for %%P in ("%path64%" "%path32%") do (
-        if exist "%%~P\Adobe Crash Processor.exe.bak" move /y "%%~P\Adobe Crash Processor.exe.bak" "%%~P\Adobe Crash Processor.exe" >nul
-        if exist "%%~P\AdobeCollabSync.exe.bak" move /y "%%~P\AdobeCollabSync.exe.bak" "%%~P\AdobeCollabSync.exe" >nul
-    )
-    echo Da khoi phuc dich vu ngam. & pause & goto RestoreDefaultsSubmenu
-)
-if %errorlevel%==4 goto acrobat
-pause
-goto menu
 
 
 :MENU_OFFICE
