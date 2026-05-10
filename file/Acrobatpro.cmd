@@ -6,17 +6,17 @@ REM Run as admin
 cd /d "%~dp0"
 taskkill /IM powershell.exe /F
 
-title Acropolis V%ver%
+title Acrobat V%ver%
 set customAcrobatPath=C:\Program Files\Adobe\Acrobat DC\Acrobat
 
 :MainMenu
 cls
-title Acropolis V%ver%
+title Acrobat V%ver%
 mode 82, 25
 echo:     ________________________________________________________________________
 echo:
-echo:                               Welcome to Acropolis
-echo:                          developed by -V, GenP Subreddit
+echo:                           Cai dat va kich hoat Acrobat
+echo:                              developed by -CongNV
 echo:     ________________________________________________________________________ 
 echo:
 echo:         [3] Extras        ^|  Individual Options     ^|   (Advanced Users)
@@ -28,7 +28,7 @@ echo:
 echo:         [0] Exit
 echo:     ________________________________________________________________________ 
 echo.
-echo:     Enter a menu option on the keyboard [3,4,5,6,0] :
+echo:     Lua chon cua ban [3,4,5,6,0] :
 choice /C:1234560 /N
 set "userChoice=%errorlevel%"
 
@@ -44,27 +44,27 @@ goto MainMenu
 
 
 :DownloadInstall
-if not exist "%TEMP%\Acropolis" (
-    md "%TEMP%\Acropolis"
+if not exist "%TEMP%\SourceAcrobat" (
+    md "%TEMP%\SourceAcrobat"
 )
 cls
 echo:     ________________________________________________________________________
 echo:
-echo:                  Downloading and Installing Adobe Acrobat DC...
+echo:                  Dang tai and cai dat Adobe Acrobat DC...
 echo:     ________________________________________________________________________
 echo.
 REM Download and Installation steps here
 rem Download the standalone Acrobat version needed
-curl --ssl-no-revoke --progress-bar --output "%TEMP%\Acropolis\Acrobat_DC_Web_x64_WWMUI.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+curl --ssl-no-revoke --progress-bar --output "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
 rem Check if the download was successful
-if not exist "%TEMP%\Acropolis\Acrobat_DC_Web_x64_WWMUI.zip" (
+if not exist "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" (
     echo Error: Failed to download Adobe Acrobat DC. Please check your internet connection, disable your Antivirus and try again.
     pause
     goto MainMenu
 )
 rem Extracting Adobe Acrobat DC...
-tar -xf "%TEMP%\Acropolis\Acrobat_DC_Web_x64_WWMUI.zip" -C "%TEMP%\Acropolis"
-del /f "%TEMP%\Acropolis\Acrobat_DC_Web_x64_WWMUI.zip"
+tar -xf "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" -C "%TEMP%\SourceAcrobat"
+del /f "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip"
 
 
 cls 
@@ -85,7 +85,7 @@ echo:             Click the FINISH button at the end of the installation.
 echo:     ________________________________________________________________________
 echo.
 rem Run the setup file silently
-"%TEMP%\Acropolis\Adobe Acrobat\setup.exe" /quiet
+"%TEMP%\SourceAcrobat\Adobe Acrobat\setup.exe" /quiet
 
 goto downloadPatch
 
@@ -96,8 +96,8 @@ IF NOT EXIST "%customAcrobatPath%\Acrobat.exe" (
     REM  Acrobat is not installed
     goto AcrobatNotInstalled
 )
-if not exist "%TEMP%\Acropolis" (
-    md "%TEMP%\Acropolis"
+if not exist "%TEMP%\SourceAcrobat" (
+    md "%TEMP%\SourceAcrobat"
 )
 cls
 echo:     ________________________________________________________________________
@@ -106,10 +106,10 @@ echo:                                Downloading Patch...
 echo:     ________________________________________________________________________
 echo.
 REM Download the patch files
-curl --ssl-no-revoke --progress-bar -L --output "%TEMP%\Acropolis\AcrobatV.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
+curl --ssl-no-revoke --progress-bar -L --output "%TEMP%\SourceAcrobat\AcrobatV.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
 echo.
 rem Check if the download was successful    
-if not exist "%TEMP%\Acropolis\AcrobatV.zip" (
+if not exist "%TEMP%\SourceAcrobat\AcrobatV.zip" (
     echo Error: Failed to download the patch. Please check your internet connection, disable your Antivirus and try again.
     pause
     goto MainMenu
@@ -118,8 +118,8 @@ if not exist "%TEMP%\Acropolis\AcrobatV.zip" (
 ) 
 echo.
 rem Extracting Patch file...
-tar -xf "%TEMP%\Acropolis\AcrobatV.zip" -C "%TEMP%\Acropolis"
-del /f "%TEMP%\Acropolis\AcrobatV.zip"
+tar -xf "%TEMP%\SourceAcrobat\AcrobatV.zip" -C "%TEMP%\SourceAcrobat"
+del /f "%TEMP%\SourceAcrobat\AcrobatV.zip"
 SET "userChoice=1"
 goto CloseAdobeProcesses
 
@@ -178,10 +178,10 @@ echo:                             Patching Adobe Acrobat DC...
 echo:     ________________________________________________________________________
 echo.
 rem Patching steps here, using customPath
-xcopy /y "%TEMP%\Acropolis\acrotray.exe" "%customAcrobatPath%\acrotray.exe"
-xcopy /y "%TEMP%\Acropolis\Acrobat.dll" "%customAcrobatPath%\Acrobat.dll"
-xcopy /y "%TEMP%\Acropolis\acrodistdll.dll" "%customAcrobatPath%\acrodistdll.dll"
-rmdir /s /q "%TEMP%\Acropolis"
+xcopy /y "%TEMP%\SourceAcrobat\acrotray.exe" "%customAcrobatPath%\acrotray.exe"
+xcopy /y "%TEMP%\SourceAcrobat\Acrobat.dll" "%customAcrobatPath%\Acrobat.dll"
+xcopy /y "%TEMP%\SourceAcrobat\acrodistdll.dll" "%customAcrobatPath%\acrodistdll.dll"
+rmdir /s /q "%TEMP%\SourceAcrobat"
 echo.
 echo Files patched and replaced.
 echo.
@@ -448,7 +448,7 @@ goto ExtraSubmenu
 
 :SetCustomAcrobatPath
 cls
-title Acropolis - Custom Path
+title Acrobat - Custom Path
 echo:     ________________________________________________________________________
 echo:
 echo:                           Custom Acrobat Installation Path
