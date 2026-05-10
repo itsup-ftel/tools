@@ -385,7 +385,7 @@ if %errorlevel% neq 0 (
 
     ) > "%tempHosts%"
 ) else (
-    echo:     [OK] Da tai danh sach tu GitHub thanh cong.
+    echo:     [OK] Da tai danh sach chan adobe thanh cong.
 )
 
 :: Tiến hành trộn vào file Hosts hệ thống
