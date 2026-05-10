@@ -190,7 +190,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "            if ($isInstalled -match $app.ID) {" ^
     "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
     "                $res = winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements 2>$null;" ^
-    "                if ($res -match 'No applicable update found') { Write-Host '   -> Ung dung da o phien ban moi nhat.' -ForegroundColor Blue } else { Write-Host '   -> Cap nhat thanh cong!' -ForegroundColor Green }" ^
+    "                if ($res -match 'No available upgrade found') { Write-Host '   -> Ung dung da o phien ban moi nhat.' -ForegroundColor Blue } else { Write-Host '   -> Cap nhat thanh cong!' -ForegroundColor Green }" ^
     "            } else {" ^
     "                Write-Host '   -> Chua co, dang cai dat...' -ForegroundColor Red;" ^
     "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
@@ -417,7 +417,7 @@ goto menu
 
 :ramInfo
 cls
-echo %C%[ THONG TIN RAM]%Res%
+echo %C%[ THONG TIN BO NHO RAM]%Res%
 powershell -Command "$m = Get-CimInstance Win32_PhysicalMemory; $a = Get-CimInstance Win32_PhysicalMemoryArray; $used = ($m | Measure-Object).Count; $total = $a.MemoryDevices; Write-Host '[ KIEM TRA KHE CAM RAM ]' -Fore Cyan; Write-Host ('Tong: ' + $total + ' | Da cam: ' + $used + ' | Trong: ' + ($total - $used)) -Fore Yellow; Write-Host '[ CHI TIET TUNG THANH ]' -Fore Cyan; $m | Select-Object @{N='Khe (Slot)';E={$_.DeviceLocator}}, @{N='Dung luong (GB)';E={$_.Capacity/1GB}}, @{N='Toc do (MHz)';E={$_.ConfiguredClockSpeed}}, @{N='Hang';E={$_.Manufacturer}}, @{N='Seri';E={$_.PartNumber.Trim()}} | Format-Table -AutoSize"
 pause
 goto menu
@@ -425,7 +425,7 @@ goto menu
 :hddInfo
 cls
 echo %C%==================================================%Res%
-echo %Y%[ THONG TIN PHAN CUNG CHI TIET O CUNG]%Res%
+echo          %Y%[ THONG TIN CHI TIET O CUNG]%Res%
 echo %C%==================================================%Res%
 powershell -command "Get-PhysicalDisk | Select-Object FriendlyName, SerialNumber, MediaType, @{Name='Size(GB)';Expression={[Math]::Round($_.Size/1GB,2)}}, HealthStatus | Out-String"
 echo %C%--------------------------------------------------%Res%
