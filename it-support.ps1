@@ -39,7 +39,7 @@ echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
 echo.
-echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%--%Res% ---------------
+echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
 echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Ung dung mien phi    %G%--%Res% ---------------
 echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Tool PDF Editor      %G%--%Res% ---------------
@@ -89,7 +89,7 @@ if /i "%opt%"=="36" goto activeMAS
 if /i "%opt%"=="37" goto installappfree
 if /i "%opt%"=="38" goto acrobat
 if /i "%opt%"=="39" goto
-if /i "%opt%"=="40" goto
+if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto
 if /i "%opt%"=="42" goto
 if /i "%opt%"=="43" goto
@@ -100,6 +100,105 @@ if /i "%opt%"=="0" exit
 goto menu
 
 :: --- CAC HAM XU LY ---
+
+
+:saoluuphuchoi
+cls
+set "backupPath=D:\Backup_System"
+set "userProfile=%USERPROFILE%"
+set "localApp=%LOCALAPPDATA%"
+echo %C%================================================================================%Res%
+echo %Y%                  CONG CU SAO LUU ^& PHUC HOI HE THONG%Res%
+echo %C%================================================================================%Res%
+echo.
+echo    %Y%[1]%Res% %W%SAO LUU (Backup) - Dong ung dung, copy du lieu, kiem tra loi%Res%
+echo    %Y%[2]%Res% %W%PHUC HOI (Restore) - Giai nen du lieu ve vi tri mac dinh%Res%
+echo    %Y%[3]%Res% %W%CAU HINH - Thay doi noi luu (Hien tai: %G%%backupPath%%W%)%Res%
+echo    %Y%[4]%Res% %R%THOAT VE MENU CHINH%Res%
+echo.
+echo %C%--------------------------------------------------------------------------------%Res%
+set /p choice="%C%Moi ban chon (1-4): %Res%"
+
+if "%choice%"=="1" goto BACKUP
+if "%choice%"=="2" goto RESTORE
+if "%choice%"=="3" goto SET_PATH
+if "%choice%"=="4" goto menu
+goto saoluuphuchoi
+
+:BACKUP
+cls
+echo %Y%[>>>] DANG TIEN HANH SAO LUU THUC CHIEN...%Res%
+echo.
+
+:: 1. Buoc tat cac tien trinh dang khoa file
+echo %C%[1/4]%Res% Dang dong cac ung dung dang chay...
+taskkill /F /IM chrome.exe /IM msedge.exe /IM outlook.exe /IM coccoc.exe /IM browser.exe >nul 2>&1
+timeout /t 2 >nul
+echo %G%      [OK] Da giai phong cac file du lieu.%Res%
+
+:: 2. Tao thu muc
+if not exist "%backupPath%" mkdir "%backupPath%"
+
+:: 3. Thuc hien copy (Co kiem tra loi tung buoc)
+echo %C%[2/4]%Res% Dang sao luu thu muc ca nhan...
+set "err="
+xcopy "%userProfile%\Desktop" "%backupPath%\Desktop\" /E /I /H /Y /C /Q || set "err=1"
+xcopy "%userProfile%\Documents" "%backupPath%\Documents\" /E /I /H /Y /C /Q || set "err=1"
+xcopy "%userProfile%\Downloads" "%backupPath%\Downloads\" /E /I /H /Y /C /Q || set "err=1"
+
+echo %C%[3/4]%Res% Dang sao luu du lieu Trinh duyet ^& Mail...
+xcopy "%localApp%\Google\Chrome\User Data\Default" "%backupPath%\Browsers\Chrome\Default\" /E /I /H /Y /C /Q || set "err=1"
+xcopy "%localApp%\Microsoft\Edge\User Data\Default" "%backupPath%\Browsers\Edge\Default\" /E /I /H /Y /C /Q || set "err=1"
+xcopy "%userProfile%\Documents\Outlook Files" "%backupPath%\Mail\Outlook_Files\" /E /I /H /Y /C /Q || set "err=1"
+
+echo %C%[4/4]%Res% Dang trich xuat Driver he thong...
+dism /online /export-driver /destination:"%backupPath%\Drivers" >nul || set "err=1"
+
+:: 4. Ket luan
+echo.
+if defined err (
+    echo %R%================================================================================%Res%
+    echo %R%[CANH BAO] Co mot vai tep tin khong the sao luu. Hay kiem tra lai!%Res%
+    echo %R%================================================================================%Res%
+) else (
+    echo %G%================================================================================%Res%
+    echo %G%[THANH CONG] Tat ca du lieu da an toan tai: %backupPath%%Res%
+    echo %G%================================================================================%Res%
+)
+echo %W%He thong dang mo thu muc de ban kiem tra...%Res%
+start "" "%backupPath%"
+pause
+goto saoluuphuchoi
+
+:RESTORE
+cls
+echo %Y%[<<<] DANG TIEN HANH PHUC HOI DU LIEU...%Res%
+echo.
+if not exist "%backupPath%" (echo %R%[!] Khong tim thay nguon sao luu.%Res% & pause & goto saoluuphuchoi)
+
+echo %C%[*]%Res% Dang dong cac ung dung truoc khi ghi de...
+taskkill /F /IM chrome.exe /IM msedge.exe /IM outlook.exe >nul 2>&1
+
+echo %C%[*]%Res% Dang tra du lieu ve vi tri goc...
+xcopy "%backupPath%\Desktop" "%userProfile%\Desktop\" /E /I /H /Y /C /Q
+xcopy "%backupPath%\Browsers\Chrome\Default" "%localApp%\Google\Chrome\User Data\Default\" /E /I /H /Y /C /Q
+xcopy "%backupPath%\Browsers\Edge\Default" "%localApp%\Microsoft\Edge\User Data\Default\" /E /I /H /Y /C /Q
+
+echo.
+echo %G%[OK] Phuc hoi hoan tat!%Res%
+pause
+goto saoluuphuchoi
+
+:SET_PATH
+cls
+echo %C%--- CAU HINH DUONG DAN LUU TRU ---%Res%
+echo Nhap duong dan moi (Vi du: E:\MyBackup):
+set /p backupPath="%Y%Duong dan: %Res%"
+if not exist "%backupPath%" (
+    echo %W%Thu muc chua ton tai, se duoc tao khi sao luu.%Res%
+)
+goto saoluuphuchoi
+
 
 :installappfree
 cls
