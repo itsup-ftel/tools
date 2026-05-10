@@ -322,10 +322,10 @@ echo:     [==^> Dang giai nen GenP...]
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
 echo:     ________________________________________________________________________
-echo:     HUONG DAN:
+echo: %Y%[HUONG DAN:]%Res%
 echo:     1. Cua so GenP se mo len ngay sau day.
-echo:     2. Nhan nut "Search" de GenP tim Acrobat trong may.
-echo:     3. Nhan nut "Patch" (bieu tuong vien thuoc) va cho chay xong.
+echo:     2. Nhan nut %G%["Search"]%Res% de GenP tim Acrobat trong may.
+echo:     3. Nhan nut %G%["Patch"]%Res% (bieu tuong vien thuoc) va cho chay xong.
 echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
 echo:     ________________________________________________________________________
 timeout /t 5
@@ -338,9 +338,10 @@ cls
 echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
 
 :: 1. Chan Firewall
-echo     - Dang thiet lap Firewall Rules cho Acrobat...
+echo     ==^> Dang thiet lap Firewall Rules cho Acrobat...
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
+echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
 :: 2. Chan Hosts
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
@@ -353,7 +354,7 @@ curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
 
 :: Kiểm tra nếu tải thất bại (file không tồn tại hoặc rỗng)
 if %errorlevel% neq 0 (
-    echo:     [!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu cong...
+    echo:     %R%[[!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu cong...]%Res%
     (
         echo 127.0.0.1 192.150.14.69
         echo 127.0.0.1 192.150.18.101
@@ -366,6 +367,7 @@ if %errorlevel% neq 0 (
 :: Tiến hành trộn vào file Hosts hệ thống
 echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
 powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
+echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 
 :: 3. Loai tru thu muc khoi Defender
 echo     - Dang them thu muc cai dat vao danh sach loai tru...
@@ -377,7 +379,7 @@ rmdir /s /q "%source%"
 del /f "%tempHosts%" >nul 2>&1
 
 echo:     ________________________________________________________________________
-echo:                      HOAN THANH KICH HOAT ADOBE TRIET DE!
+echo:                   %G%[HOAN THANH KICH HOAT ADOBE TRIET DE!]%Res%
 echo:     ________________________________________________________________________
 pause
 goto acrobat
