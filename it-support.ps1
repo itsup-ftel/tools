@@ -295,11 +295,27 @@ echo.
 choice /C:12340 /N
 set "userChoice=%errorlevel%"
 
-if %userChoice%==1 goto DownloadInstall
+if %userChoice%==1 goto CheckBeforeDownload
 if %userChoice%==2 goto DownloadPatch
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
-if %userChoice%==o goto menu /b
+if %userChoice%==0 goto menu /b
+
+:CheckBeforeDownload
+cls
+echo:     ==^> Dang kiem tra trang thai he thong...
+set "installed=0"
+if exist "%path64%\Acrobat.exe" set "installed=1"
+if exist "%path32%\Acrobat.exe" set "installed=1"
+
+if "%installed%"=="1" (
+    echo.
+    echo:     [THONG BAO] Adobe Acrobat da duoc cai dat san tren may tinh.
+    echo:     Script se tu dong chuyen sang buoc KICH HOAT (Muc 2) sau 3 giay...
+    timeout /t 3 >nul
+    goto DownloadPatch
+)
+goto DownloadInstall
 
 :DownloadInstall
 if exist "%source%" rmdir /s /q "%source%"
