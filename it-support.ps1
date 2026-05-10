@@ -270,21 +270,23 @@ echo.
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
 
+
 :acrobat
 cls
-set "pathadobe64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
-set "pathadobe32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
-title Acrobat V%ver%
-mode 82, 25
+title Acrobat V%ver% - Developed by CongNV
+mode 82, 28
+set "ver=1.2"
+set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
+set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
 echo:     ________________________________________________________________________
 echo:
 echo:                           Cai dat va kich hoat Acrobat
 echo:                              developed by -CongNV
 echo:     ________________________________________________________________________ 
-echo:         [1] Tai va cai dat
-echo:         [2] Kich hoat
-echo:         [3] Extras        ^|  Individual Options     ^|   (Advanced Users)
-echo:         [4] Recovery      ^|  Restore Defaults       ^|  (Troubleshooting)
+echo:         [1] FULL: Tai, Cai dat ^& Kich hoat tu dong
+echo:         [2] Chi Kich hoat (Neu da cai san)
+echo:         [3] Extras        ^|  Advanced Options
+echo:         [4] Recovery      ^|  Restore Defaults
 echo:         ________________________________________________________________
 echo:
 echo:         [0] Exit
@@ -298,465 +300,119 @@ if %userChoice%==1 goto DownloadInstall
 if %userChoice%==2 goto DownloadPatch
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
-if %userChoice%==0 goto menu
-
-goto menu
+if %userChoice%==5 exit /b
 
 :DownloadInstall
-if not exist "%TEMP%\SourceAcrobat" (
-    md "%TEMP%\SourceAcrobat"
-)
+if not exist "%TEMP%\SourceAcrobat" md "%TEMP%\SourceAcrobat"
 cls
-echo:     ________________________________________________________________________
-echo:
-echo:                  Dang tai and cai dat Adobe Acrobat DC...
-echo:     ________________________________________________________________________
-echo.
-REM Download and Installation steps here
-rem Download the standalone Acrobat version needed
-curl --ssl-no-revoke --progress-bar --output "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
-rem Check if the download was successful
+echo:     ==^> Dang tai Adobe Acrobat DC (x64)...
+curl --ssl-no-revoke --progress-bar -L --output "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+
 if not exist "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" (
-    echo Error: Failed to download Adobe Acrobat DC. Please check your internet connection, disable your Antivirus and try again.
-    pause
-    goto acrobat
+    echo [LOI] Khong the tai file. Kiem tra ket noi mang.
+    pause & goto acrobat
 )
-rem Extracting Adobe Acrobat DC...
+
+echo:     ==^> Dang giai nen va cai dat am tham...
 tar -xf "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" -C "%TEMP%\SourceAcrobat"
+start /wait "" "%TEMP%\SourceAcrobat\Adobe Acrobat\setup.exe" /quiet
 del /f "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip"
-
-
-cls 
-echo.
-echo:     ________________________________________________________________________
-echo:
-echo:                                 A T T E N T I O N
-echo:     ________________________________________________________________________
-echo:     
-echo:         If you are prompted to install the genuine service, uncheck it.  
-echo:
-echo:             Do NOT change the paths and do NOT close the installer.
-echo:
-echo:         Click the install button and wait for the installation to finish.
-echo:         ________________________________________________________________  
-echo:
-echo:             Click the FINISH button at the end of the installation.
-echo:     ________________________________________________________________________
-echo.
-rem Run the setup file silently
-"%TEMP%\SourceAcrobat\Adobe Acrobat\setup.exe" /quiet
-goto downloadPatch
+goto DownloadPatch
 
 :DownloadPatch
-REM Check if Acrobat is installed
-IF NOT EXIST "%pathadobe64%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-) else NOT EXIST "%pathadobe32%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-)
-if not exist "%TEMP%\SourceAcrobat" (
-    md "%TEMP%\SourceAcrobat"
-)
 cls
-echo:     ________________________________________________________________________
-echo:
-echo:                                Downloading Patch...
-echo:     ________________________________________________________________________
-echo.
-REM Download the patch files
+if not exist "%path64%\Acrobat.exe" if not exist "%path32%\Acrobat.exe" (
+    echo [LOI] Khong tim thay Adobe Acrobat da cai dat tren may.
+    pause & goto acrobat
+)
+
+if not exist "%TEMP%\SourceAcrobat" md "%TEMP%\SourceAcrobat"
+echo:     ==^> Dang tai Patch tu GitHub...
 curl --ssl-no-revoke --progress-bar -L --output "%TEMP%\SourceAcrobat\AcrobatV.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
-echo.
-rem Check if the download was successful    
-if not exist "%TEMP%\SourceAcrobat\AcrobatV.zip" (
-    echo Error: Failed to download the patch. Please check your internet connection, disable your Antivirus and try again.
-    pause
-    goto acrobat
-) else (
-    echo Patch downloaded successfully.
-) 
-echo.
-rem Extracting Patch file...
 tar -xf "%TEMP%\SourceAcrobat\AcrobatV.zip" -C "%TEMP%\SourceAcrobat"
-del /f "%TEMP%\SourceAcrobat\AcrobatV.zip"
-::SET "userChoice=1"
-goto CloseAdobeProcesses
 
-:CloseAdobeProcesses
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                       Closing Adobe processes and services...
-echo:     ________________________________________________________________________
-echo.
-REM Close all Adobe processes and services
-powershell -Command "Get-Service -DisplayName Adobe* | Stop-Service -Force -Confirm:$false; $Processes = Get-Process * | Where-Object { $_.CompanyName -match 'Adobe' -or $_.Path -match 'Adobe' }; Foreach ($Process in $Processes) { Stop-Process $Process -Force -ErrorAction SilentlyContinue }"
-echo Adobe processes and services closed.
-echo.
-goto BackupFiles
+:ProcessPatch
+echo:     ==^> Dang dong cac tien trinh Adobe va thuc hien Patch...
+powershell -Command "Get-Service -DisplayName Adobe* | Stop-Service -Force -ErrorAction SilentlyContinue; Get-Process | Where-Object {$_.CompanyName -match 'Adobe' -or $_.Path -match 'Adobe'} | Stop-Process -Force -ErrorAction SilentlyContinue"
 
-:BackupFiles
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                        Creating backup of default files...
-echo:     ________________________________________________________________________
-echo.
+:: Vong lap xu ly cho ca 2 duong dan 64 va 32 bit
+for %%P in ("%path64%" "%path32%") do (
+    if exist "%%~P\Acrobat.exe" (
+        echo    - Dang xu ly tai: %%~P
+        :: Backup
+        for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do (
+            if exist "%%~P\%%F" if not exist "%%~P\%%F.bak" copy "%%~P\%%F" "%%~P\%%F.bak" >nul
+        )
+        :: Ghi de Patch
+        xcopy /y "%TEMP%\SourceAcrobat\acrotray.exe" "%%~P\" >nul
+        xcopy /y "%TEMP%\SourceAcrobat\Acrobat.dll" "%%~P\" >nul
+        xcopy /y "%TEMP%\SourceAcrobat\acrodistdll.dll" "%%~P\" >nul
+        :: Vo hieu hoa Crash Processor
+        if exist "%%~P\Adobe Crash Processor.exe" move /y "%%~P\Adobe Crash Processor.exe" "%%~P\Adobe Crash Processor.exe.bak" >nul
+    )
+)
 
-rem Create backup files
-if not exist "%pathadobe64%\acrotray.exe.bak" (
-    copy "%pathadobe64%\acrotray.exe" "%pathadobe64%\acrotray.exe.bak"
-)
-if not exist "%pathadobe64%\Acrobat.dll.bak" (
-    copy "%pathadobe64%\Acrobat.dll" "%pathadobe64%\Acrobat.dll.bak"
-)
-if not exist "%pathadobe64%\acrodistdll.dll.bak" (
-    copy "%pathadobe64%\acrodistdll.dll" "%pathadobe64%\acrodistdll.dll.bak"
-)
-if not exist "%pathadobe32%\acrotray.exe.bak" (
-    copy "%pathadobe32%\acrotray.exe" "%pathadobe32%\acrotray.exe.bak"
-)
-if not exist "%pathadobe32%\Acrobat.dll.bak" (
-    copy "%pathadobe32%\Acrobat.dll" "%pathadobe32%\Acrobat.dll.bak"
-)
-if not exist "%pathadobe32%\acrodistdll.dll.bak" (
-    copy "%pathadobe32%\acrodistdll.dll" "%pathadobe32%\acrodistdll.dll.bak"
-)
-echo.
-echo Backup created.
-echo.
-goto PatchAcrobat
-
-
-:PatchAcrobat
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                             Patching Adobe Acrobat DC...
-echo:     ________________________________________________________________________
-echo.
-rem Patching steps here, using customPath
-xcopy /y "%TEMP%\SourceAcrobat\acrotray.exe" "%customAcrobatPath%\acrotray.exe"
-xcopy /y "%TEMP%\SourceAcrobat\Acrobat.dll" "%customAcrobatPath%\Acrobat.dll"
-xcopy /y "%TEMP%\SourceAcrobat\acrodistdll.dll" "%customAcrobatPath%\acrodistdll.dll"
-rmdir /s /q "%TEMP%\SourceAcrobat"
-echo.
-echo Files patched and replaced.
-echo.
-goto DisableAdobeUpdater
-
-
-:DisableAdobeUpdater
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                             Disabling Adobe Updater...
-echo:     ________________________________________________________________________
-echo.
-rem Disable Adobe updater
-sc config "AdobeARMservice" start= disabled
-sc stop "AdobeARMservice"
-echo.
-echo Adobe updater disabled.
-goto DisableBackgroundServices
-
-:DisableBackgroundServices
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                        Disabling Adobe Crash Processor...
-echo:     ________________________________________________________________________
-echo.
-rem Create backup files and disable Adobe Crash Processo
-if not exist "%pathadobe64%\Adobe Crash Processor.exe.bak" (
-    copy "%pathadobe64%\Adobe Crash Processor.exe" "%pathadobe64%\Adobe Crash Processor.exe.bak"
-)
-if not exist "%pathadobe32%\Adobe Crash Processor.exe.bak" (
-    copy "%pathadobe32%\Adobe Crash Processor.exe" "%pathadobe32%\Adobe Crash Processor.exe.bak"
-)
-del /f "%pathadobe64%\Adobe Crash Processor.exe"
-del /f "%pathadobe32%\Adobe Crash Processor.exe"
-echo.
-echo Adobe Crash Processor disabled.
-goto AddHosts
+:DisableUpdater
+echo:     ==^> Vo hieu hoa Adobe Updater Service...
+sc config "AdobeARMservice" start= disabled >nul 2>&1
+sc stop "AdobeARMservice" >nul 2>&1
 
 :AddHosts
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                               Adding hosts entries...
-echo:     ________________________________________________________________________
-echo.
-REM Execute PowerShell command and check output
-C:\Windows\system32\WindowsPowerShell\v1.0\PowerShell.exe -NoProfile -Command "if(-not([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){Write-Host 'Script execution failed...';exit};$hostsPath='C:\Windows\System32\drivers\etc\hosts';$webContent=(Invoke-RestMethod -Uri 'http://adobe.isdumb.one' -UseBasicParsing).Split($([char]0x0A))|ForEach-Object{ $_.Trim()};$currentHostsContent=Get-Content -Path $hostsPath;$startMarker='#region Adobe URL Blacklist';$endMarker='#endregion';$blockStart=$currentHostsContent.IndexOf($startMarker);$blockEnd=$currentHostsContent.IndexOf($endMarker);if($blockStart -ne -1 -and $blockEnd -ne -1){$currentHostsContent=$currentHostsContent[0..($blockStart-1)]+$currentHostsContent[($blockEnd+1)..$currentHostsContent.Length]};$newBlock=@($startMarker)+$webContent+$endMarker;$newHostsContent=$currentHostsContent+$newBlock;Set-Content -Path $hostsPath -Value $newHostsContent;Write-Host 'Script execution complete!';exit"
+echo:     ==^> Cap nhat file Hosts de chan Adobe Check...
+powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=(Invoke-RestMethod -Uri 'http://isdumb.one' -UseBasicParsing).Split(\"`n\").Trim() | ?{$_ -ne ''}; $c=Get-Content $h; $s='#region Adobe'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
 
-IF %ERRORLEVEL% EQU 0 (
-    echo Hosts entries added successfully.
-) ELSE (
-    echo Failed to add hosts entries.
-)
-echo.
-echo Hosts entries added.
-echo.
-goto FinalizeInstallation
-
-:FinalizeInstallation
-cls
+rmdir /s /q "%TEMP%\SourceAcrobat"
 echo:     ________________________________________________________________________
-echo:
-echo:                                    Finalizing...
+echo:                             KICH HOAT HOAN TAT!
 echo:     ________________________________________________________________________
-echo:
-echo:                            Files patched and replaced!
-echo:
-echo:                   Successfully disabled Adobe updater service!
-echo:     ________________________________________________________________________
-echo:
-echo:                              Installation completed!
-echo:     ________________________________________________________________________
-echo:
-echo:     Press any key to continue...
-pause > nul
-goto acrobat
-
-
-:DisableCollabSync
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                           Disabling AdobeCollabSync...
-echo:     ________________________________________________________________________
-echo.
-rem Disable AdobeCollabSync
-if not exist "%pathadobe64%\AdobeCollabSync.exe.bak" (
-    copy "%pathadobe64%\AdobeCollabSync.exe" "%pathadobe64%\AdobeCollabSync.exe.bak"
-)
-if not exist "%pathadobe32%\AdobeCollabSync.exe.bak" (
-    copy "%pathadobe32%\AdobeCollabSync.exe" "%pathadobe32%\AdobeCollabSync.exe.bak"
-)
-del /f "%pathadobe64%\AdobeCollabSync.exe"
-del /f "%pathadobe32%\AdobeCollabSync.exe"
-echo.
-echo AdobeCollabSync disabled.
-echo.
-pause
-goto ExtraSubmenu
-
-
-:RestoreBackup
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                       Restoring backup of default files...
-echo:     ________________________________________________________________________
-echo.
-IF NOT EXIST "%pathadobe64%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-) else NOT EXIST "%pathadobe32%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-)
-rem Restore backup files
-if exist "%pathadobe64%\acrotray.exe.bak" (
-    copy "%pathadobe64%\acrotray.exe.bak" "%pathadobe64%\acrotray.exe"
-)
-if exist "%pathadobe64%\Acrobat.dll.bak" (
-    copy "%pathadobe64%\Acrobat.dll.bak" "%pathadobe64%\Acrobat.dll"
-)
-if exist "%pathadobe64%\acrodistdll.dll.bak" (
-    copy "%pathadobe64%\acrodistdll.dll.bak" "%pathadobe64%\acrodistdll.dll"
-)
-if exist "%pathadobe32%\acrotray.exe.bak" (
-    copy "%pathadobe32%\acrotray.exe.bak" "%pathadobe32%\acrotray.exe"
-)
-if exist "%pathadobe32%\Acrobat.dll.bak" (
-    copy "%pathadobe32%\Acrobat.dll.bak" "%pathadobe32%\Acrobat.dll"
-)
-if exist "%pathadobe32%\acrodistdll.dll.bak" (
-    copy "%pathadobe32%\acrodistdll.dll.bak" "%pathadobe32%\acrodistdll.dll"
-)
-del /f "%pathadobe64%\acrotray.exe.bak"
-del /f "%pathadobe64%\Acrobat.dll.bak"
-del /f "%pathadobe64%\acrodistdll.dll.bak"
-del /f "%pathadobe32%\acrotray.exe.bak"
-del /f "%pathadobe32%\Acrobat.dll.bak"
-del /f "%pathadobe32%\acrodistdll.dll.bak"
-echo.
-echo Backup restored.
-pause
-goto RestoreDefaultsSubmenu
-
-
-:ReenableCrashProcessor
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                        Re-enabling Adobe Crash Processor...
-echo:     ________________________________________________________________________
-echo.
-IF NOT EXIST "%pathadobe64%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-) else NOT EXIST "%pathadobe32%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-)
-rem Restore Adobe Crash Processor
-if exist "%pathadobe64%\Adobe Crash Processor.exe.bak" (
-    copy "%pathadobe64%\Adobe Crash Processor.exe.bak" "%pathadobe64%\Adobe Crash Processor.exe"
-)
-if exist "%pathadobe32%\Adobe Crash Processor.exe.bak" (
-    copy "%pathadobe32%\Adobe Crash Processor.exe.bak" "%pathadobe32%\Adobe Crash Processor.exe"
-)
-del /f "%pathadobe64%\Adobe Crash Processor.exe.bak"
-del /f "%pathadobe32%\Adobe Crash Processor.exe.bak"
-echo Adobe Crash Processor re-enabled.
-echo.
-pause
-goto RestoreDefaultsSubmenu
-
-:ReenableCollabSync
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                           Re-enabling AdobeCollabSync...
-echo:     ________________________________________________________________________
-echo.
-IF NOT EXIST "%pathadobe64%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-) else NOT EXIST "%pathadobe32%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-)
-rem Restore AdobeCollabSync
-if exist "%customAcrobatPath%\AdobeCollabSync.exe.bak" (
-    copy "%customAcrobatPath%\AdobeCollabSync.exe.bak" "%customAcrobatPath%\AdobeCollabSync.exe"
-)
-del /f "%customAcrobatPath%\AdobeCollabSync.exe.bak"
-echo.
-echo AdobeCollabSync re-enabled.
-echo.
-pause
-goto RestoreDefaultsSubmenu
-
-
-:EnableAdobeUpdater
-cls
-echo:     ________________________________________________________________________
-echo:
-echo:                             Enabling Adobe Updater...
-echo:     ________________________________________________________________________
-echo.
-rem Enable Adobe updater
-sc config "AdobeARMservice" start= auto
-sc start "AdobeARMservice"
-echo Adobe updater enabled.
-pause
-goto RestoreDefaultsSubmenu
-
-
-:AcrobatNotInstalled
-cls 
-echo:     ________________________________________________________________________
-echo:
-echo:                               Acrobat not installed
-echo:     ________________________________________________________________________
-echo.
-echo:     Acrobat is not installed. Please check your installation path at 1-2
-echo.
-echo:     Press any key to return to the main menu...
-pause >nul
-goto acrobat
-
+pause & goto acrobat
 
 :ExtraSubmenu
 cls
-title Acropolis - Extras
-echo:     ________________________________________________________________________
-echo:
-echo:                           Extras and individual options
-echo:     ________________________________________________________________________
-echo:
-echo:         [1] Create backup of default files
-echo:         [2] Disable Adobe Updater
-echo:         [3] Disable Adobe Crash Processor
-echo:         [4] Disable AdobeCollabSync (Not included, may cause issues!)
-echo:         [5] Set Custom Acrobat Installation Path
-echo:
-echo:         [0] Return to Main Menu
-echo:     ________________________________________________________________________
-echo.
-echo:     Enter a menu option in the Keyboard [1,2,3,4,5,0] :
-choice /C:123450 /N
-set "extraChoice=%errorlevel%"
-
-if %extraChoice%==1 goto BackupFiles
-if %extraChoice%==2 goto DisableAdobeUpdater
-if %extraChoice%==3 goto DisableBackgroundServices
-if %extraChoice%==4 goto DisableCollabSync
-if %extraChoice%==5 goto SetCustomAcrobatPath
-if %extraChoice%==0 goto acrobat
-
-goto ExtraSubmenu
-
-:SetCustomAcrobatPath
-cls
-title Acrobat - Custom Path
-echo:     ________________________________________________________________________
-echo:
-echo:                           Custom Acrobat Installation Path
-echo:     ________________________________________________________________________
-echo.
-echo:     Please enter the custom installation path for Adobe Acrobat 
-echo:     (e.g., D:\Adobe\Acrobat DC\Acrobat):
-echo.
-echo:     Current path: %customAcrobatPath%
-echo:     ________________________________________________________________________
-echo. 
-set /p customAcrobatPath=".    Enter path: "
-if "%customAcrobatPath%"=="" goto ExtraSubmenu
-echo.
-echo      New path set to: %customAcrobatPath%
-echo:     ________________________________________________________________________
-echo.
-echo:     Press any key to continue...
-
-pause > nul
-goto ExtraSubmenu
-
+echo:     [1] Sao luu file he thong (Manual Backup)
+echo:     [2] Vo hieu hoa Adobe Updater
+echo:     [3] Vo hieu hoa AdobeCollabSync
+echo:     [0] Quay lai
+choice /C:1230 /N
+if %errorlevel%==1 (
+    for %%P in ("%path64%" "%path32%") do (
+        if exist "%%~P\Acrobat.exe" for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do copy "%%~P\%%F" "%%~P\%%F.bak" >nul
+    )
+    echo Da sao luu. & pause & goto ExtraSubmenu
+)
+if %errorlevel%==2 goto DisableUpdater
+if %errorlevel%==3 (
+    for %%P in ("%path64%" "%path32%") do if exist "%%~P\AdobeCollabSync.exe" move /y "%%~P\AdobeCollabSync.exe" "%%~P\AdobeCollabSync.exe.bak"
+    echo Da chan CollabSync. & pause & goto ExtraSubmenu
+)
+if %errorlevel%==4 goto acrobat
 
 :RestoreDefaultsSubmenu
 cls
-title Acropolis - Recovery
-echo:     ________________________________________________________________________
-echo:
-echo:                                 Recovery Options
-echo:     ________________________________________________________________________
-echo.
-echo:         [1] Restore default Acrobat
-echo:         [2] Re-enable Adobe Updater
-echo:         [3] Re-enable Adobe Crash Processor
-echo:         [4] Re-enable AdobeCollabSync (May fix connection issues)
-echo.
-echo:         [0] Return to Main Menu
-echo:     ________________________________________________________________________
-echo.
-echo:     Enter a menu option on the keyboard [1,2,3,4,0] :
-choice /C:12340 /N
-set "restoreChoice=%errorlevel%"
-
-if %restoreChoice%==1 goto CloseAdobeProcesses
-if %restoreChoice%==2 goto EnableAdobeUpdater
-if %restoreChoice%==3 goto ReenableCrashProcessor
-if %restoreChoice%==4 goto ReenableCollabSync
-if %restoreChoice%==0 goto acrobat
-goto acrobat
-
-:EndScript
-echo Exiting...
+echo:     [1] Khoi phuc file goc (.bak -^> .exe/.dll)
+echo:     [2] Bat lai Adobe Updater
+echo:     [3] Bat lai Adobe Crash Processor ^& CollabSync
+echo:     [0] Quay lai
+choice /C:1230 /N
+if %errorlevel%==1 (
+    for %%P in ("%path64%" "%path32%") do (
+        if exist "%%~P\Acrobat.exe" for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do if exist "%%~P\%%F.bak" copy /y "%%~P\%%F.bak" "%%~P\%%F" ^& del "%%~P\%%F.bak"
+    )
+    echo Da khoi phuc file goc. & pause & goto RestoreDefaultsSubmenu
+)
+if %errorlevel%==2 (
+    sc config "AdobeARMservice" start= auto ^& sc start "AdobeARMservice"
+    echo Da bat Updater. & pause & goto RestoreDefaultsSubmenu
+)
+if %errorlevel%==3 (
+    for %%P in ("%path64%" "%path32%") do (
+        if exist "%%~P\Adobe Crash Processor.exe.bak" move /y "%%~P\Adobe Crash Processor.exe.bak" "%%~P\Adobe Crash Processor.exe"
+        if exist "%%~P\AdobeCollabSync.exe.bak" move /y "%%~P\AdobeCollabSync.exe.bak" "%%~P\AdobeCollabSync.exe"
+    )
+    echo Da khoi phuc cac dich vu ngam. & pause & goto RestoreDefaultsSubmenu
+)
+if %errorlevel%==4 goto acrobat
+pause
 goto menu
 
 
