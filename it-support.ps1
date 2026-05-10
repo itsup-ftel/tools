@@ -290,12 +290,12 @@ echo:
 echo:         [0] Exit
 echo:     ________________________________________________________________________ 
 echo.
-echo:     Lua chon cua ban [3,4,5,6,0] :
+echo:     Lua chon cua ban [1,2,3,4,5,6,0] :
 choice /C:1234560 /N
 set "userChoice=%errorlevel%"
 
 if %userChoice%==1 goto DownloadInstall
-if %userChoice%==2 goto acrobat
+if %userChoice%==2 goto PatchAcrobat
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
 if %userChoice%==5 goto DiscordInvite
