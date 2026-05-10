@@ -360,7 +360,7 @@ if exist "%path64%" (
     goto downloadPatch
 ) else if exist "%path32%" (
     goto downloadPatch
-) else ( echo Acrobat chua cai dat.
+) else ( echo Acrobat chua cai dat.)
 if not exist "%TEMP%\SourceAcrobat" (
     md "%TEMP%\SourceAcrobat"
 )
