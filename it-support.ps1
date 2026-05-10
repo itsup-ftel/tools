@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----13h38-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----13h40-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -280,16 +280,16 @@ set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
 set "source=%TEMP%\SourceAcrobat"
 echo:     ________________________________________________________________________
 echo:
-echo:                           Cai dat va kich hoat Acrobat
+echo:                  %Y%[CAI DAT - KICH HOAT ACROBAT DC PRO]%Res%
 echo:                              developed by -CongNV
 echo:     ________________________________________________________________________ 
 echo:         [1] FULL: Tai, Cai dat ^& Kich hoat tu dong
 echo:         [2] Chi Kich hoat (Neu da cai san)
-echo:         [3] Extras        ^|  Advanced Options
-echo:         [4] Recovery      ^|  Restore Defaults
-echo:         ________________________________________________________________
+echo:         [3] Tuy chon mo rong
+echo:         [4] Khoi phuc ve mac dinh
+echo:     ________________________________________________________________________ 
 echo:
-echo:         [0] Exit
+echo:         [0] Thoat ve menu chinh
 echo:     ________________________________________________________________________ 
 echo.
 choice /C:12340 /N
@@ -299,13 +299,13 @@ if %userChoice%==1 goto DownloadInstall
 if %userChoice%==2 goto DownloadPatch
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
-if %userChoice%==5 exit /b
+if %userChoice%==o goto menu /b
 
 :DownloadInstall
 if exist "%source%" rmdir /s /q "%source%"
 md "%source%"
 cls
-echo:     ==^> Dang tai Adobe Acrobat DC...
+echo:     %W%[==^> Dang tai Adobe Acrobat DC...]%Res%
 curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
 
 if not exist "%source%\Acrobat.zip" (
@@ -314,16 +314,16 @@ if not exist "%source%\Acrobat.zip" (
 )
 
 :: --- PHAN XU LY ANTIVIRUS MANH TAY ---
-echo:     ==^> Dang tam tat Windows Defender de tranh loi giai nen...
+echo:     %C%[==^> Dang tam tat Windows Defender de tranh loi giai nen...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 :: -------------------------------------
 
-echo:     ==^> Dang giai nen Adobe Acrobat (Vui long doi)...
+echo:     %W%[==^> Dang giai nen Adobe Acrobat (Vui long doi)...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
 del /f "%source%\Acrobat.zip"
 
-echo:     ==^> Dang cai dat, vui long uncheck genuine service -> nhan next ->finish...
+echo:     %C%[==^> Dang cai dat, vui long uncheck genuine service -> nhan next ->finish...]%Res%
 start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
 goto DownloadPatch
 
@@ -335,7 +335,7 @@ if not exist "%path64%\Acrobat.exe" if not exist "%path32%\Acrobat.exe" (
 )
 
 if not exist "%source%" md "%source%"
-echo:     ==^> Dang tai file Patch...
+echo:     %W%[==^> Dang tai file Patch...]%Res%
 curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
 
 :: --- Dam bao Exclusion va Tat Real-time cho Patch ---
@@ -348,7 +348,7 @@ powershell -Command "Expand-Archive -Path '%source%\Patch.zip' -DestinationPath 
 del /f "%source%\Patch.zip"
 
 :ProcessPatch
-echo:     ==^> Dang dong cac tien trinh Adobe...
+echo:     %R%[==^> Dang dong cac tien trinh Adobe...]%Res%
 powershell -Command "Get-Service -DisplayName Adobe* | Stop-Service -Force -ErrorAction SilentlyContinue; $p = Get-Process | Where-Object {$_.CompanyName -match 'Adobe' -or $_.Path -match 'Adobe'}; if($p){$p | Stop-Process -Force -ErrorAction SilentlyContinue}"
 
 for %%P in ("%path64%" "%path32%") do (
@@ -368,12 +368,12 @@ sc stop "AdobeARMservice" >nul 2>&1
 
 :AddHosts
 ::powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=(Invoke-RestMethod -Uri 'http://isdumb.one' -UseBasicParsing).Split(\"`n\").Trim() | ?{$_ -ne ''}; $c=Get-Content $h; $s='#region Adobe'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
-echo:     ==^> Dang tai danh sach host adobe..
+echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
 
 :: Thử tải từ GitHub
-echo:     ==^> Dang thu tai danh sach adobe xuong...
+echo:     %W%[==^> Dang thu tai danh sach adobe xuong...]%Res%
 curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
 
 :: Kiểm tra nếu tải thất bại (file không tồn tại hoặc rỗng)
@@ -385,28 +385,28 @@ if %errorlevel% neq 0 (
 
     ) > "%tempHosts%"
 ) else (
-    echo:     [OK] Da tai danh sach chan adobe thanh cong.
+    echo:     %G%[[OK] Da tai danh sach chan adobe thanh cong.]%Res%
 )
 
 :: Tiến hành trộn vào file Hosts hệ thống
-echo:     ==^> Dang ghi du lieu vao file Hosts...
+echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
 powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
 
 :: Dọn dẹp file tạm
 if exist "%tempHosts%" del /f "%tempHosts%"
 echo.
-echo:     ==^> Da hoan tat cap nhat Hosts.
+echo:     %G%[==^> Da hoan tat cap nhat Hosts.]%Res%
 timeout /t 2 >nul
 
 :: --- KHOI PHUC ANTIVIRUS VA DON DEP ---
-echo:     ==^> Dang bat lai bao ve va don dep he thong...
+echo:     %W%[==^> Dang bat lai bao ve va don dep he thong...]%Res%
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
 powershell -Command "Remove-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 rmdir /s /q "%source%"
 :: --------------------------------------
 
 echo:     ________________________________________________________________________
-echo:                             HOAN THANH KICH HOAT!
+echo:                          %G%[HOAN THANH KICH HOAT!]%Res%
 echo:     ________________________________________________________________________
 echo.
 pause
