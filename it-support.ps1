@@ -279,7 +279,8 @@ echo:
 echo:                           Cai dat va kich hoat Acrobat
 echo:                              developed by -CongNV
 echo:     ________________________________________________________________________ 
-echo:
+echo:         [1] Tai va cai dat
+echo:         [2] Kich hoat
 echo:         [3] Extras        ^|  Individual Options     ^|   (Advanced Users)
 echo:         [4] Recovery      ^|  Restore Defaults       ^|  (Troubleshooting)
 echo:         [5] Discord       ^|  Support                ^|   (Discord Invite)
@@ -293,7 +294,7 @@ echo:     Lua chon cua ban [3,4,5,6,0] :
 choice /C:1234560 /N
 set "userChoice=%errorlevel%"
 
-if %userChoice%==1 goto acrobat
+if %userChoice%==1 goto DownloadInstall
 if %userChoice%==2 goto acrobat
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
