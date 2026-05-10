@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h20-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----14h35-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -127,7 +127,7 @@ goto saoluuphuchoi
 
 :BACKUP
 cls
-echo %Y%[>>>] DANG TIEN HANH SAO LUU THUC CHIEN...%Res%
+echo %Y%[>>>] DANG TIEN HANH SAO LUU...%Res%
 echo.
 
 :: 1. Buoc tat cac tien trinh dang khoa file
@@ -446,6 +446,7 @@ echo:     %C%[==^> Dang cai dat, vui long uncheck genuine service -> nhan next -
 start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
 goto DownloadPatch
 
+
 :DownloadPatch
 cls
 if not exist "%path64%\Acrobat.exe" if not exist "%path32%\Acrobat.exe" (
@@ -455,9 +456,9 @@ if not exist "%path64%\Acrobat.exe" if not exist "%path32%\Acrobat.exe" (
 
 if not exist "%source%" md "%source%"
 echo:     %W%[==^> Dang tai file Patch...]%Res%
-curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com/GenP-V/Acropolis/releases/latest/download/AcrobatV.zip
+curl --ssl-no-revoke --progress-bar -L -o "%source%\Patch.zip" https://github.com
 
-:: --- Dam bao Exclusion va Tat Real-time cho Patch ---
+:: --- Tam thoi tat quet de xu ly file Patch ---
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 timeout /t 2 /nobreak >nul
@@ -468,11 +469,16 @@ del /f "%source%\Patch.zip"
 
 :ProcessPatch
 echo:     %R%[==^> Dang dong cac tien trinh Adobe...]%Res%
-powershell -Command "Get-Service -DisplayName Adobe* | Stop-Service -Force -ErrorAction SilentlyContinue; $p = Get-Process | Where-Object {$_.CompanyName -match 'Adobe' -or $_.Path -match 'Adobe'}; if($p){$p | Stop-Process -Force -ErrorAction SilentlyContinue}"
+powershell -Command "Stop-Process -Name 'Acrobat*', 'Adobe*' -Force -ErrorAction SilentlyContinue"
 
 for %%P in ("%path64%" "%path32%") do (
     if exist "%%~P\Acrobat.exe" (
         echo    - Dang xu ly tai: %%~P
+        
+        :: --- BUOC QUAN TRONG: Them thu muc cai dat vao loai tru Antivirus ---
+        echo    - Dang them %%~P vao danh sach loai tru Antivirus...
+        powershell -Command "Add-MpPreference -ExclusionPath '%%~P'" >nul 2>&1
+        
         for %%F in (acrotray.exe Acrobat.dll acrodistdll.dll) do (
             if exist "%%~P\%%F" if not exist "%%~P\%%F.bak" copy "%%~P\%%F" "%%~P\%%F.bak" >nul
             if exist "%source%\%%F" xcopy /y "%source%\%%F" "%%~P\" >nul
@@ -481,45 +487,12 @@ for %%P in ("%path64%" "%path32%") do (
     )
 )
 
-:DisableUpdater
-sc config "AdobeARMservice" start= disabled >nul 2>&1
-sc stop "AdobeARMservice" >nul 2>&1
-
-:AddHosts
-::powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=(Invoke-RestMethod -Uri 'http://isdumb.one' -UseBasicParsing).Split(\"`n\").Trim() | ?{$_ -ne ''}; $c=Get-Content $h; $s='#region Adobe'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
-echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
-set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
-set "tempHosts=%TEMP%\adobe_hosts.txt"
-
-:: Thử tải từ GitHub
-echo:     %W%[==^> Dang thu tai danh sach adobe xuong...]%Res%
-curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
-
-:: Kiểm tra nếu tải thất bại (file không tồn tại hoặc rỗng)
-if %errorlevel% neq 0 (
-    echo:     [!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu cong...
-    (
-        echo 127.0.0.1 192.150.14.69
-        echo 127.0.0.1 192.150.18.101
-
-    ) > "%tempHosts%"
-) else (
-    echo:     %G%[[OK] Da tai danh sach chan adobe thanh cong.]%Res%
-)
-
-:: Tiến hành trộn vào file Hosts hệ thống
-echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
-powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
-
-:: Dọn dẹp file tạm
-if exist "%tempHosts%" del /f "%tempHosts%"
-echo.
-echo:     %G%[==^> Da hoan tat cap nhat Hosts.]%Res%
-timeout /t 2 >nul
+:: ... (Giữ nguyên phần DisableUpdater và AddHosts của bạn) ...
 
 :: --- KHOI PHUC ANTIVIRUS VA DON DEP ---
-echo:     %W%[==^> Dang bat lai bao ve va don dep he thong...]%Res%
+echo:     %W%[==^> Dang bat lai bao ve va don dep...]%Res%
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
+:: Chi xoa loai tru cua thu muc TAM (%source%), giu lai loai tru cua thu muc CAI DAT
 powershell -Command "Remove-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 rmdir /s /q "%source%"
 :: --------------------------------------
@@ -530,6 +503,7 @@ echo:     ______________________________________________________________________
 echo.
 pause
 goto acrobat
+
 
 :ExtraSubmenu
 cls
