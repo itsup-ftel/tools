@@ -121,29 +121,29 @@ winget source update >nul 2>&1
 :: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
-    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
+    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
     "@{Name='Coc Coc'; ID='CocCoc.CocCoc'}," ^
-    "@{Name='UniKey'; ID='UniKey.UniKey'}," ^
-    "@{Name='Zalo'; ID='Zalo.Zalo'}," ^
-    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
-    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
-    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
-    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
-    "@{Name='Google Drive'; ID='Google.Drive'}," ^
+    "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
+    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'}," ^
     "@{Name='Evernote'; ID='Evernote.Evernote'}," ^
     "@{Name='Everything'; ID='voidtools.Everything'}," ^
-    "@{Name='WinRAR'; ID='RARLab.WinRAR'}," ^
-    "@{Name='7-Zip'; ID='7zip.7zip'}," ^
-    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
+    "@{Name='Firefox'; ID='Mozilla.Firefox'}," ^
     "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
-    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
+    "@{Name='Google Drive'; ID='Google.Drive'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
-    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
     "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
+    "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
+    "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
+    "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
+    "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
+    "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
-    "@{Name='Core Temp'; ID='ALCPU.CoreTemp'}," ^
-    "@{Name='CrystalDiskInfo'; ID='CrystalDewWorld.CrystalDiskInfo'}" ^
+    "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
+    "@{Name='UniKey'; ID='UniKey.UniKey'}," ^
+    "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
+    "@{Name='WinRAR'; ID='RARLab.WinRAR'}," ^
+    "@{Name='Zalo'; ID='Zalo.Zalo'}" ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
