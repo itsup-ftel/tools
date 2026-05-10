@@ -272,19 +272,6 @@ goto menu
 
 :acrobat
 cls
-echo off
-set ver=24.3
-
-REM Run as admin
-%1 mshta vbscript:CreateObject("Shell.Application").ShellExecute("cmd","/c %~s0 ::","","runas",1)(window.close) && exit
-cd /d "%~dp0"
-taskkill /IM powershell.exe /F
-
-title Acrobat V%ver%
-set customAcrobatPath=C:\Program Files\Adobe\Acrobat DC\Acrobat
-
-:MainMenu
-cls
 title Acrobat V%ver%
 mode 82, 25
 echo:     ________________________________________________________________________
@@ -306,16 +293,15 @@ echo:     Lua chon cua ban [3,4,5,6,0] :
 choice /C:1234560 /N
 set "userChoice=%errorlevel%"
 
-if %userChoice%==1 goto MainMenu
-if %userChoice%==2 goto MainMenu
+if %userChoice%==1 goto acrobat
+if %userChoice%==2 goto acrobat
 if %userChoice%==3 goto ExtraSubmenu
 if %userChoice%==4 goto RestoreDefaultsSubmenu
 if %userChoice%==5 goto DiscordInvite
 if %userChoice%==6 goto Help
-if %userChoice%==7 goto ExitScript
+if %userChoice%==7 goto menu
 
-goto MainMenu
-
+goto menu
 
 :DownloadInstall
 if not exist "%TEMP%\SourceAcrobat" (
@@ -334,7 +320,7 @@ rem Check if the download was successful
 if not exist "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" (
     echo Error: Failed to download Adobe Acrobat DC. Please check your internet connection, disable your Antivirus and try again.
     pause
-    goto MainMenu
+    goto acrobat
 )
 rem Extracting Adobe Acrobat DC...
 tar -xf "%TEMP%\SourceAcrobat\Acrobat_DC_Web_x64_WWMUI.zip" -C "%TEMP%\SourceAcrobat"
@@ -386,7 +372,7 @@ rem Check if the download was successful
 if not exist "%TEMP%\SourceAcrobat\AcrobatV.zip" (
     echo Error: Failed to download the patch. Please check your internet connection, disable your Antivirus and try again.
     pause
-    goto MainMenu
+    goto acrobat
 ) else (
     echo Patch downloaded successfully.
 ) 
@@ -441,7 +427,7 @@ echo.
 if %userChoice%==1 goto PatchAcrobat
 pause
 if %userChoice%==3 goto ExtraSubmenu
-goto MainMenu
+goto acrobat
 
 
 :PatchAcrobat
@@ -479,7 +465,7 @@ if %userChoice%==1 goto DisableBackgroundServices
 pause
 if %userChoice%==3 goto ExtraSubmenu
 
-goto MainMenu
+goto acrobat
 
 :DisableBackgroundServices
 cls
@@ -503,7 +489,7 @@ echo Adobe Crash Processor disabled.
 if %userChoice%==1 goto AddHosts
 pause
 if %userChoice%==3 goto ExtraSubmenu
-goto MainMenu
+goto acrobat
 
 :AddHosts
 cls
@@ -526,7 +512,7 @@ echo.
 if %userChoice%==1 goto FinalizeInstallation
 pause
 if %userChoice%==3 goto ExtraSubmenu
-goto MainMenu
+goto acrobat
 
 :FinalizeInstallation
 cls
@@ -552,7 +538,7 @@ echo:     ______________________________________________________________________
 echo:
 echo:     Press any key to continue...
 pause > nul
-goto MainMenu
+goto acrobat
 
 
 :DisableCollabSync
@@ -670,7 +656,7 @@ goto RestoreDefaultsSubmenu
 
 :Help
 start "" https://www.reddit.com/r/GenP/wiki/index/
-goto MainMenu
+goto acrobat
 
 
 :AcrobatNotInstalled
@@ -687,7 +673,7 @@ echo:     Otherwise, please install Acrobat and try again.
 echo.
 echo:     Press any key to return to the main menu...
 pause >nul
-goto MainMenu
+goto acrobat
 
 
 :ExtraSubmenu
@@ -716,7 +702,7 @@ if %extraChoice%==2 goto DisableAdobeUpdater
 if %extraChoice%==3 goto DisableBackgroundServices
 if %extraChoice%==4 goto DisableCollabSync
 if %extraChoice%==5 goto SetCustomAcrobatPath
-if %extraChoice%==6 goto MainMenu
+if %extraChoice%==6 goto acrobat
 
 goto ExtraSubmenu
 
@@ -770,18 +756,18 @@ if %restoreChoice%==1 goto CloseAdobeProcesses
 if %restoreChoice%==2 goto EnableAdobeUpdater
 if %restoreChoice%==3 goto ReenableCrashProcessor
 if %restoreChoice%==4 goto ReenableCollabSync
-if %restoreChoice%==5 goto MainMenu
+if %restoreChoice%==5 goto acrobat
 
-goto MainMenu
+goto acrobat
 
 
 :DiscordInvite
 start "" https://discord.com/invite/X9ZuegSM4N
-goto MainMenu
+goto acrobat
 
 
 :EndScript
-echo Exiting Acropolis...
+echo Exiting...
 goto menu
 
 
