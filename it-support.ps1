@@ -353,10 +353,14 @@ goto downloadPatch
 
 :DownloadPatch
 REM Check if Acrobat is installed
-IF NOT EXIST "%customAcrobatPath%\Acrobat.exe" (
-    REM  Acrobat is not installed
-    goto AcrobatNotInstalled
-)
+set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
+set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat\Acrobat.exe"
+
+if exist "%path64%" (
+    goto downloadPatch
+) else if exist "%path32%" (
+    goto downloadPatch
+) else ( echo Acrobat chua cai dat.
 if not exist "%TEMP%\SourceAcrobat" (
     md "%TEMP%\SourceAcrobat"
 )
