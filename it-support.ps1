@@ -372,18 +372,21 @@ if %errorlevel% neq 0 (
 echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
 attrib -r "%hPath%" >nul 2>&1
 powershell -NoProfile -Command ^
-    "$path = '%hPath%'; $txt = '%tempHosts%'; " ^
+    "$path='%hPath%'; $txt='%tempHosts%'; " ^
+    "$s='#region Adobe'; $e='#endregion'; " ^
+    "if (!(Test-Path $txt)) { exit }; " ^
     "$newLines = Get-Content $txt | Where-Object { $_.Trim() -ne '' }; " ^
-    "if (!$newLines) { exit }; " ^
-    "$content = [System.IO.File]::ReadAllText($path); " ^
-    "$s = '#region Adobe'; $e = '#endregion'; " ^
-    "$pattern = '(?s)' + [Regex]::Escape($s) + '.*?' + [Regex]::Escape($e) + '[\r\n]*'; " ^
-    "$cleanContent = [Regex]::Replace($content, $pattern, ''); " ^
+    "$oldContent = Get-Content $path -ErrorAction SilentlyContinue; " ^
+    "if (!$oldContent) { $oldContent = @() }; " ^
     "$finalList = New-Object System.Collections.Generic.List[string]; " ^
-    "$finalList.AddRange($cleanContent.Split(\"`n\").Trim(\"`r\")); " ^
-    "if ($finalList[-1] -ne '') { $finalList.Add('') }; " ^
+    "$skip = $false; " ^
+    "foreach ($line in $oldContent) { " ^
+    "    if ($line.Trim() -eq $s) { $skip = $true; continue }; " ^
+    "    if ($line.Trim() -eq $e) { $skip = $false; continue }; " ^
+    "    if (!$skip) { $finalList.Add($line) }; " ^
+    "}; " ^
     "$finalList.Add($s); " ^
-    "foreach ($line in $newLines) { $finalList.Add($line) }; " ^
+    "foreach ($nl in $newLines) { $finalList.Add($nl) }; " ^
     "$finalList.Add($e); " ^
     "[System.IO.File]::WriteAllLines($path, $finalList);"
 echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
