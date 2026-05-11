@@ -284,7 +284,7 @@ echo:     ______________________________________________________________________
 echo:
 echo:              %C%    [ADOBE ACROBAT DC PRO x64]%Res%
 echo:     ________________________________________________________________________ 
-echo:         [1] FULL: Tai, Cai dat ^& Kich hoat
+echo:         [1] %G%FULL: Tai, Cai dat ^& Kich hoat%Res%
 echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
 echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
 echo:         [0] Thoat ve menu chinh
@@ -310,9 +310,9 @@ if exist "%path32%\Acrobat.exe" (set "foundPath=%path32%")
 
 if defined foundPath (
     echo:
-    echo:     [!] Phat hien Adobe Acrobat da duoc cai dat tai:
+    echo:%R%     [!] Phat hien Adobe Acrobat da duoc cai dat tai:%Res%
     echo:         "%foundPath%"
-    echo:     ==^> Chuyen huong sang buoc mo AdobeGenP sau 3 giay...
+    echo:%Y%     ==^> Chuyen huong sang buoc mo AdobeGenP sau 3 giay...%Res%
     timeout /t 3 >nul
     goto RunGenP
 )
@@ -320,7 +320,7 @@ if defined foundPath (
 :: Neu chua co thi moi tien hanh tai va cai dat
 echo:     [==^> Dang tai Adobe Acrobat DC x64...]
 if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
 echo:     [==^> Dang giai nen va cai dat...]
 powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
@@ -331,7 +331,7 @@ cls
 echo:     [==^> Dang chuan bi tien hanh kich hoat...]
 if not exist "%source%" md "%source%"
 :: Link tai GenP moi nhat (Phien ban on dinh)
-curl --ssl-no-revoke --progress-bar -L -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
 
 echo:     [==^> Tam tat Antivirus de chay GenP...]
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
