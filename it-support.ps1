@@ -412,6 +412,7 @@ echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 :: 3. Loai tru thu muc khoi Defender
 echo     - Dang them thu muc cai dat vao danh sach loai tru...
 powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe'" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Adobe" >nul 2>&1
 
 :: 4. Don dep
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
