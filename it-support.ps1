@@ -350,6 +350,7 @@ echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
+set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
 
 :: Thử tải từ GitHub
 echo:     %W%[==^> Dang thu tai danh sach adobe xuong...]%Res%
@@ -369,7 +370,23 @@ if %errorlevel% neq 0 (
 
 :: Tiến hành trộn vào file Hosts hệ thống
 echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
-powershell -NoProfile -Command "$h='C:\Windows\System32\drivers\etc\hosts'; $w=Get-Content '%tempHosts%'; $c=Get-Content $h; $s='#region Adobe Block'; $e='#endregion'; if($c -contains $s){$start=$c.IndexOf($s); $end=$c.IndexOf($e); $c=$c[0..($start-1)] + $c[($end+1)..$c.Length]}; Set-Content $h ($c + $s + $w + $e) -Force"
+attrib -r "%hPath%" >nul 2>&1
+powershell -NoProfile -Command ^
+    "$h='%hPath%'; $txt='%tempHosts%'; " ^
+    "$s = '#region Adobe'; $e = '#endregion'; " ^
+    "$c = Get-Content $h -ErrorAction SilentlyContinue; " ^
+    "if (!$c) { $c = @() }; " ^
+    "$newLines = Get-Content $txt -ErrorAction SilentlyContinue | Where-Object { $_.Trim() -ne '' }; " ^
+    "if (!$newLines) { Write-Host '[!] File nguon rong.'; exit }; " ^
+    "$startIndex = [array]::IndexOf($c, $s); " ^
+    "$endIndex = [array]::IndexOf($c, $e); " ^
+    "if ($startIndex -ge 0 -and $endIndex -gt $startIndex) { " ^
+    "    Write-Host ' - Da phat hien vung du lieu cu. Dang xoa...'; " ^
+    "    $c = $c[0..($startIndex-1)] + $c[($endIndex+1)..$c.Length]; " ^
+    "} " ^
+    "Write-Host ' - Dang nạp tung dong du lieu moi vao file Hosts...'; " ^
+    "$final = $c + $s + $newLines + $e; " ^
+    "[System.IO.File]::WriteAllLines($h, $final); "
 echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 
 :: 3. Loai tru thu muc khoi Defender
