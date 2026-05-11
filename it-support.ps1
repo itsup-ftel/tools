@@ -273,10 +273,11 @@ goto menu
 
 :acrobat
 cls
-title Acrobat x64 - AdobeGenP Active
+title Acrobat x64 - AdobeGenP Active V%ver%
 mode 85, 35
 set "ver=2026"
 set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
+set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
 set "source=%TEMP%\GenP_Source"
 
 echo:     ________________________________________________________________________
@@ -300,6 +301,23 @@ goto menu
 
 :DownloadInstall
 cls
+echo:     [==^> Dang kiem tra trang thai he thong...]
+
+:: Kiem tra su ton tai cua Acrobat truoc khi tai
+set "foundPath="
+if exist "%path64%\Acrobat.exe" (set "foundPath=%path64%")
+if exist "%path32%\Acrobat.exe" (set "foundPath=%path32%")
+
+if defined foundPath (
+    echo:
+    echo:     [!] Phat hien Adobe Acrobat da duoc cai dat tai:
+    echo:         "%foundPath%"
+    echo:     ==^> Chuyen huong sang buoc mo AdobeGenP sau 3 giay...
+    timeout /t 3 >nul
+    goto RunGenP
+)
+
+:: Neu chua co thi moi tien hanh tai va cai dat
 echo:     [==^> Dang tai Adobe Acrobat DC x64...]
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
