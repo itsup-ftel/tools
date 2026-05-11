@@ -28,7 +28,7 @@ echo  %G%=======================================================================
 echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo  %G%====================================================================================================================%Res%
 echo.
-echo     %Y%[ 1. HE THONG ]%Res%          %Y%[ 2. PHAN CUNG ]%Res%       %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
+echo     %Y%[ 1. PHAN CUNG]%Res%          %Y%[ 2. HE THONG ]%Res%       %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
 echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Get MAC ^& SN         %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
@@ -283,10 +283,10 @@ echo:     ______________________________________________________________________
 echo:
 echo:              %C%    [ACROBAT DC PRO - KICH HOAT: GENP]%Res%
 echo:     ________________________________________________________________________ 
-echo:         [1] FULL: Tai, Cai dat ^& Mo GenP
-echo:         [2] Chi mo AdobeGenP (Neu da cai san Acrobat)
-echo:         [3] Chan Firewall ^& Update Hosts (Sau khi Patch xong)
-echo:         [0] Thoat
+echo:         [1] FULL: Tai, Cai dat ^& Kich hoat
+echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
+echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
+echo:         [0] Thoat ve menu chinh
 echo:     ________________________________________________________________________ 
 echo.
 choice /C:1230 /N
@@ -323,7 +323,7 @@ echo:     [==^> Dang giai nen GenP...]
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
 echo:     ________________________________________________________________________
-echo: %Y%[HUONG DAN:]%Res%
+echo: %Y%[HUONG DAN THAO TAC:]%Res%
 echo:     1. Cua so GenP se mo len ngay sau day.
 echo:     2. Nhan nut %G%["Search"]%Res% de GenP tim Acrobat trong may.
 echo:     3. Nhan nut %G%["Patch"]%Res% (bieu tuong vien thuoc) va cho chay xong.
@@ -341,7 +341,9 @@ echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
 :: 1. Chan Firewall
 echo     ==^> Dang thiet lap Firewall Rules cho Acrobat...
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_Block_Out" dir=out program="%path64%" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_Block_In" dir=in program="%path64%" action=block >nul 2>&1
 echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
 :: 2. Chan Hosts
