@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----11t5-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----11t5-ok-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -273,16 +273,16 @@ goto menu
 
 :acrobat
 cls
-title Acrobat x64 - AdobeGenP Active V%ver%
 mode 85, 35
 set "ver=2026"
 set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
 set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
 set "source=%TEMP%\GenP_Source"
+title Adobe Acrobat DC Pro x64 - V%ver%
 
 echo:     ________________________________________________________________________
 echo:
-echo:              %C%    [ACROBAT DC PRO - KICH HOAT: GENP]%Res%
+echo:              %C%    [ADOBE ACROBAT DC PRO x64]%Res%
 echo:     ________________________________________________________________________ 
 echo:         [1] FULL: Tai, Cai dat ^& Kich hoat
 echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
@@ -328,7 +328,7 @@ goto RunGenP
 
 :RunGenP
 cls
-echo:     [==^> Dang chuan bi AdobeGenP...]
+echo:     [==^> Dang chuan bi tien hanh kich hoat...]
 if not exist "%source%" md "%source%"
 :: Link tai GenP moi nhat (Phien ban on dinh)
 curl --ssl-no-revoke --progress-bar -L -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
@@ -356,15 +356,16 @@ goto ExtraSecurity
 cls
 echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
 
-:: 1. Chan Firewall
+:: Chan Firewall
 echo     ==^> Dang thiet lap Firewall Rules cho Acrobat...
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_Block_Out" dir=out program="%path64%" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_Block_In" dir=in program="%path64%" action=block >nul 2>&1
+netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
-:: 2. Chan Hosts
+:: Chan Hosts
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
