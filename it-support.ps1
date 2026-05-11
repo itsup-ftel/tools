@@ -19,6 +19,7 @@ set "Y=%ESC%[93m"
 set "C=%ESC%[96m"
 set "W=%ESC%[97m"
 set "R=%ESC%[91m"
+set "B=%ESC%[94m"
 set "Res=%ESC%[0m"
 
 :menu
@@ -280,15 +281,15 @@ set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
 set "source=%TEMP%\GenP_Source"
 title Adobe Acrobat DC Pro x64 - V%ver%
 
-echo:     ________________________________________________________________________
+echo:     ______________________________________________________________
 echo:
-echo:              %C%    [ADOBE ACROBAT DC PRO x64]%Res%
-echo:     ________________________________________________________________________ 
+echo:              %C%      [ADOBE ACROBAT DC PRO x64]%Res%
+echo:     ______________________________________________________________
 echo:         [1] %G%FULL: Tai, Cai dat ^& Kich hoat%Res%
 echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
 echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
 echo:         [0] Thoat ve menu chinh
-echo:     ________________________________________________________________________ 
+echo:     ______________________________________________________________
 echo.
 choice /C:1230 /N
 set "userChoice=%errorlevel%"
@@ -343,7 +344,7 @@ powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '
 echo:     ________________________________________________________________________
 echo: %Y%[HUONG DAN THAO TAC:]%Res%
 echo:     1. Cua so GenP se mo len ngay sau day.
-echo:     2. Nhan nut %G%["Search"]%Res% de GenP tim Acrobat trong may.
+echo:     2. Nhan nut %B%["Search"]%Res% de GenP tim Acrobat trong may.
 echo:     3. Nhan nut %G%["Patch"]%Res% (bieu tuong vien thuoc) va cho chay xong.
 echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
 echo:     ________________________________________________________________________
