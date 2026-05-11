@@ -34,7 +34,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----10t5-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----11t5-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -372,21 +372,20 @@ if %errorlevel% neq 0 (
 echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
 attrib -r "%hPath%" >nul 2>&1
 powershell -NoProfile -Command ^
-    "$h='%hPath%'; $txt='%tempHosts%'; " ^
+    "$path = '%hPath%'; $txt = '%tempHosts%'; " ^
+    "$newLines = Get-Content $txt | Where-Object { $_.Trim() -ne '' }; " ^
+    "if (!$newLines) { exit }; " ^
+    "$content = [System.IO.File]::ReadAllText($path); " ^
     "$s = '#region Adobe'; $e = '#endregion'; " ^
-    "$c = Get-Content $h -ErrorAction SilentlyContinue; " ^
-    "if (!$c) { $c = @() }; " ^
-    "$newLines = Get-Content $txt -ErrorAction SilentlyContinue | Where-Object { $_.Trim() -ne '' }; " ^
-    "if (!$newLines) { Write-Host '[!] File nguon rong.'; exit }; " ^
-    "$startIndex = [array]::IndexOf($c, $s); " ^
-    "$endIndex = [array]::IndexOf($c, $e); " ^
-    "if ($startIndex -ge 0 -and $endIndex -gt $startIndex) { " ^
-    "    Write-Host ' - Da phat hien vung du lieu cu. Dang xoa...'; " ^
-    "    $c = $c[0..($startIndex-1)] + $c[($endIndex+1)..$c.Length]; " ^
-    "} " ^
-    "Write-Host ' - Dang nạp tung dong du lieu moi vao file Hosts...'; " ^
-    "$final = $c + $s + $newLines + $e; " ^
-    "[System.IO.File]::WriteAllLines($h, $final); "
+    "$pattern = '(?s)' + [Regex]::Escape($s) + '.*?' + [Regex]::Escape($e) + '[\r\n]*'; " ^
+    "$cleanContent = [Regex]::Replace($content, $pattern, ''); " ^
+    "$finalList = New-Object System.Collections.Generic.List[string]; " ^
+    "$finalList.AddRange($cleanContent.Split(\"`n\").Trim(\"`r\")); " ^
+    "if ($finalList[-1] -ne '') { $finalList.Add('') }; " ^
+    "$finalList.Add($s); " ^
+    "foreach ($line in $newLines) { $finalList.Add($line) }; " ^
+    "$finalList.Add($e); " ^
+    "[System.IO.File]::WriteAllLines($path, $finalList);"
 echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 
 :: 3. Loai tru thu muc khoi Defender
