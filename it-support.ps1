@@ -42,9 +42,9 @@ echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. 
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%40.%Res% Cleanup Activation
-echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Ung dung mien phi    %G%--%Res% ---------------
-echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Tool PDF Editor      %G%--%Res% ---------------
-echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%--%Res% -------------------   %G%--%Res% ---------------
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup WIN/OFFICE   %G%--%Res% ---------------
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung mien phi    %G%--%Res% ---------------
+echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung ban quyen   %G%--%Res% ---------------
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
 echo  %G%====================================================================================================================%Res%
@@ -87,9 +87,9 @@ if /i "%opt%"=="33" start wf.msc & goto menu
 if /i "%opt%"=="34" start Appwiz.cpl & goto menu
 if /i "%opt%"=="35" goto MENU_OFFICE
 if /i "%opt%"=="36" goto activeMAS
-if /i "%opt%"=="37" goto installappfree
-if /i "%opt%"=="38" goto acrobat
-if /i "%opt%"=="39" goto
+if /i "%opt%"=="37" goto cleanup
+if /i "%opt%"=="38" goto installappfree
+if /i "%opt%"=="39" gotoacrobat
 if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto
 if /i "%opt%"=="42" goto
@@ -271,6 +271,26 @@ echo.
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
 
+:cleanup
+cls
+echo:    %B%╔════════════════════════════════════════════════════════════════════╗%Res%
+echo:    %B%║%Res%      %Y%[ CLEANUP ACTIVATION WINDOWS ^& OFFICE ]%Res%      %B%║%Res%
+echo:    %B%╚════════════════════════════════════════════════════════════════════╝%Res%
+
+echo:
+echo %G%[+]%W% Dang xoa ban quyen Windows...%Res%
+powershell -Command "slmgr /upk; slmgr /cpky; slmgr /rearm" >nul 2>&1
+
+echo:
+echo %G%[+]%W% Dang quet va xoa key Office...%Res%
+powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $keys = cscript \"$p\ospp.vbs\" /dstatus | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript \"$p\ospp.vbs\" /unpkey:$k } } }" >nul 2>&1
+
+echo:
+echo %R%==========================================%Res%
+echo %G%   DA XU LY XONG! VUI LONG KHOI DONG LAI.%Res%
+echo %R%==========================================%Res%
+pause
+goto menu
 
 :acrobat
 cls
