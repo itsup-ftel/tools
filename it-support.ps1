@@ -42,7 +42,7 @@ echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. 
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%41.%Res% Dich vu cong
-echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup WIN/OFFICE   %G%--%Res% ---------------
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup WIN/OFFICE   %G%42.%Res% Foxit pdf editor
 echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung mien phi    %G%--%Res% ---------------
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung ban quyen   %G%--%Res% ---------------
 echo.
@@ -92,7 +92,7 @@ if /i "%opt%"=="38" goto installappfree
 if /i "%opt%"=="39" gotoacrobat
 if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto dichvucong
-if /i "%opt%"=="42" goto
+if /i "%opt%"=="42" goto foxiteditor
 if /i "%opt%"=="43" goto
 if /i "%opt%"=="44" goto
 if /i "%opt%"=="r" goto restart
@@ -150,6 +150,104 @@ start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
 goto RunGenP
 pause
 goto menu
+
+:foxiteditor
+cls
+mode 85, 35
+set "ver=2024.4.0.27683"
+set "pathfoxit=%ProgramFiles(x86)%\Foxit Software\Foxit PDF Editor"
+set "source=%TEMP%\Foxit_Source"
+title Foxit PDF Editor - V%ver%
+
+echo:     ______________________________________________________________
+echo:
+echo:                    %C%[Foxit PDF Editor x2024]%Res%
+echo:     ______________________________________________________________
+echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
+echo:         [2] Chi kich hoat Editor (Neu da cai san app)
+echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
+echo:         [0] Thoat ve menu chinh
+echo:     ______________________________________________________________
+echo.
+choice /C:1230 /N
+set "userChoice=%errorlevel%"
+
+if %userChoice%==1 goto Downloadfoxit
+if %userChoice%==2 goto Activefoxit
+if %userChoice%==3 goto Blockfoxit
+if %userChoice%==0 goto menu
+goto menu
+
+:Downloadfoxit
+cls
+echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
+
+:: Kiem tra su ton tai cua Foxit PDF Editor truoc khi tai
+set "foundPath="
+if exist "%pathfoxit%\FoxitPDFEditor.exe" (set "foundPath=%pathfoxit%")
+
+if defined foundPath (
+    echo:
+    echo:    %R%[[!] Phat hien Foxit PDF Editor da duoc cai dat tai:]%Res%
+    echo:         "%foundPath%"
+    echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
+    timeout /t 3 >nul
+    goto Activefoxit
+)
+
+:: Neu chua co thi moi tien hanh tai va cai dat
+echo:     %W%[==^> Dang tai Foxit PDF Editor x2024...]%Res%
+if not exist "%source%" md "%source%"
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.msi" https://cdn01.foxitsoftware.com/product/phantomPDF/desktop/win/2024.4.1/FoxitPDFEditor202441_enu_Setup_Website.msi
+start /wait "" "%source%\FoxitPDFEditor.msi" /quiet /norestart
+goto Activefoxit
+
+:Activefoxit
+cls
+echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
+if not exist "%source%" md "%source%"
+:: Link tai active
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.zip" https://drive.usercontent.google.com/download?id=1OPqckbJJ19OVmUy349zqLdkMV9iwksxW&export=download&authuser=0&confirm=t&uuid=98403bc3-cac7-4002-a371-0788c82f1a4e&at=ALBwUgkSZd1SBuFB7YOXoZHo0gVk:1778580452445
+
+echo:     %W%[==^> Tam tat Antivirus de chay tien trinh...]%Res%
+powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
+
+echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
+powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\FoxitPDFEditor' -Force"
+xcopy "%source%\FoxitPDFEditor" "%pathfoxit%\" /E /I /H /Y /Q >nul
+
+pause
+goto Blockfoxit
+
+:Blockfoxit
+cls
+:: Chan Firewall
+echo     ==^> Dang thiet lap Firewall Rules cho Foxit PDF Editor...
+netsh advfirewall firewall add rule name="FoxitPDFEditor_Block_Out" dir=out program="%pathfoxit%\FoxitPDFEditor.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditorupdate_Block_Out" dir=out program="%pathfoxit%\FoxitUpdater.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditor_Folder_Block_Out" dir=out program="%pathfoxit%" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditor_Block_In" dir=in program="%pathfoxit%\FoxitPDFEditor.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditorupdate_Block_In" dir=in program="%pathfoxit%\FoxitUpdater.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditor_Folder_Block_In" dir=in program="%pathfoxit%" action=block >nul 2>&1
+netsh advfirewall set allprofiles state on >nul 2>&1
+echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
+
+
+:: 3. Loai tru thu muc khoi Defender
+echo     - Dang them thu muc cai dat vao danh sach loai tru...
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit Software" >nul 2>&1
+
+:: 4. Don dep
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
+rmdir /s /q "%source%"
+del /f "%tempHosts%" >nul 2>&1
+
+echo:     ________________________________________________________________________
+echo:                   %G%[HOAN THANH CAI DAT FOXIT PDF EDITOR!]%Res%
+echo:     ________________________________________________________________________
+pause
+goto foxiteditor
 
 :installappfree
 cls
