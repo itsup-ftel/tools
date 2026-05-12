@@ -273,21 +273,20 @@ goto menu
 
 :cleanup
 cls
-echo:    %B%╔════════════════════════════════════════════════════════════════════╗%Res%
-echo:    %B%║%Res%      %Y%[ CLEANUP ACTIVATION WINDOWS ^& OFFICE ]%Res%      %B%║%Res%
-echo:    %B%╚════════════════════════════════════════════════════════════════════╝%Res%
-
+echo %C%==========================================%Res%
+echo %Y%   CLEANUP ACTIVATION WINDOWS ^& OFFICE%Res%
+echo %C%==========================================%Res%
 echo:
-echo %G%[+]%W% Dang xoa ban quyen Windows...%Res%
-powershell -Command "slmgr /upk; slmgr /cpky; slmgr /rearm" >nul 2>&1
+echo %G%[+]%W% Dang quet va xoa ban quyen Windows...%Res%
+powershell -Command "cscript //nologo %windir%\system32\slmgr.vbs /upk; cscript //nologo %windir%\system32\slmgr.vbs /cpky; cscript //nologo %windir%\system32\slmgr.vbs /rearm" >nul 2>&1
 
 echo:
 echo %G%[+]%W% Dang quet va xoa key Office...%Res%
-powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $keys = cscript \"$p\ospp.vbs\" /dstatus | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript \"$p\ospp.vbs\" /unpkey:$k } } }" >nul 2>&1
+powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $out = cscript //nologo \"$p\ospp.vbs\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\ospp.vbs\" /unpkey:$k >$null } } }" >nul 2>&1
 
 echo:
 echo %R%==========================================%Res%
-echo %G%   DA XU LY XONG! VUI LONG KHOI DONG LAI.%Res%
+echo %G% DA HOAN TAT! KHONG CON KEY TREN HE THONG.%Res%
 echo %R%==========================================%Res%
 pause
 goto menu
