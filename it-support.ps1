@@ -75,8 +75,8 @@ if /i "%opt%"=="21" goto printTest
 if /i "%opt%"=="22" goto listPrinters
 if /i "%opt%"=="23" goto 
 if /i "%opt%"=="24" goto 
-if /i "%opt%"=="25" goto control panel & goto menu
-if /i "%opt%"=="26" goto taskmgr
+if /i "%opt%"=="25" start control & goto menu
+if /i "%opt%"=="26" start taskmgr & goto menu
 if /i "%opt%"=="27" start services.msc & goto menu
 if /i "%opt%"=="28" start devmgmt.msc & goto menu
 if /i "%opt%"=="29" start ms-settings: & goto menu
