@@ -41,7 +41,7 @@ echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%40.%Res% Sao luu/ Phuc hoi
-echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%--%Res% ---------------
+echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%40.%Res% Cleanup Activation
 echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Ung dung mien phi    %G%--%Res% ---------------
 echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Tool PDF Editor      %G%--%Res% ---------------
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%--%Res% -------------------   %G%--%Res% ---------------
@@ -212,8 +212,8 @@ echo ======================================================
 echo           %Y%[ CONG CU QUAN LY BITLOCKER]%Res%
 echo ======================================================
 echo 1. Kiem tra trang thai BitLocker tat ca o dia
-echo 2. Tat Bitlocker cho 1 o dia cu the (Vi du: C:)
-echo 3. Tat BitLocker cho TAT CA o dia dang bao ve
+echo 2. %R%[Tat Bitlocker]%Res% cho 1 o dia cu the (Vi du: C:)
+echo 3. %R%[Tat BitLocker]%Res% cho TAT CA o dia dang bao ve
 echo 4. Theo doi tien trinh giai ma (Real-time)
 echo 5. Thoat ve menu chinh
 echo ======================================================
@@ -228,7 +228,7 @@ goto :bitlocker
 
 :status
 echo.
-echo --- TRANG THAI BITLOCKER ---
+echo %C%[--- TRANG THAI BITLOCKER ---]%Res%
 powershell -command "Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize"
 pause
 goto :bitlocker
@@ -256,15 +256,15 @@ goto :bitlocker
 
 :monitor
 echo.
-echo --- DANG THEO DOI (Nhan Ctrl+C de dung) ---
+echo --- Dang theo doi tien trinh giai ma (Nhan Ctrl+C de dung) ---
 powershell -command "while($true) { Clear-Host; Write-Host '--- Tien trinh giai ma (Nhan Ctrl+C de thoat) ---'; Get-BitLockerVolume | Select-Object MountPoint, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize; Start-Sleep -Seconds 5 }"
 goto :bitlocker
 
 :activeMAS
 cls
-echo %Y%=====================================================%Res%
-echo       %Y%[ DANG KET NOI DEN MAY CHU MAS...]%Res%
-echo =====================================================%Res%
+echo:    %B%╔════════════════════════════════════════════════════════════════════╗%Res%
+echo:    %B%║%Res%           %Y%[ DANG KET NOI DEN MAY CHU MAS.. ]%Res%       %B%║%Res%
+echo:    %B%╚════════════════════════════════════════════════════════════════════╝%Res%
 echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
@@ -283,9 +283,9 @@ title Adobe Acrobat DC Pro x64 - V%ver%
 
 echo:     ______________________________________________________________
 echo:
-echo:              %C%      [ADOBE ACROBAT DC PRO x64]%Res%
+echo:                    %C%[ADOBE ACROBAT DC PRO x64]%Res%
 echo:     ______________________________________________________________
-echo:         [1] %G%FULL: Tai, Cai dat ^& Kich hoat%Res%
+echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
 echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
 echo:         [0] Thoat ve menu chinh
@@ -302,7 +302,7 @@ goto menu
 
 :DownloadInstall
 cls
-echo:     [==^> Dang kiem tra trang thai he thong...]
+echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 
 :: Kiem tra su ton tai cua Acrobat truoc khi tai
 set "foundPath="
@@ -311,34 +311,34 @@ if exist "%path32%\Acrobat.exe" (set "foundPath=%path32%")
 
 if defined foundPath (
     echo:
-    echo:%R%     [!] Phat hien Adobe Acrobat da duoc cai dat tai:%Res%
+    echo:    %R%[[!] Phat hien Adobe Acrobat da duoc cai dat tai:]%Res%
     echo:         "%foundPath%"
-    echo:%Y%     ==^> Chuyen huong sang buoc mo AdobeGenP sau 3 giay...%Res%
+    echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
     timeout /t 3 >nul
     goto RunGenP
 )
 
 :: Neu chua co thi moi tien hanh tai va cai dat
-echo:     [==^> Dang tai Adobe Acrobat DC x64...]
+echo:     %W%[==^> Dang tai Adobe Acrobat DC x64...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
-echo:     [==^> Dang giai nen va cai dat...]
+echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
 goto RunGenP
 
 :RunGenP
 cls
-echo:     [==^> Dang chuan bi tien hanh kich hoat...]
+echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
 if not exist "%source%" md "%source%"
 :: Link tai GenP moi nhat (Phien ban on dinh)
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
 
-echo:     [==^> Tam tat Antivirus de chay GenP...]
+echo:     %W%[==^> Tam tat Antivirus de chay GenP...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 
-echo:     [==^> Dang giai nen GenP...]
+echo:     %W%[==^> Dang giai nen GenP...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
 echo:     ________________________________________________________________________
@@ -359,10 +359,14 @@ echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
 
 :: Chan Firewall
 echo     ==^> Dang thiet lap Firewall Rules cho Acrobat...
-netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_Block_Out" dir=out program="%path64%" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_Block_In" dir=in program="%path64%" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_64_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_64_Block_Out" dir=out program="%path64%" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_64_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_64_Block_In" dir=in program="%path64%" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_32_Block_Out" dir=out program="%path32%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_32_Block_Out" dir=out program="%path32%" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acrobat_32_Block_In" dir=in program="%path32%\Acrobat.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_32_Block_In" dir=in program="%path32%" action=block >nul 2>&1
 netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
