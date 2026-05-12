@@ -41,7 +41,7 @@ echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai OFFICE        %G%40.%Res% Sao luu/ Phuc hoi
-echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%41.%Res%----------
+echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active WIN/OFFICE%Res%    %G%41.%Res% Dich vu cong
 echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup WIN/OFFICE   %G%--%Res% ---------------
 echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung mien phi    %G%--%Res% ---------------
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung ban quyen   %G%--%Res% ---------------
@@ -91,7 +91,7 @@ if /i "%opt%"=="37" goto cleanup
 if /i "%opt%"=="38" goto installappfree
 if /i "%opt%"=="39" gotoacrobat
 if /i "%opt%"=="40" goto saoluuphuchoi
-if /i "%opt%"=="41" goto
+if /i "%opt%"=="41" goto dichvucong
 if /i "%opt%"=="42" goto
 if /i "%opt%"=="43" goto
 if /i "%opt%"=="44" goto
@@ -101,6 +101,55 @@ if /i "%opt%"=="0" exit
 goto menu
 
 :: --- CAC HAM XU LY ---
+
+:dichvucong
+cls
+echo %C%==========================================%Res%
+echo %Y%        [ CAI DAT DICH VU CONG ]%Res%
+echo %C%==========================================%Res%
+echo.
+echo 1. HTKK - Ho tro ke khai
+echo 2. iTaxViewer - Doc ho so thue
+echo 3. CT SigningHub - Ky dien tu
+echo 4. eSigner - Plugin
+echo 5. Thoat ve menu chinh
+echo %C%==========================================%Res%
+set /p choice="Chon lua chon cua ban (1-5): "
+
+if "%choice%"=="1" goto :htkk
+if "%choice%"=="2" goto :itaxviewer
+if "%choice%"=="3" goto :ctHub
+if "%choice%"=="4" goto :esigner
+if "%choice%"=="5" goto menu
+goto :dichvucong
+
+:htkk
+cls
+echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
+
+:: Kiem tra su ton tai cua HTKK truoc khi tai
+set "foundPath="
+if exist "%ProgramFiles(x86)%\HTKK\Project\HTKK.exe" (set "foundPath=%pathhtkk%")
+
+if defined foundPath (
+    echo:
+    echo:    %R%[[!] Phat hien HTKK da duoc cai dat tai:]%Res%
+    echo:         "%pathhtkk%"
+    echo:    %Y%[==^> Tien hanh backup datafiles...]%Res%
+    timeout /t 3 >nul
+    goto bkdatafiles
+)
+
+:: Neu chua co thi moi tien hanh tai va cai dat
+echo:     %W%[==^> Dang tai Adobe Acrobat DC x64...]%Res%
+if not exist "%source%" md "%source%"
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
+powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
+start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
+goto RunGenP
+pause
+goto menu
 
 :installappfree
 cls
@@ -262,9 +311,9 @@ goto :bitlocker
 
 :activeMAS
 cls
-echo:    %B%╔════════════════════════════════════════════════════════════════════╗%Res%
-echo:    %B%║%Res%           %Y%[ DANG KET NOI DEN MAY CHU MAS.. ]%Res%       %B%║%Res%
-echo:    %B%╚════════════════════════════════════════════════════════════════════╝%Res%
+echo %C%==========================================%Res%
+echo %Y%   [ DANG KET NOI DEN MAY CHU MAS... ]%Res%
+echo %C%==========================================%Res%
 echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
