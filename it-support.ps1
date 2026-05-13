@@ -271,10 +271,10 @@ echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
 
 :: 3. Loai tru thu muc khoi Defender
-echo     - Dang lam sach source cai...
+echo     - Dang them loai tru va don source cai...
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit Software'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
 rmdir /s /q "%source%"
-del /f "%tempHosts%" >nul 2>&1
 
 echo:     ________________________________________________________________________
 echo:                   %G%[HOAN THANH CAI DAT FOXIT PDF EDITOR!]%Res%
