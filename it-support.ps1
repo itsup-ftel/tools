@@ -350,8 +350,8 @@ if defined foundPath (
 echo:     %W%[==^> Dang tai Foxit PDF Editor x2024...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.msi" https://cdn01.foxitsoftware.com/product/phantomPDF/desktop/win/2024.4.1/FoxitPDFEditor202441_enu_Setup_Website.msi
-start /wait "" "%source%\FoxitPDFEditor.msi" /quiet /norestart
 echo:     %W%[==^> Dang cai dat Foxit PDF Editor x2024...]%Res%
+start /wait "" "%source%\FoxitPDFEditor.msi" /quiet /norestart
 goto Activefoxit
 
 :Activefoxit
