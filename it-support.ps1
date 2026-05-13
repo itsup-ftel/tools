@@ -35,7 +35,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----11t5-ok-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----13t5-ok-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. TRUY CAP ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI AUTODESK ]%Res%
@@ -200,6 +200,7 @@ echo:     %W%[==^> Dang tai Foxit PDF Editor x2024...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.msi" https://cdn01.foxitsoftware.com/product/phantomPDF/desktop/win/2024.4.1/FoxitPDFEditor202441_enu_Setup_Website.msi
 start /wait "" "%source%\FoxitPDFEditor.msi" /quiet /norestart
+echo:     %W%[==^> Dang cai dat Foxit PDF Editor x2024...]%Res%
 goto Activefoxit
 
 :Activefoxit
@@ -216,8 +217,6 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&
 echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\FoxitPDFEditor' -Force"
 xcopy "%source%\FoxitPDFEditor" "%pathfoxit%\" /E /I /H /Y /Q >nul
-
-pause
 goto Blockfoxit
 
 :Blockfoxit
@@ -238,7 +237,7 @@ echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
 :: 3. Loai tru thu muc khoi Defender
 echo     - Dang them thu muc cai dat vao danh sach loai tru...
-powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit Software" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit Software'" >nul 2>&1
 
 :: 4. Don dep
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
@@ -593,7 +592,7 @@ echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 :: 3. Loai tru thu muc khoi Defender
 echo     - Dang them thu muc cai dat vao danh sach loai tru...
 powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe'" >nul 2>&1
-powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Adobe" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Adobe'" >nul 2>&1
 
 :: 4. Don dep
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
