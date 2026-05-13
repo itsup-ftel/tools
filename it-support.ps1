@@ -125,136 +125,62 @@ goto :dichvucong
 
 :htkk
 cls
-set "source=%TEMP%\Source"
-set "BACKUP_DIR=%TEMP%\Backup_HTKK_Datafiles"
-echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
-timeout /t 1 >nul
+:: Cấu hình biến môi trường cố định
+set "SRC=%TEMP%\HTKK_Src"
+set "BAK=%TEMP%\HTKK_Bak"
+set "URL=https://vnshort.com/58Bq"
 
-:: Kiểm tra sự tồn tại của .NET 3.5 trong Registry hệ thống
+:: Tự động định vị đường dẫn HTKK đang có hoặc mặc định
+set "HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK%\Project\HTKK.exe" if exist "C:\Program Files\HTKK\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
+
+echo [==^> 1. Kiem tra .NET Framework 3.5...]
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
-if %errorlevel% equ 0 (
-    echo:     %G%[OK] He thong da co san .NET Framework 3.5%Res%
-    timeout /t 1 >nul
-    goto check_htkk
-) else (
-    echo:     %R%[!] Phat hien he thong CHUA cai dat .NET Framework 3.5%Res%
-    echo:     %Y%[==^> Dang tien hanh kich hoat .NET Framework 3.5, vui long cho..]%Res%
-    echo:     %W%[!] Vui long dam bao may tinh co ket noi Internet!%Res%
-    echo:
-    
-    :: Chạy lệnh DISM để tải trực tiếp từ Windows Update
-    dism /online /enable-feature /featurename:NetFx3 /all
-    
-    :: Kiểm tra lại sau khi chạy lệnh cài đặt
-    reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
-    if %errorlevel% equ 0 (
-        echo:     %G%[OK] Kich hoat .NET Framework 3.5 thanh cong!%Res%
-        timeout /t 2 >nul
-        goto check_htkk
-    ) else (
-        echo:     %R%[X] Cai dat .NET 3.5 that bai. Vui long bat Windows Update va thu lai!%Res%
-        pause
-        exit
+if %errorlevel% neq 0 (
+    echo [!] Thieu .NET 3.5. Dang tu dong kich hoat qua DISM (Can Internet)...
+    dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
+    if %errorlevel% neq 0 (echo [X] Loi: Khong the cai .NET 3.5. Dung lenh! & pause & exit)
+)
+echo [OK] .NET Framework 3.5 da san sang.
+
+echo. & echo [==^> 2. Sao luu va Go bo HTKK cu...]
+if exist "%HTKK%\Project\HTKK.exe" (
+    if exist "%HTKK%\Datafiles" (
+        echo [*] Dang sao luu Datafiles...
+        xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
     )
+    echo [*] Dang goi trinh go cai dat HTKK...
+    for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%A"
+    for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%A"
+    
+    if defined UNINST (start /wait "" %UNINST%) else (rmdir /s /q "%HTKK%" 2>nul)
+) else (echo [*] May sach, khong co phien ban cu.)
+
+echo. & echo [==^> 3. Tai va Cai dat HTKK v5.6.6...]
+if exist "%SRC%" rmdir /s /q "%SRC%"
+md "%SRC%"
+curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
+powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
+
+echo [*] Dang chay Setup ngam...
+start /wait "" "%SRC%\HTKK_v5.6.6_signed\setup.exe" /quiet
+
+:: Cập nhật lại đường dẫn chuẩn sau khi cài mới
+set "HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK%\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
+
+if not exist "%HTKK%\Project\HTKK.exe" (echo [X] Loi: Cai dat HTKK that bai! & rmdir /s /q "%SRC%" & pause & exit)
+
+echo. & echo [==^> 4. Phuc hoi du lieu va Don dep...]
+if exist "%BAK%" (
+    xcopy "%BAK%" "%HTKK%\Datafiles\" /E /I /H /Y /C >nul
+    rmdir /s /q "%BAK%"
 )
+rmdir /s /q "%SRC%"
 
-:: 1. Xác định đường dẫn gốc và kiểm tra cài đặt
-set "pathhtkk=C:\Program Files (x86)\HTKK"
-if not exist "%pathhtkk%\Project\HTKK.exe" (
-    if exist "C:\Program Files\HTKK\Project\HTKK.exe" (
-        set "pathhtkk=C:\Program Files\HTKK"
-    ) else (
-        set "pathhtkk="
-    )
-)
-
-:: Nếu tìm thấy HTKK đã cài đặt
-if defined pathhtkk (
-    echo:
-    echo:    %R%[!] Phat hien HTKK da duoc cai dat tai:%Res%
-    echo:         "%pathhtkk%"
-    echo:    %Y%[==^> Tien hanh backup datafiles...]%Res%
-    timeout /t 2 >nul
-    goto backup_and_remove
-) else (
-    echo:    %G%[==^> He thong chua cai HTKK. Tien hanh tai moi...]%Res%
-    goto download_and_install
-)
-
-:backup_and_remove
-:: 2. Thực hiện sao lưu Datafiles trước khi gỡ
-if exist "%pathhtkk%\Datafiles" (
-    echo:     %W%[==^> Dang sao luu thu muc du lieu cu...]%Res%
-    if not exist "%BACKUP_DIR%" md "%BACKUP_DIR%"
-    xcopy "%pathhtkk%\Datafiles" "%BACKUP_DIR%\" /E /I /H /Y /C >nul
-    echo:     %G%[OK] Da sao luu du lieu an toan tai: %BACKUP_DIR%]%Res%
-) else (
-    echo:     %Y%[!] Khong tim thay thu muc Datafiles cu. Bo qua sao luu.%Res%
-)
-
-:: 3. Thực hiện gỡ cài đặt phiên bản cũ
-echo:     %W%[==^> Dang go HTKK phien ban cu..]%Res%
-
-:: Tìm chuỗi UninstallString từ Registry hệ thống để kích hoạt bộ gỡ cài đặt ẩn
-set "UNINSTALL_CMD="
-for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do (set "UNINSTALL_CMD=%%A")
-for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do (set "UNINSTALL_CMD=%%A")
-
-if defined UNINSTALL_CMD (
-    echo:     %Y%[!] Vui long lam theo huong dan tren man hinh Uninstaller de hoan tat xoa bo phien ban cu%Res%
-    start /wait "" %UNINSTALL_CMD%
-    echo:     %G%[OK] Da xoa bo xong phien ban cu.]%Res%
-) else (
-    echo:     %R%[!] Khong tim thay chuoi uninstaller tu dong. Tien hanh xoa thu cong thu muc cai dat cu.%Res%
-    rmdir /s /q "%pathhtkk%" 2^>nul
-)
-timeout /t 2 >nul
-
-:download_and_install
-:: 4. Tiến hành tải phiên bản mới thông qua Curl
-echo:     %W%[==^> Dang tai HTKK_v5.6.6_signed...]%Res%
-if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\HTKK.zip" https://vnshort.com/58Bq
-
-:: 5. Giải nén bằng PowerShell và khởi chạy Setup
-echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
-
-echo:     %Y%[!] Dang mo trinh cai dat moi. Vui long hoan tat cac buoc Setup tre man hinh...]%Res%
-start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe"
-
-:: Định dạng lại vị trí thư mục cài đặt mới (mặc định Windows 64bit)
-set "NEW_HTKK_PATH=C:\Program Files (x86)\HTKK"
-if not exist "%NEW_HTKK_PATH%" set "NEW_HTKK_PATH=C:\Program Files\HTKK"
-
-:: Kiểm tra xem cài đặt thành công hay chưa
-if not exist "%NEW_HTKK_PATH%\Project\HTKK.exe" (
-    echo:     %R%[X] Cai dat that bai! Khong tim thay file HTKK.exe moi.]%Res%
-    rmdir /s /q "%source%"
-    pause
-    exit
-)
-echo:     %G%[==^> Da cai dat hoan tat HTKK phien ban moi]%Res%
-
-:restore_data
-:: 6. Khôi phục lại Datafiles đã sao lưu trước đó
-if exist "%BACKUP_DIR%" (
-    echo:     %W%[==^> Dang khoi phuc lai du lieu ma so thue (Datafiles)...]%Res%
-    if not exist "%NEW_HTKK_PATH%\Datafiles" md "%NEW_HTKK_PATH%\Datafiles"
-    xcopy "%BACKUP_DIR%" "%NEW_HTKK_PATH%\Datafiles\" /E /I /H /Y /C >nul
-    echo:     %G%[OK] Phuc hoi du lieu thanh cong!]%Res%
-    rmdir /s /q "%BACKUP_DIR%"
-)
-
-:: 7. Dọn dẹp thư mục tạm và hoàn tất toàn bộ tiến trình
-echo:     %W%[==^> Dang don dep bo nho tam...]%Res%
-rmdir /s /q "%source%"
-
-echo:
-echo: ==========================================================
-echo:   %G%[THANH CONG] HTKK DA DUOC CAP NHAT VA PHUC HOI DU LIEU!%Res%
-echo: ==========================================================
-echo:
+echo. & echo ===================================================
+echo [THANH CONG] HTKK DA DUOC CAP NHAT VA PHUC HOI DU LIEU!
+echo ===================================================
 pause
 goto dichvucong
 
