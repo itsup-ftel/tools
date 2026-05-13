@@ -317,7 +317,7 @@ echo:     ______________________________________________________________
 echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         [2] Chi kich hoat Editor %Y%(Neu da cai san app)%Res%
 echo:         [3] Chan Firewall (Chan quet ban quyen)
-echo:         [0] %R%Thoat ve menu chinh%Res%
+echo: %R%        [0] Thoat ve menu chinh%Res%
 echo:     ______________________________________________________________
 echo.
 choice /C:1230 /N
