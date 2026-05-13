@@ -163,11 +163,11 @@ for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
 if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
 
 :: Chạy cài đặt ngầm cấu trúc MSI gốc của HTKK
-start /wait "" "%SETUP_EXE%" /s /v"/qn"
+start /wait "" "%SETUP_EXE%"
 
 :: Cập nhật lại biến đường dẫn thực tế sau khi cài
-set "HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%HTKK%" set "HTKK=C:\Program Files\HTKK"
+set "HTKK=%Program Files (x86)%\HTKK"
+if not exist "%HTKK%" set "HTKK=%Program Files%\HTKK"
 
 :: Khôi phục dữ liệu mã số thuế cũ
 if exist "%BAK%" (
