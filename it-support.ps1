@@ -130,148 +130,56 @@ set "SRC=%TEMP%\HTKK_Src"
 set "BAK=%TEMP%\HTKK_Bak"
 set "URL=https://vnshort.com/58Bq"
 
-:: -----------------------------------------------------
-:: DEBUG 1: KIỂM TRA .NET FRAMEWORK 3.5
-:: -----------------------------------------------------
-echo [DEBUG 1] Dang kiem tra .NET Framework 3.5...
+:: Xác định thư mục cài đặt gốc (Xử lý cho cả Win 32/64 bit)
+set "HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK%" if exist "C:\Program Files\HTKK" set "HTKK=C:\Program Files\HTKK"
+
+echo [1/5] Kiem tra va Kich hoat .NET Framework 3.5...
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% neq 0 (
-    echo [!] Phat hien thieu .NET 3.5. Chuan bi kich hoat qua DISM...
-    pause
     dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
-    echo [!] Ket qua chay DISM mang ma loi: %errorlevel% (0 la thanh cong)
-) else (
-    echo [OK] .NET Framework 3.5 da duoc cai san tren Windows.
+    if %errorlevel% neq 0 (echo [X] Loi: Thieu .NET 3.5, khong the tiep tuc! & pause & exit)
 )
 
-:: -----------------------------------------------------
-:: DEBUG 2: DINH VI VA SAO LUU DATAFILES
-:: -----------------------------------------------------
-echo [DEBUG 2] Dang tim vi tri thu muc HTKK hien tai...
-set "HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%HTKK%\Project\HTKK.exe" (
-    if exist "C:\Program Files\HTKK\Project\HTKK.exe" (
-        set "HTKK=C:\Program Files\HTKK"
-    ) else (
-        set "HTKK="
-    )
+echo [2/5] Sao luu du lieu co san...
+if exist "%HTKK%\Datafiles" (
+    if exist "%BAK%" rmdir /s /q "%BAK%"
+    xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
 )
 
-if defined HTKK (
-    echo [OK] Tim thay duong dan HTKK tai: "%HTKK%"
-    if exist "%HTKK%\Datafiles" (
-        echo [*] Dang sao luu thu muc Datafiles sang thu muc tam: "%BAK%"
-        if exist "%BAK%" rmdir /s /q "%BAK%"
-        xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C
-        echo [OK] Hoan tat sao luu du lieu.
-    ) else (
-        echo [!] Khong tim thay thu muc chua ma so thue (Datafiles).
-    )
-) else (
-    echo [!] May tinh chua cai ban HTKK nao truoc day hoặc sai duong dan Project.
-)
+echo [3/5] Don dep phien ban cu...
+if exist "%HTKK%" rmdir /s /q "%HTKK%" 2>nul
 
-:: -----------------------------------------------------
-:: DEBUG 3: GO PHIEN BAN CU (XỬ LÝ AN TOÀN - CHỐNG CRASH)
-:: -----------------------------------------------------
-echo [DEBUG 3] Chuan bi xoa bo phien ban HTKK cu...
-if defined HTKK (
-    echo [*] Dang thuc hien xoa sach thu muc goc de tranh xung dot va loi kien truc file...
-    :: Thay vi goi uninstaller dễ bi crash lenh, ta xoa truc tiep tap tin he thong vi datafiles da backup an toan
-    rmdir /s /q "%HTKK%" 2>nul
-    echo [OK] Da don sach thu muc o dia: "%HTKK%"
-) else (
-    echo [*] Bo qua buoc xoa vi khong co phien ban cu.
-)
-
-:: -----------------------------------------------------
-:: DEBUG 4: TẢI BỘ CÀI ĐẶT ZIP
-:: -----------------------------------------------------
-echo [DEBUG 4] Dang chuan bi tai file tu: %URL%
+echo [4/5] Tai va Giai nen bo cai dat HTKK moi...
 if exist "%SRC%" rmdir /s /q "%SRC%"
 md "%SRC%"
-
-echo [*] Dang tai bang cong cu CURL mac dinh cua Windows...
 curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
-if not exist "%SRC%\HTKK.zip" (
-    echo [LOI] Khong the tai file ve. Vui long kiem tra lai mang hoac link tai!
-    pause
-    exit
-)
-echo [OK] Da tai file thanh cong ve thu muc tam.
-
-:: -----------------------------------------------------
-:: DEBUG 5: GIẢI NÉN FILE ZIP
-:: -----------------------------------------------------
-echo [DEBUG 5] Dang dung Powershell de giai nen file HTKK.zip...
+if not exist "%SRC%\HTKK.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
 powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
-if %errorlevel% neq 0 (
-    echo [LOI] Trinh giai nen Powershell gap su co. File tai ve co the bi loi.
-    pause
-    exit
-)
-echo [OK] Thu muc sau giai nen gom co:
-dir /b "%SRC%"
 
-:: -----------------------------------------------------
-:: DEBUG 6: CÀI ĐẶT ẨN (SILENT INSTALL)
-:: -----------------------------------------------------
-echo [DEBUG 6] Dang tim file setup.exe va kich hoat cai dat an...
-:: Tim kiem file setup.exe trong moi thu muc con vua giai nen
+echo [5/5] Tien hanh cai dat va Phuc hoi du lieu...
 set "SETUP_EXE="
 for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
+if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
 
-if not defined SETUP_EXE (
-    echo [LOI] Khong tim thay tap tin 'setup.exe' trong file zip da giai nen!
-    pause
-    exit
-)
-
-echo [*] Tim thay bo cai tai: "%SETUP_EXE%"
-echo [*] Dang tien hanh cai dat ngam... Vui long doi den khi dong lenh tiep theo xuat hien.
+:: Chạy cài đặt ngầm cấu trúc MSI gốc của HTKK
 start /wait "" "%SETUP_EXE%" /quiet
-echo [OK] Tien trinh Setup cua HTKK da chay xong.
 
-:: Đặt lại đường dẫn chuẩn sau cài đặt để kiểm tra kết quả
-set "NEW_HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%NEW_HTKK%\Project\HTKK.exe" set "NEW_HTKK=C:\Program Files\HTKK"
+:: Cập nhật lại biến đường dẫn thực tế sau khi cài
+set "HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK%" set "HTKK=C:\Program Files\HTKK"
 
-if not exist "%NEW_HTKK%\Project\HTKK.exe" (
-    echo [LOI CRITICAL] Phien ban HTKK moi van chua duoc khoi tao thanh cong trong o C.
-    echo Cua so Setup co the da bi chan boi Windows Defender hoac Antivirus.
-    pause
-    exit
-)
-echo.
-
-:: -----------------------------------------------------
-:: DEBUG 7: PHỤC HỒI DỮ LIỆU MST CŨ
-:: -----------------------------------------------------
-echo [DEBUG 7] Dang tien hanh phuc hoi lai Datafiles...
+:: Khôi phục dữ liệu mã số thuế cũ
 if exist "%BAK%" (
-    echo [*] Dang sao chep du lieu nguoc tu %BAK% vao %NEW_HTKK%\Datafiles
-    xcopy "%BAK%" "%NEW_HTKK%\Datafiles\" /E /I /H /Y /C >nul
-    echo [OK] Phuc hoi thanh cong!
+    xcopy "%BAK%" "%HTKK%\Datafiles\" /E /I /H /Y /C >nul
     rmdir /s /q "%BAK%"
-) else (
-    echo [*] Khong co du lieu backup cu de phuc hoi.
 )
-
-:: -----------------------------------------------------
-:: DEBUG 8: DỌN DẸP THƯ MỤC TẠM & KHỞI CHẠY
-:: -----------------------------------------------------
-echo [DEBUG 8] Don dep va ket thuc quy trinh...
 rmdir /s /q "%SRC%"
 
-echo.
 echo ===================================================
-echo   [HOAN THANH EFFORT] CAP NHAT THANH CONG MIEN LOI!
+echo [OK] DA HOAN THANH CAP NHAT HTKK & RESTORE DATA!
 echo ===================================================
-echo.
-echo Chuan bi tu dong mo HTKK...
-timeout /t 2 >nul
-cd /d "%NEW_HTKK%\Project"
-start HTKK.exe
+timeout /t 3 >nul
 pause
 goto dichvucong
 
