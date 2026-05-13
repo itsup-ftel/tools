@@ -130,7 +130,7 @@ set "SRC=%TEMP%\HTKK_Src"
 set "BAK=%TEMP%\HTKK_Bak"
 set "URL=https://vnshort.com/58Bq"
 
-:: Tự động định vị đường dẫn HTKK đang có hoặc mặc định
+:: Định vị đường dẫn HTKK
 set "HTKK=C:\Program Files (x86)\HTKK"
 if not exist "%HTKK%\Project\HTKK.exe" if exist "C:\Program Files\HTKK\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
 
@@ -139,7 +139,7 @@ reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nu
 if %errorlevel% neq 0 (
     echo [!] Thieu .NET 3.5. Dang tu dong kich hoat qua DISM (Can Internet)...
     dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
-    if %errorlevel% neq 0 (echo [X] Loi: Khong the cai .NET 3.5. Dung lenh! & pause & exit)
+    if %errorlevel% neq 0 (echo [X] Loi: Khong the cai .NET 3.5. & pause & exit)
 )
 echo [OK] .NET Framework 3.5 da san sang.
 
@@ -150,10 +150,18 @@ if exist "%HTKK%\Project\HTKK.exe" (
         xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
     )
     echo [*] Dang goi trinh go cai dat HTKK...
-    for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%A"
-    for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%A"
     
-    if defined UNINST (start /wait "" %UNINST%) else (rmdir /s /q "%HTKK%" 2>nul)
+    :: Giải pháp lấy lệnh gỡ cài đặt an toàn, tránh crash CMD
+    set "UNINST="
+    for /f "tokens=2,*" %%A in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%B"
+    for /f "tokens=2,*" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%B"
+    
+    if defined UNINST (
+        echo [*] Dang chay trinh go...
+        start /wait "" %UNINST%
+    ) else (
+        rmdir /s /q "%HTKK%" 2>nul
+    )
 ) else (echo [*] May sach, khong co phien ban cu.)
 
 echo. & echo [==^> 3. Tai va Cai dat HTKK v5.6.6...]
@@ -162,10 +170,15 @@ md "%SRC%"
 curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
 powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
 
-echo [*] Dang chay Setup ngam...
-start /wait "" "%SRC%\HTKK_v5.6.6_signed\setup.exe" /quiet
+echo [*] Dang chay Setup...
+if exist "%SRC%\HTKK_v5.6.6_signed\setup.exe" (
+    start /wait "" "%SRC%\HTKK_v5.6.6_signed\setup.exe" /quiet
+) else (
+    echo [X] Khong tim thay file setup.exe sau khi giai nen!
+    pause & exit
+)
 
-:: Cập nhật lại đường dẫn chuẩn sau khi cài mới
+:: Định vị lại đường dẫn chuẩn sau khi cài mới
 set "HTKK=C:\Program Files (x86)\HTKK"
 if not exist "%HTKK%\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
 
