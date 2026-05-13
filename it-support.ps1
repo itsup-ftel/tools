@@ -130,70 +130,162 @@ set "SRC=%TEMP%\HTKK_Src"
 set "BAK=%TEMP%\HTKK_Bak"
 set "URL=https://vnshort.com/58Bq"
 
-:: Định vị đường dẫn HTKK
-set "HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%HTKK%\Project\HTKK.exe" if exist "C:\Program Files\HTKK\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
-
-echo [==^> 1. Kiem tra .NET Framework 3.5...]
+:: -----------------------------------------------------
+:: DEBUG 1: KIỂM TRA .NET FRAMEWORK 3.5
+:: -----------------------------------------------------
+echo [DEBUG 1] Dang kiem tra .NET Framework 3.5...
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% neq 0 (
-    echo [!] Thieu .NET 3.5. Dang tu dong kich hoat qua DISM (Can Internet)...
+    echo [!] Phat hien thieu .NET 3.5. Chuan bi kich hoat qua DISM...
+    pause
     dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
-    if %errorlevel% neq 0 (echo [X] Loi: Khong the cai .NET 3.5. & pause & exit)
+    echo [!] Ket qua chay DISM mang ma loi: %errorlevel% (0 la thanh cong)
+) else (
+    echo [OK] .NET Framework 3.5 da duoc cai san tren Windows.
 )
-echo [OK] .NET Framework 3.5 da san sang.
+echo.
+pause
 
-echo. & echo [==^> 2. Sao luu va Go bo HTKK cu...]
-if exist "%HTKK%\Project\HTKK.exe" (
-    if exist "%HTKK%\Datafiles" (
-        echo [*] Dang sao luu Datafiles...
-        xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
-    )
-    echo [*] Dang goi trinh go cai dat HTKK...
-    
-    :: Giải pháp lấy lệnh gỡ cài đặt an toàn, tránh crash CMD
-    set "UNINST="
-    for /f "tokens=2,*" %%A in ('reg query "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%B"
-    for /f "tokens=2,*" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do set "UNINST=%%B"
-    
-    if defined UNINST (
-        echo [*] Dang chay trinh go...
-        start /wait "" %UNINST%
+:: -----------------------------------------------------
+:: DEBUG 2: DINH VI VA SAO LUU DATAFILES
+:: -----------------------------------------------------
+echo [DEBUG 2] Dang tim vi tri thu muc HTKK hien tai...
+set "HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK%\Project\HTKK.exe" (
+    if exist "C:\Program Files\HTKK\Project\HTKK.exe" (
+        set "HTKK=C:\Program Files\HTKK"
     ) else (
-        rmdir /s /q "%HTKK%" 2>nul
+        set "HTKK="
     )
-) else (echo [*] May sach, khong co phien ban cu.)
+)
 
-echo. & echo [==^> 3. Tai va Cai dat HTKK v5.6.6...]
+if defined HTKK (
+    echo [OK] Tim thay duong dan HTKK tai: "%HTKK%"
+    if exist "%HTKK%\Datafiles" (
+        echo [*] Dang sao luu thu muc Datafiles sang thu muc tam: "%BAK%"
+        if exist "%BAK%" rmdir /s /q "%BAK%"
+        xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C
+        echo [OK] Hoan tat sao luu du lieu.
+    ) else (
+        echo [!] Khong tim thay thu muc chua ma so thue (Datafiles).
+    )
+) else (
+    echo [!] May tinh chua cai ban HTKK nao truoc day hoặc sai duong dan Project.
+)
+echo.
+pause
+
+:: -----------------------------------------------------
+:: DEBUG 3: GO PHIEN BAN CU (XỬ LÝ AN TOÀN - CHỐNG CRASH)
+:: -----------------------------------------------------
+echo [DEBUG 3] Chuan bi xoa bo phien ban HTKK cu...
+if defined HTKK (
+    echo [*] Dang thuc hien xoa sach thu muc goc de tranh xung dot va loi kien truc file...
+    :: Thay vi goi uninstaller dễ bi crash lenh, ta xoa truc tiep tap tin he thong vi datafiles da backup an toan
+    rmdir /s /q "%HTKK%" 2>nul
+    echo [OK] Da don sach thu muc o dia: "%HTKK%"
+) else (
+    echo [*] Bo qua buoc xoa vi khong co phien ban cu.
+)
+echo.
+pause
+
+:: -----------------------------------------------------
+:: DEBUG 4: TẢI BỘ CÀI ĐẶT ZIP
+:: -----------------------------------------------------
+echo [DEBUG 4] Dang chuan bi tai file tu: %URL%
 if exist "%SRC%" rmdir /s /q "%SRC%"
 md "%SRC%"
+
+echo [*] Dang tai bang cong cu CURL mac dinh cua Windows...
 curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
+if not exist "%SRC%\HTKK.zip" (
+    echo [LOI] Khong the tai file ve. Vui long kiem tra lai mang hoac link tai!
+    pause
+    exit
+)
+echo [OK] Da tai file thanh cong ve thu muc tam.
+echo.
+pause
+
+:: -----------------------------------------------------
+:: DEBUG 5: GIẢI NÉN FILE ZIP
+:: -----------------------------------------------------
+echo [DEBUG 5] Dang dung Powershell de giai nen file HTKK.zip...
 powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
+if %errorlevel% neq 0 (
+    echo [LOI] Trinh giai nen Powershell gap su co. File tai ve co the bi loi.
+    pause
+    exit
+)
+echo [OK] Thu muc sau giai nen gom co:
+dir /b "%SRC%"
+echo.
+pause
 
-echo [*] Dang chay Setup...
-if exist "%SRC%\HTKK_v5.6.6_signed\setup.exe" (
-    start /wait "" "%SRC%\HTKK_v5.6.6_signed\setup.exe" /quiet
-) else (
-    echo [X] Khong tim thay file setup.exe sau khi giai nen!
-    pause & exit
+:: -----------------------------------------------------
+:: DEBUG 6: CÀI ĐẶT ẨN (SILENT INSTALL)
+:: -----------------------------------------------------
+echo [DEBUG 6] Dang tim file setup.exe va kich hoat cai dat an...
+:: Tim kiem file setup.exe trong moi thu muc con vua giai nen
+set "SETUP_EXE="
+for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
+
+if not defined SETUP_EXE (
+    echo [LOI] Khong tim thay tap tin 'setup.exe' trong file zip da giai nen!
+    pause
+    exit
 )
 
-:: Định vị lại đường dẫn chuẩn sau khi cài mới
-set "HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%HTKK%\Project\HTKK.exe" set "HTKK=C:\Program Files\HTKK"
+echo [*] Tim thay bo cai tai: "%SETUP_EXE%"
+echo [*] Dang tien hanh cai dat ngam... Vui long doi den khi dong lenh tiep theo xuat hien.
+start /wait "" "%SETUP_EXE%" /quiet
+echo [OK] Tien trinh Setup cua HTKK da chay xong.
+echo.
+pause
 
-if not exist "%HTKK%\Project\HTKK.exe" (echo [X] Loi: Cai dat HTKK that bai! & rmdir /s /q "%SRC%" & pause & exit)
+:: Đặt lại đường dẫn chuẩn sau cài đặt để kiểm tra kết quả
+set "NEW_HTKK=C:\Program Files (x86)\HTKK"
+if not exist "%NEW_HTKK%\Project\HTKK.exe" set "NEW_HTKK=C:\Program Files\HTKK"
 
-echo. & echo [==^> 4. Phuc hoi du lieu va Don dep...]
+if not exist "%NEW_HTKK%\Project\HTKK.exe" (
+    echo [LOI CRITICAL] Phien ban HTKK moi van chua duoc khoi tao thanh cong trong o C.
+    echo Cua so Setup co the da bi chan boi Windows Defender hoac Antivirus.
+    pause
+    exit
+)
+echo.
+
+:: -----------------------------------------------------
+:: DEBUG 7: PHỤC HỒI DỮ LIỆU MST CŨ
+:: -----------------------------------------------------
+echo [DEBUG 7] Dang tien hanh phuc hoi lai Datafiles...
 if exist "%BAK%" (
-    xcopy "%BAK%" "%HTKK%\Datafiles\" /E /I /H /Y /C >nul
+    echo [*] Dang sao chep du lieu nguoc tu %BAK% vao %NEW_HTKK%\Datafiles
+    xcopy "%BAK%" "%NEW_HTKK%\Datafiles\" /E /I /H /Y /C >nul
+    echo [OK] Phuc hoi thanh cong!
     rmdir /s /q "%BAK%"
+) else (
+    echo [*] Khong co du lieu backup cu de phuc hoi.
 )
+echo.
+pause
+
+:: -----------------------------------------------------
+:: DEBUG 8: DỌN DẸP THƯ MỤC TẠM & KHỞI CHẠY
+:: -----------------------------------------------------
+echo [DEBUG 8] Don dep va ket thuc quy trinh...
 rmdir /s /q "%SRC%"
 
-echo. & echo ===================================================
-echo [THANH CONG] HTKK DA DUOC CAP NHAT VA PHUC HOI DU LIEU!
+echo.
 echo ===================================================
+echo   [HOAN THANH EFFORT] CAP NHAT THANH CONG MIEN LOI!
+echo ===================================================
+echo.
+echo Chuan bi tu dong mo HTKK...
+timeout /t 2 >nul
+cd /d "%NEW_HTKK%\Project"
+start HTKK.exe
 pause
 goto dichvucong
 
