@@ -237,8 +237,7 @@ echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
 
 :: 3. Loai tru thu muc khoi Defender
-echo     - Dang them thu muc cai dat vao danh sach loai tru...
-powershell -Command "Add-MpPreference -ExclusionPath '%pathfoxit%'" >nul 2>&1
+echo     - Dang lam sach source cai...
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
 rmdir /s /q "%source%"
 del /f "%tempHosts%" >nul 2>&1
