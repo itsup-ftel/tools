@@ -148,6 +148,9 @@ if exist "%HTKK%\Datafiles" (
 )
 
 echo [3/5] Don dep phien ban cu...
+powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'HTKK'}; if ($app) { $app.Uninstall() }" >nul 2>&1
+
+:: Xóa sạch thư mục còn sót lại để dọn đường cho bộ cài mới
 if exist "%HTKK%" rmdir /s /q "%HTKK%" 2>nul
 
 echo [4/5] Tai va Giai nen bo cai dat HTKK moi...
