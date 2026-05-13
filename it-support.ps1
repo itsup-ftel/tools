@@ -38,7 +38,7 @@ echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----13t5--16h12-------
 echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. MO NHANH 2 ]%Res%       %C%[ 7. CAI DAT ]%Res%         %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%    %G%41.%Res% Dich vu cong
