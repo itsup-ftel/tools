@@ -138,8 +138,11 @@ if defined foundPath (
     echo:         "%pathhtkk%"
     echo:    %Y%[==^> Tien hanh backup datafiles...]%Res%
     timeout /t 3 >nul
-    goto bkdatafiles
+    goto removehtkk
 )
+:removehtkk
+echo:     %W%[==^> Dang go HTKK phien ban cu..]%Res%
+goto htkk
 
 :: Neu chua co thi moi tien hanh tai va cai dat
 echo:     %W%[==^> Dang tai HTKK_v5.6.6_signed...]%Res%
