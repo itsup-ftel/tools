@@ -125,6 +125,7 @@ goto :dichvucong
 
 :htkk
 cls
+set "source=%TEMP%\Source"
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 
 :: Kiem tra su ton tai cua HTKK truoc khi tai
@@ -148,10 +149,13 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe" /quiet
 echo:     %G%[==^> Da cai dat hoan tat HTKK]%Res%
+rmdir /s /q "%source%"
 pause
 goto dichvucong
 
 :itaxviewer
+cls
+set "source=%TEMP%\Source"
 echo:     %W%[==^> Dang tai iTaxViewer...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\HTKK.zip" https://vnshort.com/9oEf
@@ -159,10 +163,13 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\iTaxViewer2.7.4.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\iTaxViewer2.7.4.exe" /quiet
 echo:     %G%[==^> Da cai dat hoan tat iTaxViewer]%Res%
+rmdir /s /q "%source%"
 pause
 goto dichvucong
 
 :ctHub
+cls
+set "source=%TEMP%\Source"
 echo:     %W%[==^> Dang tai CTSigningHub...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\CTSigningHub.zip" https://vnshort.com/gLzM
@@ -170,11 +177,14 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe" /quiet
 echo:     %G%[==^> Da cai dat hoan tat HTKK]%Res%
+rmdir /s /q "%source%"
 pause
 goto dichvucong
 
 
 :esigner
+cls
+set "source=%TEMP%\Source"
 echo:     %W%[==^> Dang tai eSigner_1.1.0...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\eSigner_1.1.0_setup.zip" https://vnshort.com/MCxM
@@ -182,6 +192,7 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\eSigner_1.1.0_setup.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\HTKK_v5.6.6_signed\eSigner_1.1.0_setup.exe" /quiet
 echo:     %G%[==^> Da cai dat hoan tat esigner]%Res%
+rmdir /s /q "%source%"
 pause
 goto dichvucong
 
