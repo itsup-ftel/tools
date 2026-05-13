@@ -133,13 +133,13 @@ timeout /t 1 >nul
 :: Kiểm tra sự tồn tại của .NET 3.5 trong Registry hệ thống
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% equ 0 (
-    echo:     %G%[OK] He thong da co san .NET Framework 3.5.]%Res%
+    echo:     %G%[OK] He thong da co san .NET Framework 3.5%Res%
     timeout /t 1 >nul
     goto check_htkk
 ) else (
-    echo:     %R%[[!] Phat hien he thong CHUA cai dat .NET Framework 3.5.]%Res%
-    echo:     %Y%[==^> Dang tien hanh kich hoat .NET Framework 3.5 qua DISM...]%Res%
-    echo:     %W%[!] Vui long dam bao may tinh co ket noi Internet.]%Res%
+    echo:     %R%[!] Phat hien he thong CHUA cai dat .NET Framework 3.5%Res%
+    echo:     %Y%[==^> Dang tien hanh kich hoat .NET Framework 3.5, vui long cho..]%Res%
+    echo:     %W%[!] Vui long dam bao may tinh co ket noi Internet!%Res%
     echo:
     
     :: Chạy lệnh DISM để tải trực tiếp từ Windows Update
@@ -148,11 +148,11 @@ if %errorlevel% equ 0 (
     :: Kiểm tra lại sau khi chạy lệnh cài đặt
     reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
     if %errorlevel% equ 0 (
-        echo:     %G%[OK] Kich hoat .NET Framework 3.5 thanh cong!]%Res%
+        echo:     %G%[OK] Kich hoat .NET Framework 3.5 thanh cong!%Res%
         timeout /t 2 >nul
         goto check_htkk
     ) else (
-        echo:     %R%[X] Cai dat .NET 3.5 that bai. Vui long bat Windows Update va thu lai.]%Res%
+        echo:     %R%[X] Cai dat .NET 3.5 that bai. Vui long bat Windows Update va thu lai!%Res%
         pause
         exit
     )
@@ -171,7 +171,7 @@ if not exist "%pathhtkk%\Project\HTKK.exe" (
 :: Nếu tìm thấy HTKK đã cài đặt
 if defined pathhtkk (
     echo:
-    echo:    %R%[[!] Phat hien HTKK da duoc cai dat tai:]%Res%
+    echo:    %R%[!] Phat hien HTKK da duoc cai dat tai:%Res%
     echo:         "%pathhtkk%"
     echo:    %Y%[==^> Tien hanh backup datafiles...]%Res%
     timeout /t 2 >nul
@@ -189,7 +189,7 @@ if exist "%pathhtkk%\Datafiles" (
     xcopy "%pathhtkk%\Datafiles" "%BACKUP_DIR%\" /E /I /H /Y /C >nul
     echo:     %G%[OK] Da sao luu du lieu an toan tai: %BACKUP_DIR%]%Res%
 ) else (
-    echo:     %Y%[!] Khong tim thay thu muc Datafiles cu. Bo qua sao luu.]%Res%
+    echo:     %Y%[!] Khong tim thay thu muc Datafiles cu. Bo qua sao luu.%Res%
 )
 
 :: 3. Thực hiện gỡ cài đặt phiên bản cũ
@@ -201,11 +201,11 @@ for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Microsoft\Windows\Cur
 for /f "tokens=2 reg_sz" %%A in ('reg query "HKLM\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s /f "HTKK" 2^>nul ^| findstr /i "UninstallString"') do (set "UNINSTALL_CMD=%%A")
 
 if defined UNINSTALL_CMD (
-    echo:     %Y%[!] Vui long lam theo huong dan tren man hinh Uninstaller de hoan tat xoa bo phien ban cu]%Res%
+    echo:     %Y%[!] Vui long lam theo huong dan tren man hinh Uninstaller de hoan tat xoa bo phien ban cu%Res%
     start /wait "" %UNINSTALL_CMD%
     echo:     %G%[OK] Da xoa bo xong phien ban cu.]%Res%
 ) else (
-    echo:     %R%[!] Khong tim thay chuoi uninstaller tu dong. Tien hanh xoa thu cong thu muc cai dat cu.]%Res%
+    echo:     %R%[!] Khong tim thay chuoi uninstaller tu dong. Tien hanh xoa thu cong thu muc cai dat cu.%Res%
     rmdir /s /q "%pathhtkk%" 2^>nul
 )
 timeout /t 2 >nul
