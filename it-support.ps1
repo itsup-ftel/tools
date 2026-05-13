@@ -194,7 +194,7 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
 
 echo:     %Y%[!] Dang mo trinh cai dat moi. Vui long hoan tat cac buoc Setup tre man hinh...]%Res%
-start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe" /quiet
+start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe"
 
 :: Định dạng lại vị trí thư mục cài đặt mới (mặc định Windows 64bit)
 set "NEW_HTKK_PATH=C:\Program Files (x86)\HTKK"
