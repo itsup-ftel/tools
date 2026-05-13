@@ -367,7 +367,7 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&
 
 echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\FoxitPDFEditor' -Force"
-xcopy "%source%\FoxitPDFEditor" "%pathfoxit%\" /E /I /H /Y /Q >nul
+xcopy /E /I /H /Y /Q "%source%\FoxitPDFEditor" "%pathfoxit%\" >nul
 goto Blockfoxit
 
 :Blockfoxit
