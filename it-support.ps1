@@ -160,7 +160,7 @@ curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
 if not exist "%SRC%\HTKK.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
 powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
 
-echo [5/6] Tien hanh cai dat theo cua so...
+echo [5/6] Tien hanh cai dat voi thanh tien trinh hien thi...
 set "SETUP_EXE="
 for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
 if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
