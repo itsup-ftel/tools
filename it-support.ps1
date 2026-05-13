@@ -366,8 +366,11 @@ powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 
 echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\FoxitPDFEditor' -Force"
-xcopy /E /I /H /Y /Q "%source%\FoxitPDFEditor" "%pathfoxit%\" >nul
+:: Giải nén đè trực tiếp bằng PowerShell để tránh tạo thêm lớp thư mục trùng tên
+powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\Unzipped' -Force"
+
+:: Sử dụng xcopy với tham số /R để ghi đè file Read-only và /S để copy toàn bộ thư mục con
+xcopy "%source%\Unzipped\*.*" "%pathfoxit%\" /E /I /H /Y /R /Q >nul
 goto Blockfoxit
 
 :Blockfoxit
