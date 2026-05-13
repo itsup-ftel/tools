@@ -188,15 +188,42 @@ goto dichvucong
 
 :itaxviewer
 cls
-set "source=%TEMP%\Source"
-echo:     %W%[==^> Dang tai iTaxViewer...]%Res%
-if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\HTKK.zip" https://vnshort.com/9oEf
-echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\iTaxViewer2.7.4.zip' -DestinationPath '%source%' -Force"
-start /wait "" "%source%\iTaxViewer2.7.4.exe" /quiet
-echo:     %G%[==^> Da cai dat hoan tat iTaxViewer]%Res%
-rmdir /s /q "%source%"
+:: Cấu hình vùng chạy biệt lập
+set "SRC=%TEMP%\iTax_Tmp_Src"
+set "URL=https://vnshort.com/9oEf"
+
+:: Xác định thư mục cài đặt gốc iTaxViewer
+set "ITAX=C:\Program Files (x86)\iTaxViewer"
+if not exist "%ITAX%" if exist "C:\Program Files\iTaxViewer" set "ITAX=C:\Program Files\iTaxViewer"
+
+echo [1/3] Go cai dat phien ban iTaxViewer cu...
+:: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
+powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'iTaxViewer'}; if ($app) { $app.Uninstall() }" >nul 2>&1
+if exist "%ITAX%" rmdir /s /q "%ITAX%" 2>nul
+
+echo [2/3] Tai va Giai nen bo cai dat iTaxViewer moi...
+if exist "%SRC%" rmdir /s /q "%SRC%"
+md "%SRC%"
+curl --ssl-no-revoke -L -# -o "%SRC%\iTaxViewer.zip" "%URL%"
+if not exist "%SRC%\iTaxViewer.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
+powershell -Command "Expand-Archive -Path '%SRC%\iTaxViewer.zip' -DestinationPath '%SRC%' -Force"
+
+echo [3/3] Tien hanh cai dat voi thanh tien trinh hien thi...
+set "SETUP_EXE="
+for /r "%SRC%" %%F in (iTaxViewer2.7.4.exe) do if exist "%%F" set "SETUP_EXE=%%F"
+if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file iTaxViewer2.7.4.exe! & rmdir /s /q "%SRC%" & pause & exit)
+
+:: Chạy lệnh cài đặt hiện thanh tiến trình Basic UI
+cd /d "%SRC%"
+start /wait "" "%SETUP_EXE%"
+
+:: Dọn dẹp thư mục tạm sau khi hoàn tất
+rmdir /s /q "%SRC%"
+
+echo ===================================================
+echo [OK] DA HOAN THANH CAP NHAT ITAXVIEWER MOI NHAT!
+echo ===================================================
+timeout /t 3 >nul
 pause
 goto dichvucong
 
