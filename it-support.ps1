@@ -143,9 +143,9 @@ if defined foundPath (
 :: Neu chua co thi moi tien hanh tai va cai dat
 echo:     %W%[==^> Dang tai HTKK_v5.6.6_signed...]%Res%
 if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\HTKK.rar" https://download803.fshare.vn/dl/fhth07TGy6TiHD7BfKwqUobM4-9J+zk5BJIB5oG0NfDAZune30CLtmY1p25Z2v+YlPKALbS9kkl1pcGt/HTKK_v5.6.6_signed.rar
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\HTKK.zip" https://download803.fshare.vn/dl/fhth07TGy6TiHD7BfKwqUobM4-9J+zk5BJIB5oG0NfDAZune30CLtmY1p25Z2v+YlPKALbS9kkl1pcGt/HTKK_v5.6.6_signed.rar
 echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\HTKK.rar' -DestinationPath '%source%' -Force"
+powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
 start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe" /quiet
 echo:     %G%[==^> Da cai dat hoan tat HTKK]%Res%
 pause
