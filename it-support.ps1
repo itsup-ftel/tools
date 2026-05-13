@@ -370,7 +370,7 @@ echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\Unzipped' -Force"
 
 :: Sử dụng xcopy với tham số /R để ghi đè file Read-only và /S để copy toàn bộ thư mục con
-xcopy "%source%\Unzipped\*.*" "%pathfoxit%\" /E /I /H /Y /R /Q >nul
+xcopy "%source%\Unzipped\FoxitPDFEditor\*.*" "%pathfoxit%\" /E /I /H /Y /R /Q >nul
 goto Blockfoxit
 
 :Blockfoxit
