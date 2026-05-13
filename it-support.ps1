@@ -207,7 +207,7 @@ cls
 echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
 if not exist "%source%" md "%source%"
 :: Link tai active
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.zip" https://drive.usercontent.google.com/download?id=1OPqckbJJ19OVmUy349zqLdkMV9iwksxW&export=download&authuser=0&confirm=t&uuid=98403bc3-cac7-4002-a371-0788c82f1a4e&at=ALBwUgkSZd1SBuFB7YOXoZHo0gVk:1778580452445
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.zip" https://vnshort.com/n2rr
 
 echo:     %W%[==^> Tam tat Antivirus de chay tien trinh...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
@@ -226,8 +226,10 @@ cls
 echo     ==^> Dang thiet lap Firewall Rules cho Foxit PDF Editor...
 netsh advfirewall firewall add rule name="FoxitPDFEditor_Block_Out" dir=out program="%pathfoxit%\FoxitPDFEditor.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="FoxitPDFEditorupdate_Block_Out" dir=out program="%pathfoxit%\FoxitUpdater.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditor_activation_Block_Out" dir=out program="%pathfoxit%\Activation.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="FoxitPDFEditor_Folder_Block_Out" dir=out program="%pathfoxit%" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="FoxitPDFEditor_Block_In" dir=in program="%pathfoxit%\FoxitPDFEditor.exe" action=block >nul 2>&1
+netsh advfirewall firewall add rule name="FoxitPDFEditor_activation_Block_In" dir=in program="%pathfoxit%\Activation.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="FoxitPDFEditorupdate_Block_In" dir=in program="%pathfoxit%\FoxitUpdater.exe" action=block >nul 2>&1
 netsh advfirewall firewall add rule name="FoxitPDFEditor_Folder_Block_In" dir=in program="%pathfoxit%" action=block >nul 2>&1
 netsh advfirewall set allprofiles state on >nul 2>&1
