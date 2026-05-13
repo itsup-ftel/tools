@@ -134,33 +134,33 @@ set "URL=https://vnshort.com/58Bq"
 set "HTKK=C:\Program Files (x86)\HTKK"
 if not exist "%HTKK%" if exist "C:\Program Files\HTKK" set "HTKK=C:\Program Files\HTKK"
 
-echo [1/5] Kiem tra va Kich hoat .NET Framework 3.5...
+echo [1/6] Kiem tra va Kich hoat .NET Framework 3.5...
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% neq 0 (
     dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
     if %errorlevel% neq 0 (echo [X] Loi: Thieu .NET 3.5, khong the tiep tuc! & pause & exit)
 )
 
-echo [2/5] Sao luu du lieu co san...
+echo [2/6] Sao luu du lieu co san...
 if exist "%HTKK%\Datafiles" (
     if exist "%BAK%" rmdir /s /q "%BAK%"
     xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
 )
 
-echo [3/5] Don dep phien ban cu...
+echo [3/6] Don dep phien ban cu...
 powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'HTKK'}; if ($app) { $app.Uninstall() }" >nul 2>&1
 
 :: Xóa sạch thư mục còn sót lại để dọn đường cho bộ cài mới
 if exist "%HTKK%" rmdir /s /q "%HTKK%" 2>nul
 
-echo [4/5] Tai va Giai nen bo cai dat HTKK moi...
+echo [4/6] Tai va Giai nen bo cai dat HTKK moi...
 if exist "%SRC%" rmdir /s /q "%SRC%"
 md "%SRC%"
 curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
 if not exist "%SRC%\HTKK.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
 powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
 
-echo [5/5] Tien hanh cai dat va Phuc hoi du lieu...
+echo [5/6] Tien hanh cai dat theo cua so...
 set "SETUP_EXE="
 for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
 if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
@@ -173,6 +173,7 @@ set "HTKK=%Program Files (x86)%\HTKK"
 if not exist "%HTKK%" set "HTKK=%Program Files%\HTKK"
 
 :: Khôi phục dữ liệu mã số thuế cũ
+echo [6/6] Dang tien hanh khoi phuc datafiles...
 if exist "%BAK%" (
     xcopy "%BAK%" "%HTKK%\Datafiles\" /E /I /H /Y /C >nul
     rmdir /s /q "%BAK%"
@@ -180,7 +181,7 @@ if exist "%BAK%" (
 rmdir /s /q "%SRC%"
 
 echo ===================================================
-echo [OK] DA HOAN THANH CAP NHAT HTKK & RESTORE DATA!
+echo [OK] DA HOAN THANH CAP NHAT HTKK!
 echo ===================================================
 timeout /t 3 >nul
 pause
