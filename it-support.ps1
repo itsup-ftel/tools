@@ -143,8 +143,6 @@ if %errorlevel% neq 0 (
 ) else (
     echo [OK] .NET Framework 3.5 da duoc cai san tren Windows.
 )
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 2: DINH VI VA SAO LUU DATAFILES
@@ -172,8 +170,6 @@ if defined HTKK (
 ) else (
     echo [!] May tinh chua cai ban HTKK nao truoc day hoặc sai duong dan Project.
 )
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 3: GO PHIEN BAN CU (XỬ LÝ AN TOÀN - CHỐNG CRASH)
@@ -187,8 +183,6 @@ if defined HTKK (
 ) else (
     echo [*] Bo qua buoc xoa vi khong co phien ban cu.
 )
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 4: TẢI BỘ CÀI ĐẶT ZIP
@@ -205,8 +199,6 @@ if not exist "%SRC%\HTKK.zip" (
     exit
 )
 echo [OK] Da tai file thanh cong ve thu muc tam.
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 5: GIẢI NÉN FILE ZIP
@@ -220,8 +212,6 @@ if %errorlevel% neq 0 (
 )
 echo [OK] Thu muc sau giai nen gom co:
 dir /b "%SRC%"
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 6: CÀI ĐẶT ẨN (SILENT INSTALL)
@@ -241,8 +231,6 @@ echo [*] Tim thay bo cai tai: "%SETUP_EXE%"
 echo [*] Dang tien hanh cai dat ngam... Vui long doi den khi dong lenh tiep theo xuat hien.
 start /wait "" "%SETUP_EXE%" /quiet
 echo [OK] Tien trinh Setup cua HTKK da chay xong.
-echo.
-pause
 
 :: Đặt lại đường dẫn chuẩn sau cài đặt để kiểm tra kết quả
 set "NEW_HTKK=C:\Program Files (x86)\HTKK"
@@ -268,8 +256,6 @@ if exist "%BAK%" (
 ) else (
     echo [*] Khong co du lieu backup cu de phuc hoi.
 )
-echo.
-pause
 
 :: -----------------------------------------------------
 :: DEBUG 8: DỌN DẸP THƯ MỤC TẠM & KHỞI CHẠY
