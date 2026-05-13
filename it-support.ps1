@@ -127,9 +127,36 @@ goto :dichvucong
 cls
 set "source=%TEMP%\Source"
 set "BACKUP_DIR=%TEMP%\Backup_HTKK_Datafiles"
-
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 timeout /t 1 >nul
+
+:: Kiểm tra sự tồn tại của .NET 3.5 trong Registry hệ thống
+reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
+if %errorlevel% equ 0 (
+    echo:     %G%[OK] He thong da co san .NET Framework 3.5.]%Res%
+    timeout /t 1 >nul
+    goto check_htkk
+) else (
+    echo:     %R%[[!] Phat hien he thong CHUA cai dat .NET Framework 3.5.]%Res%
+    echo:     %Y%[==^> Dang tien hanh kich hoat .NET Framework 3.5 qua DISM...]%Res%
+    echo:     %W%[!] Vui long dam bao may tinh co ket noi Internet.]%Res%
+    echo:
+    
+    :: Chạy lệnh DISM để tải trực tiếp từ Windows Update
+    dism /online /enable-feature /featurename:NetFx3 /all
+    
+    :: Kiểm tra lại sau khi chạy lệnh cài đặt
+    reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
+    if %errorlevel% equ 0 (
+        echo:     %G%[OK] Kich hoat .NET Framework 3.5 thanh cong!]%Res%
+        timeout /t 2 >nul
+        goto check_htkk
+    ) else (
+        echo:     %R%[X] Cai dat .NET 3.5 that bai. Vui long bat Windows Update va thu lai.]%Res%
+        pause
+        exit
+    )
+)
 
 :: 1. Xác định đường dẫn gốc và kiểm tra cài đặt
 set "pathhtkk=C:\Program Files (x86)\HTKK"
