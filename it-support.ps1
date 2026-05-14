@@ -599,14 +599,31 @@ echo %C%==========================================%Res%
 echo %Y%   CLEANUP ACTIVATION WINDOWS ^& OFFICE%Res%
 echo %C%==========================================%Res%
 echo:
+
+:: --- PHẦN MỚI: HIỂN THỊ CÁC KEY ĐANG CÓ TRÊN MÁY ---
+echo %Y%--- CAC KEY HIEN CO TREN HE THONG ---%Res%
+
+echo %W%[?] Dang kiem tra Key Windows...%Res%
+powershell -Command "$win = cscript //nologo $env:windir\system32\slmgr.vbs /dli | Select-String 'Partial Product Key'; if($win){Write-Host \"  $win\" -ForegroundColor Green} else {Write-Host '  - Khong tim thay Key Windows.' -ForegroundColor Yellow}"
+
+echo %W%[?] Dang kiem tra Key Office...%Res%
+powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); $found = $false; foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $res = cscript //nologo \"$p\ospp.vbs\" /dstatus | Select-String 'Last 5 characters'; if ($res) { Write-Host \"  $res\" -ForegroundColor Green; $found = $true } } }; if (-not $found) { Write-Host '  - Khong tim thay Key Office.' -ForegroundColor Yellow }"
+
+echo:
+echo %C%Nhan phim bat ky de BAT DAU XOA key...%Res%
+pause >nul
+echo:
+:: --------------------------------------------------
+
 echo %G%[+]%W% Dang quet va xoa ban quyen Windows...%Res%
 powershell -Command "cscript //nologo %windir%\system32\slmgr.vbs /upk; cscript //nologo %windir%\system32\slmgr.vbs /cpky; cscript //nologo %windir%\system32\slmgr.vbs /rearm" >nul 2>&1
 
 echo:
 echo %G%[+]%W% Dang quet va xoa key Office...%Res%
 powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $out = cscript //nologo \"$p\ospp.vbs\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\ospp.vbs\" /unpkey:$k >$null } } }" >nul 2>&1
+
 echo:
-echo %C%--- KIEM TRA TRANG THAI KEY ---%Res%
+echo %C%--- KIEM TRA TRANG THAI KEY SAU KHI XOA ---%Res%
 
 echo %Y%Windows Status:%Res%
 powershell -Command "$win = cscript //nologo $env:windir\system32\slmgr.vbs /dli | Select-String 'Partial Product Key'; if($win){Write-Host \"  $win\"} else {Write-Host '  - Khong con Key Windows.' -ForegroundColor Red}"
