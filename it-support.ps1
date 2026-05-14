@@ -33,7 +33,7 @@ echo %C%==========================================%Res%
 echo %Y%       XAC THUC QUYEN TRUY CAP TOOL%Res%
 echo %C%==========================================%Res%
 echo.
-set /p "input_pass=Nhap mat khau de mo Tool: "
+set /p "input_pass=Nhap mat khau de vao su dung Tool: "
 
 if "%input_pass%"=="" (
     echo.
