@@ -38,7 +38,7 @@ if "%input_pass%"=="%PASSWORD%" (
     echo.
     echo %G%[OK] Mat khau chinh xac!%Res%
     timeout /t 1 >nul
-    goto dichvucong
+    goto menu
 ) else (
     set /a "FAIL_COUNT+=1"
     echo.
