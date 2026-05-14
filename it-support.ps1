@@ -29,10 +29,10 @@ set "FAIL_COUNT=0"
 :login
 cls
 echo %C%==========================================%Res%
-echo %Y%       XAC THUC QUYEN TRUY CAP%Res%
+echo %Y%       XAC THUC QUYEN TRUY CAP TOOL%Res%
 echo %C%==========================================%Res%
 echo.
-set /p "input_pass=Nhap mat khau de mo Menu: "
+set /p "input_pass=Nhap mat khau de mo Tool: "
 
 if "%input_pass%"=="%PASSWORD%" (
     echo.
@@ -48,12 +48,11 @@ if "%input_pass%"=="%PASSWORD%" (
         exit
     ) else (
         set /a "REMAIN=3-FAIL_COUNT"
-        echo %R%[X] Sai mat khau. Ban con %REMAIN% lan thu!%Res%
+        echo %R%[X] Sai mat khau lan %FAIL_COUNT%. Ban con %REMAIN% lan thu!%Res%
         timeout /t 2 >nul
         goto login
     )
 )
-
 
 :menu
 cls
