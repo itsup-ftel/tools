@@ -57,7 +57,7 @@ if %FAIL_COUNT% geq 3 (
 )
 set /a "REMAIN=3-FAIL_COUNT"
 echo %R%[X] Sai mat khau lan %FAIL_COUNT%. Ban con %REMAIN% lan thu!%Res%
-timeout /t 2 >nul
+timeout /t 3 >nul
 goto login
 
 :menu
