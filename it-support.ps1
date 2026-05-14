@@ -207,7 +207,7 @@ if exist "%HTKK_DIR%\Datafiles" (
 )
 
 :: Gọi hàm cài đặt chung cho HTKK (Bước 3, 4, 5 nằm trong hàm này)
-call :InstallApp "HTKK" "https://vnshort.com/58Bq" "HTKK.zip" "setup.exe" "%HTKK_DIR%"
+call :InstallApp "%CURRENT_APP%" "https://vnshort.com/58Bq" "HTKK.zip" "setup.exe" "%HTKK_DIR%"
 
 :: Khôi phục dữ liệu HTKK sau khi cài xong
 echo %C%[6/6]%Res% Dang tien hanh khoi phuc datafiles...
@@ -224,7 +224,7 @@ cls
 set "CURRENT_APP=iTaxViewer"
 set "DIR=C:\Program Files (x86)\iTaxViewer"
 if not exist "%DIR%" if exist "C:\Program Files\iTaxViewer" set "DIR=C:\Program Files\iTaxViewer"
-call :InstallApp "iTaxViewer" "https://vnshort.com/9oEf" "iTaxViewer.zip" "iTaxViewer2.7.4.exe" "%DIR%"
+call :InstallApp "%CURRENT_APP%" "https://vnshort.com/9oEf" "iTaxViewer.zip" "iTaxViewer2.7.4.exe" "%DIR%"
 goto end_process
 
 :proc_cthub
@@ -232,7 +232,7 @@ cls
 set "CURRENT_APP=CTSigningHub"
 set "DIR=C:\Program Files (x86)\CT\CTSigningHub"
 if not exist "%DIR%" if exist "C:\Program Files\CT\CTSigningHub" set "DIR=C:\Program Files\CT\CTSigningHub"
-call :InstallApp "CTSigningHub" "https://vnshort.com/gLzM" "CTSigningHub.zip" "CTSigningHub.exe" "%DIR%"
+call :InstallApp "%CURRENT_APP%" "https://vnshort.com/gLzM" "CTSigningHub.zip" "CTSigningHub.exe" "%DIR%"
 goto end_process
 
 :proc_esigner
@@ -240,7 +240,7 @@ cls
 set "CURRENT_APP=eSigner"
 set "DIR=C:\Program Files (x86)\eSigner Java"
 if not exist "%DIR%" if exist "C:\Program Files\eSigner Java" set "DIR=C:\Program Files\eSigner Java"
-call :InstallApp "esigner" "https://vnshort.com/MCxM "eSigner_1.1.0_setup.zip" "eSigner_1.1.0_setup.exe" "%DIR%"
+call :InstallApp "%CURRENT_APP%" "https://vnshort.com/MCxM" "eSigner_1.1.0_setup.zip" "eSigner_1.1.0_setup.exe" "%DIR%"
 goto end_process
 
 :end_process
