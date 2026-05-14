@@ -1,7 +1,6 @@
 # it-support.ps1
 $batchCode = @'
 @echo off
-:: Tu kiem tra va xin quyen Admin ngay trong Batch
 net session >nul 2>&1
 if %errorLevel% neq 0 (
     powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
@@ -10,10 +9,8 @@ if %errorLevel% neq 0 (
 title IT SUPPORT PROFESSIONAL TOOLKIT v26.5
 mode con: cols=120 lines=30
 
-:: Tao ky tu ESC de chay mau ANSI
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
 
-:: Dinh nghia mau
 set "G=%ESC%[92m"
 set "Y=%ESC%[93m"
 set "C=%ESC%[96m"
@@ -22,7 +19,6 @@ set "R=%ESC%[91m"
 set "B=%ESC%[94m"
 set "Res=%ESC%[0m"
 
-:: Cấu hình mật khẩu truy cập và số lần nhập sai ban đầu
 set "PASSWORD=2026"
 set "FAIL_COUNT=0"
 
@@ -42,7 +38,6 @@ if "%input_pass%"=="" (
     goto login
 )
 
-:: Kiểm tra tính chính xác của mật khẩu
 if "%input_pass%"=="%PASSWORD%" (
     echo.
     echo %G%[OK] Mat khau chinh xac!%Res%
@@ -185,21 +180,6 @@ echo %C%====================================================================%Res
 pause
 goto menu
 
-@echo off
-cls
-
-:: Khởi tạo mã màu ANSI bằng kỹ thuật Prompt
-for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
-
-:: Định nghĩa bảng màu
-set "G=%ESC%[92m"
-set "Y=%ESC%[93m"
-set "C=%ESC%[96m"
-set "W=%ESC%[97m"
-set "R=%ESC%[91m"
-set "B=%ESC%[94m"
-set "Res=%ESC%[0m"
-
 :dichvucong
 cls
 echo %C%==========================================%Res%
@@ -221,10 +201,6 @@ if "%choice%"=="4" goto :proc_esigner
 if "%choice%"=="5" goto menu
 goto :dichvucong
 
-:: =========================================================================
-:: KHỐI XỬ LÝ RIÊNG CHO TỪNG PHẦN MỀM (Cấu hình tham số và gọi hàm dùng chung)
-:: =========================================================================
-
 :proc_htkk
 cls
 set "CURRENT_APP=HTKK"
@@ -235,7 +211,6 @@ if %errorlevel% neq 0 (
     if %errorlevel% neq 0 (echo %R%[X] Loi: Thieu .NET 3.5!%Res% & pause & goto dichvucong)
 )
 
-:: Xác định thư mục cài đặt gốc & Sao lưu dữ liệu HTKK
 set "HTKK_DIR=C:\Program Files (x86)\HTKK"
 if not exist "%HTKK_DIR%" if exist "C:\Program Files\HTKK" set "HTKK_DIR=C:\Program Files\HTKK"
 set "BAK=%TEMP%\HTKK_Bak"
@@ -246,10 +221,8 @@ if exist "%HTKK_DIR%\Datafiles" (
     xcopy "%HTKK_DIR%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
 )
 
-:: Gọi hàm cài đặt chung cho HTKK (Bước 3, 4, 5 nằm trong hàm này)
 call :InstallApp "%CURRENT_APP%" "https://vnshort.com/58Bq" "HTKK.zip" "setup.exe" "%HTKK_DIR%"
 
-:: Khôi phục dữ liệu HTKK sau khi cài xong
 echo %C%[6/6]%Res% Dang tien hanh khoi phuc datafiles...
 set "HTKK_DIR=C:\Program Files (x86)\HTKK"
 if not exist "%HTKK_DIR%" set "HTKK_DIR=C:\Program Files\HTKK"
@@ -291,10 +264,6 @@ timeout /t 3 >nul
 pause
 goto dichvucong
 
-:: =========================================================================
-:: HÀM CÀI ĐẶT DÙNG CHUNG (Tích hợp hiển thị màu sắc thông báo)
-:: Tham số: %1=Tên App, %2=Link tải, %3=Tên File Zip, %4=Tên File Setup, %5=Thư mục cài đặt
-:: =========================================================================
 :InstallApp
 set "APP_NAME=%~1"
 set "URL=%~2"
@@ -324,8 +293,6 @@ if not defined SETUP_EXE (echo %R%[X] Loi: Khong tim thay file %EXE_NAME%!%Res% 
 start /wait "" "%SETUP_EXE%"
 rmdir /s /q "%SRC%"
 exit /b
-
-
 
 :foxiteditor
 cls
@@ -358,7 +325,6 @@ goto menu
 cls
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 
-:: Kiem tra su ton tai cua Foxit PDF Editor truoc khi tai
 set "foundPath="
 if exist "%pathfoxit%\FoxitPDFEditor.exe" (set "foundPath=%pathfoxit%")
 
@@ -371,7 +337,6 @@ if defined foundPath (
     goto Activefoxit
 )
 
-:: Neu chua co thi moi tien hanh tai va cai dat
 echo:     %W%[==^> Dang tai Foxit PDF Editor x2024...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.msi" https://cdn01.foxitsoftware.com/product/phantomPDF/desktop/win/2024.4.1/FoxitPDFEditor202441_enu_Setup_Website.msi
@@ -383,7 +348,6 @@ goto Activefoxit
 cls
 echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
 if not exist "%source%" md "%source%"
-:: Link tai active
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\FoxitPDFEditor.zip" https://vnshort.com/n2rr
 
 echo:     %W%[==^> Tam tat Antivirus de chay tien trinh...]%Res%
@@ -391,10 +355,7 @@ powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 
 echo:     %W%[==^> Dang giai nen va copy source Editor...]%Res%
-:: Giải nén đè trực tiếp bằng PowerShell để tránh tạo thêm lớp thư mục trùng tên
 powershell -Command "Expand-Archive -Path '%source%\FoxitPDFEditor.zip' -DestinationPath '%source%\Unzipped' -Force"
-
-:: Sử dụng xcopy với tham số /R để ghi đè file Read-only và /S để copy toàn bộ thư mục con
 xcopy "%source%\Unzipped\FoxitPDFEditor\*.*" "%pathfoxit%\" /E /I /H /Y /R /Q >nul
 goto Blockfoxit
 
@@ -413,8 +374,6 @@ netsh advfirewall firewall add rule name="FoxitPDFEditor_Folder_Block_In" dir=in
 netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
-
-:: 3. Loai tru thu muc khoi Defender
 echo     - Dang them loai tru va don source cai...
 powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit Software'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
@@ -428,7 +387,6 @@ goto foxiteditor
 
 :installappfree
 cls
-:: 1. Kiem tra va Tu dong cai dat/Cap nhat Winget
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
     echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
@@ -440,10 +398,7 @@ if %errorLevel% neq 0 (
     echo [OK] Da kich hoat Winget.
 )
 
-:: 2. Lam moi nguon tai de tranh treo
 winget source update >nul 2>&1
-
-:: 3. Chay chuong trinh chinh
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='7-Zip'; ID='7zip.7zip'}," ^
@@ -562,11 +517,9 @@ set "drive="
 set /p drive="Nhap ky tu o dia (Vi du C hoac C:): "
 if "%drive%"=="" goto :bitlocker
 
-:: Tu dong them dau hai cham neu thieu
 if "%drive:~-1%" NEQ ":" set "drive=%drive%:"
 
 echo [!] Dang kiem tra o %drive%...
-:: Kiem tra trang thai truoc khi tat de tranh loi 0x80310008
 powershell -command "$v = Get-BitLockerVolume -MountPoint '%drive%'; if ($v.ProtectionStatus -eq 'On') { Disable-BitLocker -MountPoint '%drive%'; Write-Host '[OK] Da bat dau giai ma o %drive%.' -ForegroundColor Green } else { Write-Host '[!] O %drive% hien dang TAT BitLocker, khong can giai ma.' -ForegroundColor Yellow }"
 pause
 goto :bitlocker
@@ -600,8 +553,6 @@ echo %C%==========================================%Res%
 echo %Y%   CLEANUP ACTIVATION WINDOWS ^& OFFICE%Res%
 echo %C%==========================================%Res%
 echo:
-
-:: --- HIỂN THỊ CÁC KEY ĐANG CÓ TREN MÁY ---
 echo %Y%--- CAC KEY HIEN CO TREN HE THONG ---%Res%
 
 echo %W%[?] Dang kiem tra Key Windows...%Res%
@@ -646,8 +597,6 @@ echo %R%==========================================%Res%
 pause
 goto menu
 
-
-
 :acrobat
 cls
 mode 85, 35
@@ -680,7 +629,6 @@ goto menu
 cls
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 
-:: Kiem tra su ton tai cua Acrobat truoc khi tai
 set "foundPath="
 if exist "%path64%\Acrobat.exe" (set "foundPath=%path64%")
 if exist "%path32%\Acrobat.exe" (set "foundPath=%path32%")
@@ -694,7 +642,6 @@ if defined foundPath (
     goto RunGenP
 )
 
-:: Neu chua co thi moi tien hanh tai va cai dat
 echo:     %W%[==^> Dang tai Adobe Acrobat DC x64...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
@@ -707,7 +654,6 @@ goto RunGenP
 cls
 echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
 if not exist "%source%" md "%source%"
-:: Link tai GenP moi nhat (Phien ban on dinh)
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
 
 echo:     %W%[==^> Tam tat Antivirus de chay GenP...]%Res%
