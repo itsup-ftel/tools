@@ -279,7 +279,7 @@ set "URL=https://vnshort.com/gLzM"
 set "CTHub=C:\Program Files (x86)\CT\CTSigningHub\"
 if not exist "%CTHub%" if exist "C:\Program Files\CT\CTSigningHub" set "CTHub=C:\Program Files\CT\CTSigningHub"
 
-echo [1/3] Go cai dat phien ban iTaxViewer cu...
+echo [1/3] Go cai dat phien ban CTSigningHub cu...
 :: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
 powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'CTSigningHub'}; if ($app) { $app.Uninstall() }" >nul 2>&1
 if exist "%CTHub%" rmdir /s /q "%CTHub%" 2>nul
