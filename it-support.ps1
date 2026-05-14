@@ -38,12 +38,13 @@ if "%input_pass%"=="%PASSWORD%" (
     echo.
     echo %G%[OK] Mat khau chinh xac!%Res%
     timeout /t 1 >nul
-    goto menu
+    goto dichvucong
 ) else (
     set /a "FAIL_COUNT+=1"
     echo.
-    if %FAIL_COUNT% geq 3 (
-        echo %R%[X] SAI MAT KHAU 3 LAN! BAN KHONG CO QUYEN TRUY CAP!%Res%
+    :: Sửa logic: Nếu biến đếm đạt đến 3, khóa và thoát ngay lập tức
+    if !FAIL_COUNT! geq 3 (
+        echo %R%[X] SAI MAT KHAU LAN 3! BAN DA BI TU CHOI TRUY CAP!%Res%
         timeout /t 3 >nul
         exit
     ) else (
