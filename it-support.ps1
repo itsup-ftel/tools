@@ -31,6 +31,8 @@ echo %C%==========================================%Res%
 echo.
 set /p "input_pass=Nhap mat khau de vao su dung Tool: "
 
+for /f "delims=" %%A in ('powershell -Command "$p=''; while($true){$k=[Console]::ReadKey($true); if($k.Key -eq 'Enter'){break}elseif($k.Key -eq 'Backspace'){if($p.Length -gt 0){$p=$p.SubString(0,$p.Length-1); Write-Host -NoNewline \"`b `b\"}}else{$p+=$k.KeyChar; Write-Host -NoNewline '*'}}; Write-Host $p"') do set "input_pass=%%A"
+
 if "%input_pass%"=="" (
     echo.
     echo %R%[X] Ban chua nhap mat khau. Vui long khong de trong!%Res%
