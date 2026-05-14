@@ -42,14 +42,13 @@ if "%input_pass%"=="%PASSWORD%" (
 ) else (
     set /a "FAIL_COUNT+=1"
     echo.
-    :: Sửa logic: Nếu biến đếm đạt đến 3, khóa và thoát ngay lập tức
     if !FAIL_COUNT! geq 3 (
         echo %R%[X] SAI MAT KHAU LAN 3! BAN DA BI TU CHOI TRUY CAP!%Res%
         timeout /t 3 >nul
         exit
     ) else (
         set /a "REMAIN=3-FAIL_COUNT"
-        echo %R%[X] Sai mat khau lan %FAIL_COUNT%. Ban con %REMAIN% lan thu!%Res%
+        echo %R%[X] Sai mat khau lan !FAIL_COUNT!. Ban con !REMAIN! lan thu!%Res%
         timeout /t 2 >nul
         goto login
     )
