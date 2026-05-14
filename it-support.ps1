@@ -134,32 +134,7 @@ powershell -Command "$hosts = Get-Content $env:windir\system32\drivers\etc\hosts
 :: ==========================================
 echo:
 echo %C% KIEM TRA TOAN BO PHAN MEM AUTODESK:%Res%
-powershell -Command " ^
-$hostsAdsk = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue | Select-String 'autodesk.com', 'autodesk.com'; ^
-$adskService = Get-Service -Name 'AdskLicensingService' -ErrorAction SilentlyContinue; ^
-$lmgrdProcess = Get-Process -Name 'lmgrd', 'adskflex' -ErrorAction SilentlyContinue; ^
-$hasNLM = Test-Path 'C:\Autodesk\Network License Manager'; ^
-$hasCrackXF = Test-Path 'C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing\AdskLicensingService.data'; ^
-if ($hostsAdsk) { ^
-    Write-Host '  [-] CANH BAO: File Hosts co chèn dòng chan IP tu xa cua Autodesk (Hanh vi Crack/X-Force/Xoá Genuine Service)' -ForegroundColor Red ^
-}; ^
-if (Test-Path 'C:\Program Files\Autodesk') { ^
-    Write-Host '  [+] He thong co cài dat cac phan mem Autodesk.' -ForegroundColor Cyan; ^
-    if ($lmgrdProcess -or $hasNLM) { ^
-        Write-Host '  [-] CHÚ Ý: Phat hien ban dang gia lap Network License Server offline (Kieu Crack NLM x-force / MAGNiTUDE)' -ForegroundColor Yellow ^
-    }; ^
-    if ($adskService) { ^
-        if ($adskService.Status -eq 'Running') { ^
-            Write-Host '  [+] Dich vu cap phep AdskLicensingService dang chay hop le.' -ForegroundColor Green ^
-        } else { ^
-            Write-Host '  [-] CANH BAO: Dich vu xac thuc bi TẮT (Dau hieu xai thuoc ghi de file dll / AdskLicensingBypass)' -ForegroundColor Red ^
-        } ^
-    } else { ^
-        Write-Host '  [-] CANH BAO: Khong tim thay dich vu xac thuc goc cua Autodesk (Có the bi gỡ bỏ de chay crack)' -ForegroundColor Red ^
-    } ^
-} else { ^
-    Write-Host '  [-] Khong co phan mem Autodesk/AutoCAD nao tren may.' -ForegroundColor Gray ^
-}"
+powershell -Command "$hostsAdsk = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue | Select-String 'autodesk.com'; $adskService = Get-Service -Name 'AdskLicensingService' -ErrorAction SilentlyContinue; $lmgrdProcess = Get-Process -Name 'lmgrd', 'adskflex' -ErrorAction SilentlyContinue; $hasNLM = Test-Path 'C:\Autodesk\Network License Manager'; if ($hostsAdsk) { Write-Host '  [-] CANH BAO: File Hosts co chen dong chan IP Autodesk (Dau hieu Crack/X-Force)' -ForegroundColor Red }; if (Test-Path 'C:\Program Files\Autodesk') { Write-Host '  [+] He thong co cai dat cac phan mem Autodesk.' -ForegroundColor Cyan; if ($lmgrdProcess -or $hasNLM) { Write-Host '  [-] CHU Y: Phat hien gia lap Network License Server (Kieu Crack NLM x-force)' -ForegroundColor Yellow }; if ($adskService) { if ($adskService.Status -eq 'Running') { Write-Host '  [+] Dich vu cap phep AdskLicensingService dang chay hop le.' -ForegroundColor Green } else { Write-Host '  [-] CANH BAO: Dich vu xac thuc bi TAT (Dau hieu crack ghi de file dll)' -ForegroundColor Red } } else { Write-Host '  [-] CANH BAO: Khong tim thay dich vu xac thuc goc cua Autodesk.' -ForegroundColor Red } } else { Write-Host '  [-] Khong co phan mem Autodesk/AutoCAD nao tren may.' -ForegroundColor Gray }"
 
 echo:
 echo %C%====================================================================%Res%
