@@ -23,7 +23,7 @@ set "B=%ESC%[94m"
 set "Res=%ESC%[0m"
 
 :: Cấu hình mật khẩu truy cập và số lần nhập sai ban đầu
-set "PASSWORD=1223334444"
+set "PASSWORD=2026"
 set "FAIL_COUNT=0"
 
 :login
