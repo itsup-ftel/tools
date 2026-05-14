@@ -138,7 +138,7 @@ goto menu
 :checklicense
 cls
 echo %C%====================================================================%Res%
-echo %Y%                   HE THONG KIEM TRA BAN QUYEN %Res%
+echo %Y%                  CONG CU QUET KIEM TRA BAN QUYEN %Res%
 echo %C%====================================================================%Res%
 echo:
 echo %C% KIEM TRA BAN QUYEN WINDOWS:%Res%
