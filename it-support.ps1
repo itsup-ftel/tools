@@ -42,25 +42,28 @@ if "%input_pass%"=="" (
     goto login
 )
 
+:: Kiểm tra tính chính xác của mật khẩu
 if "%input_pass%"=="%PASSWORD%" (
     echo.
     echo %G%[OK] Mat khau chinh xac!%Res%
     timeout /t 1 >nul
     goto menu
 ) else (
-    set /a "FAIL_COUNT+=1"
-    echo.
-    if !FAIL_COUNT! geq 3 (
-        echo %R%[X] SAI MAT KHAU LAN 3! BAN DA BI TU CHOI TRUY CAP!%Res%
-        timeout /t 3 >nul
-        exit
-    ) else (
-        set /a "REMAIN=3-FAIL_COUNT"
-        echo %R%[X] Sai mat khau lan !FAIL_COUNT!. Ban con !REMAIN! lan thu!%Res%
-        timeout /t 2 >nul
-        goto login
-    )
+    goto login_error
 )
+
+:login_error
+set /a "FAIL_COUNT+=1"
+echo.
+if %FAIL_COUNT% geq 3 (
+    echo %R%[X] SAI MAT KHAU LAN 3! BAN DA BI TU CHOI TRUY CAP!%Res%
+    timeout /t 3 >nul
+    exit
+)
+set /a "REMAIN=3-FAIL_COUNT"
+echo %R%[X] Sai mat khau lan %FAIL_COUNT%. Ban con %REMAIN% lan thu!%Res%
+timeout /t 2 >nul
+goto login
 
 :menu
 cls
