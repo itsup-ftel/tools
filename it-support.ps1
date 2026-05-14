@@ -105,40 +105,40 @@ goto menu
 :checklicense
 cls
 echo %C%====================================================================%Res%
-echo %Y%                     LICENSE CHECKER SYSTEM %Res%
+echo %Y%                   HE THONG KIEM TRA BAN QUYEN %Res%
 echo %C%====================================================================%Res%
 
 :: ==========================================
 :: 1. KIỂM TRA WINDOWS
 :: ==========================================
 echo:
-echo %C% KIEM TRA BAN QUYEN WINDOWS:%Res%
-powershell -Command "$status = cscript //nologo $env:windir\system32\slmgr.vbs /dli; $kms = $status | Select-String 'KMS', 'kms host', '180 days'; $per = $status | Select-String 'permanently'; if ($kms) { Write-Host '  [-] Trang thai: BI CRACK / SUDUNG KEY KMS GIA LAP' -ForegroundColor Red; Write-Host \"  [-] Chi tiet: $kms\" -ForegroundColor DarkRed } elseif ($per) { Write-Host '  [+] Trang thai: BAN QUYEN XIN / CO DINH (Permanent)' -ForegroundColor Green } else { Write-Host '  [-] Trang thai: Chua kich hoat hoac dung thu (Trial)' -ForegroundColor Yellow }"
+echo %C%[1] KIEM TRA BAN QUYEN WINDOWS:%Res%
+powershell -Command "$w=cscript //nologo $env:windir\system32\slmgr.vbs /dli; $x=wmic path SoftwareLicensingProduct where (ApplicationID='55c92734-d682-4d71-983e-d6ec3f16059f' and PartialProductKey is not null) get Description, LicenseStatus /value | Out-String; if($w -match 'KMS' -or $x -match 'VOLUME_KMS'){Write-Host '  [-] Ket qua: CRACK (Su dung May chu KMS gia lap)' -ForegroundColor Red} elseif($w -match 'permanently' -and $x -match 'RETAIL'){Write-Host '  [+] Ket qua: BAN QUYEN XIN (Retail / OEM vi vinh)' -ForegroundColor Green} elseif($x -match 'VOLUME_MAK'){Write-Host '  [+] Ket qua: BAN QUYEN DOANH NGHIEP (Khóa MAK chinh thuc)' -ForegroundColor Green} else {Write-Host '  [-] Ket qua: Co the la Key Gia lap KTS (MAS/HWID) hoac Trial. Can kiem tra lai account Microsoft.' -ForegroundColor Yellow}"
 
 :: ==========================================
-:: 2. KIỂM TRA OFFICE
+:: 2. KIỂM TRA MICROSOFT OFFICE
 :: ==========================================
 echo:
-echo %C% KIEM TRA BAN QUYEN MICROSOFT OFFICE:%Res%
-powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); $found = $false; foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $found = $true; $out = cscript //nologo \"$p\ospp.vbs\" /dstatus; $kms = $out | Select-String 'KMS', '180 days'; $lic = $out | Select-String 'LICENSE STATUS: LICENSED'; if ($kms) { Write-Host '  [-] Trang thai: BI CRACK / DUNG KMS CO HAN' -ForegroundColor Red } elseif ($lic) { Write-Host '  [+] Trang thai: BAN QUYEN HOP LE / TAI KHOAN O365' -ForegroundColor Green } else { Write-Host '  [-] Trang thai: Chua co ban quyen' -ForegroundColor Yellow } } }; if (-not $found) { Write-Host '  [-] Khong tim thay phien ban Office nao tren may.' -ForegroundColor Gray }"
+echo %C%[2] KIEM TRA BAN QUYEN MICROSOFT OFFICE:%Res%
+powershell -Command "$ohook=Test-Path '$env:SystemRoot\system32\spp\tokens\skus\Office*'; $paths=@('${env:ProgramFiles}\Microsoft Office\Office16','${env:ProgramFiles(x86)}\Microsoft Office\Office16'); $f=$false; foreach($p in $paths){if(Test-Path \"$p\ospp.vbs\"){$f=$true; $o=cscript //nologo \"$p\ospp.vbs\" /dstatus; if($o -match 'KMS'){$status='CRACK_KMS'}elseif($o -match 'LICENSED'){$status='OK'}else{$status='UNKNOWN'}}}; if($ohook){Write-Host '  [-] CANH BAO: Phat hien engine be khoa OHOOK (Gia lap quyen Office 365/2021)' -ForegroundColor Red}elseif($status -eq 'CRACK_KMS'){Write-Host '  [-] Ket qua: CRACK (Su dung kích hoat KMS)' -ForegroundColor Red}elseif($status -eq 'OK'){Write-Host '  [+] Ket qua: BAN QUYEN HOP LE (Dung Key hoac Tai khoan Microsoft 365)' -ForegroundColor Green}else{Write-Host '  [-] Ket qua: Khong tim thay ban quyen hoac chua kich hoat.' -ForegroundColor Yellow}"
 
 :: ==========================================
-:: 3. KIỂM TRA ADOBE
+:: 3. KIỂM TRA PHAN MEM ADOBE
 :: ==========================================
 echo:
-echo %C% KIEM TRA UNG DUNG ADOBE:%Res%
-powershell -Command "$hosts = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue; $hasAdobeBlock = $hosts | Select-String 'adobe.com', 'adobe.io'; $acc = Get-Process -Name 'Creative Cloud', 'Adobe Desktop Service' -ErrorAction SilentlyContinue; if ($hasAdobeBlock) { Write-Host '  [-] CANH BAO: Phat hien chan IP Adobe trong file Hosts (Dau hieu Crack/GenP/Monkrus)' -ForegroundColor Red }; if (Test-Path 'C:\Program Files\Adobe') { Write-Host '  [+] Tim thay cac thu muc Adobe dang cai dat.' -ForegroundColor Cyan; if ($acc) { Write-Host '  [+] Adobe Creative Cloud dang chay (Co the co tai khoan ban quyen).' -ForegroundColor Green } else { Write-Host '  [-] Khong thay tien trinh Creative Cloud (Dau hieu xai thuoc offline).' -ForegroundColor Yellow } } else { Write-Host '  [-] Khong co phan mem Adobe tren may.' -ForegroundColor Gray }"
+echo %C%[3] KIEM TRA GOI PHAN MEM ADOBE:%Res%
+powershell -Command "$hosts=Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue; if($hosts -match 'adobe.com'){$h=$true}; $exe=Get-ChildItem -Path 'C:\Program Files\Adobe' -Filter '*.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 3; $crack=$false; foreach($e in $exe){$sig=Get-AuthenticodeSignature $e.FullName -ErrorAction SilentlyContinue; if($sig.Status -and $sig.Status -ne 'Valid'){$crack=$true}}; if($h){Write-Host '  [-] Phat hien file Hosts bi sua doi de chan kiem tra chu quyen Adobe.' -ForegroundColor Red}; if(Test-Path 'C:\Program Files\Adobe'){if($crack){Write-Host '  [-] KET QUA: PHAT HIEN CRACK (File thuc thi bi mat chu ky so goc cua Adobe Inc.)' -ForegroundColor Red} else {Write-Host '  [+] Ket qua: Thu muc va chu ky so hop le (Co the xai ban quyen Cloud).' -ForegroundColor Green}} else {Write-Host '  [-] Khong co phan mem Adobe.' -ForegroundColor Gray}"
 
 :: ==========================================
-:: 4. KIỂM TRA CHUYÊN SÂU AUTODESK (AUTOCAD, 3DS MAX, MAYA...)
+:: 4. KIỂM TRA PHAN MEM AUTODESK
 :: ==========================================
 echo:
-echo %C% KIEM TRA TOAN BO PHAN MEM AUTODESK:%Res%
-powershell -Command "$hostsAdsk = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue | Select-String 'autodesk.com'; $adskService = Get-Service -Name 'AdskLicensingService' -ErrorAction SilentlyContinue; $lmgrdProcess = Get-Process -Name 'lmgrd', 'adskflex' -ErrorAction SilentlyContinue; $hasNLM = Test-Path 'C:\Autodesk\Network License Manager'; if ($hostsAdsk) { Write-Host '  [-] CANH BAO: File Hosts co chen dong chan IP Autodesk (Dau hieu Crack/X-Force)' -ForegroundColor Red }; if (Test-Path 'C:\Program Files\Autodesk') { Write-Host '  [+] He thong co cai dat cac phan mem Autodesk.' -ForegroundColor Cyan; if ($lmgrdProcess -or $hasNLM) { Write-Host '  [-] CHU Y: Phat hien gia lap Network License Server (Kieu Crack NLM x-force)' -ForegroundColor Yellow }; if ($adskService) { if ($adskService.Status -eq 'Running') { Write-Host '  [+] Dich vu cap phep AdskLicensingService dang chay hop le.' -ForegroundColor Green } else { Write-Host '  [-] CANH BAO: Dich vu xac thuc bi TAT (Dau hieu crack ghi de file dll)' -ForegroundColor Red } } else { Write-Host '  [-] CANH BAO: Khong tim thay dich vu xac thuc goc cua Autodesk.' -ForegroundColor Red } } else { Write-Host '  [-] Khong co phan mem Autodesk/AutoCAD nao tren may.' -ForegroundColor Gray }"
+echo %C%[4] KIEM TRA TOAN BO PHAN MEM AUTODESK:%Res%
+powershell -Command "$hostsAdsk=Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue; $lmgrd=Get-Process -Name 'lmgrd','adskflex' -ErrorAction SilentlyContinue; $svc=Get-Service -Name 'AdskLicensingService' -ErrorAction SilentlyContinue; $clic=Test-Path 'C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing\adskflex_*.lic'; if($hostsAdsk -match 'autodesk.com'){Write-Host '  [-] CANH BAO: He thong chan IP nhan dien hang cua Autodesk.' -ForegroundColor Red}; if(Test-Path 'C:\Program Files\Autodesk'){if($lmgrd -or $clic){Write-Host '  [-] KET QUA: PHAT HIEN CRACK NLM (Gia lap Network License Server offline)' -ForegroundColor Red} elseif($svc -and $svc.Status -ne 'Running'){Write-Host '  [-] KET QUA: CO DAU HIEU CRACK (Dich vu AdskLicensing bi tat cuong buc)' -ForegroundColor Red} else {Write-Host '  [+] Ket qua: Chua phat hien ma doc hai, can kiem tra tai khoan Autodesk hop le khi vao app.' -ForegroundColor Green}} else {Write-Host '  [-] Khong co phan mem Autodesk/AutoCAD.' -ForegroundColor Gray}"
 
 echo:
 echo %C%====================================================================%Res%
-echo %G%                QUET HE THONG DA HOAN THANH!%Res%
+echo %G%                 TIEN TRINH KIEM TRA HOAN TAT !%Res%
 echo %C%====================================================================%Res%
 pause
 goto menu
