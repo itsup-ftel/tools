@@ -286,15 +286,41 @@ goto dichvucong
 
 :ctHub
 cls
-set "source=%TEMP%\Source"
-echo:     %W%[==^> Dang tai CTSigningHub...]%Res%
-if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\CTSigningHub.zip" https://vnshort.com/gLzM
-echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\HTKK.zip' -DestinationPath '%source%' -Force"
-start /wait "" "%source%\HTKK_v5.6.6_signed\setup.exe" /quiet
-echo:     %G%[==^> Da cai dat hoan tat HTKK]%Res%
-rmdir /s /q "%source%"
+:: Cấu hình vùng chạy biệt lập
+set "SRC=%TEMP%\cthub_Tmp_Src"
+set "URL=https://vnshort.com/gLzM"
+
+:: Xác định thư mục cài đặt gốc iTaxViewer
+set "CTHub=C:\Program Files (x86)\CT\CTSigningHub\"
+if not exist "%CTHub%" if exist "C:\Program Files\CT\CTSigningHub" set "CTHub=C:\Program Files\CT\CTSigningHub"
+
+echo [1/3] Go cai dat phien ban iTaxViewer cu...
+:: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
+powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'CTSigningHub'}; if ($app) { $app.Uninstall() }" >nul 2>&1
+if exist "%CTHub%" rmdir /s /q "%CTHub%" 2>nul
+
+echo [2/3] Tai va Giai nen bo cai dat CTSigningHub moi...
+if exist "%SRC%" rmdir /s /q "%SRC%"
+md "%SRC%"
+curl --ssl-no-revoke -L -# -o "%SRC%\CTSigningHub.zip" "%URL%"
+if not exist "%SRC%\CTSigningHub.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
+powershell -Command "Expand-Archive -Path '%SRC%\CTSigningHub.zip' -DestinationPath '%SRC%' -Force"
+
+echo [3/3] Tien hanh cai dat voi thanh tien trinh hien thi...
+set "SETUP_EXE="
+for /r "%SRC%" %%F in (CTSigningHub.exe) do if exist "%%F" set "SETUP_EXE=%%F"
+if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file CTSigningHub.exe! & rmdir /s /q "%SRC%" & pause & exit)
+
+:: Chạy lệnh cài đặt hiện thanh tiến trình Basic UI
+cd /d "%SRC%"
+start /wait "" "%SETUP_EXE%"
+
+:: Dọn dẹp thư mục tạm sau khi hoàn tất
+rmdir /s /q "%SRC%"
+echo ===================================================
+echo [OK] DA HOAN THANH CAP NHAT CTSigningHub MOI NHAT!
+echo ===================================================
+timeout /t 3 >nul
 pause
 goto dichvucong
 
