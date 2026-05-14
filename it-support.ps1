@@ -31,8 +31,6 @@ echo %C%==========================================%Res%
 echo.
 set /p "input_pass=Nhap mat khau de vao su dung Tool: "
 
-for /f "delims=" %%A in ('powershell -Command "$p = Read-Host -AsSecureString; $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($p); [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)"') do set "input_pass=%%A"
-
 if "%input_pass%"=="" (
     echo.
     echo %R%[X] Ban chua nhap mat khau. Vui long khong de trong!%Res%
