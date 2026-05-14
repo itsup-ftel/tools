@@ -142,6 +142,20 @@ echo %C%====================================================================%Res
 pause
 goto menu
 
+@echo off
+cls
+
+:: Khởi tạo mã màu ANSI bằng kỹ thuật Prompt
+for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
+
+:: Định nghĩa bảng màu
+set "G=%ESC%[92m"
+set "Y=%ESC%[93m"
+set "C=%ESC%[96m"
+set "W=%ESC%[97m"
+set "R=%ESC%[91m"
+set "B=%ESC%[94m"
+set "Res=%ESC%[0m"
 
 :dichvucong
 cls
@@ -149,206 +163,118 @@ echo %C%==========================================%Res%
 echo %Y%        [ CAI DAT DICH VU CONG ]%Res%
 echo %C%==========================================%Res%
 echo.
-echo 1. HTKK - Ho tro ke khai
-echo 2. iTaxViewer - Doc ho so thue
-echo 3. CT SigningHub - Ky dien tu
-echo 4. eSigner - Plugin
-echo 5. Thoat ve menu chinh
+echo  %G%1.%Res% HTKK - Ho tro ke khai
+echo  %G%2.%Res% iTaxViewer - Doc ho so thue
+echo  %G%3.%Res% CT SigningHub - Ky dien tu
+echo  %G%4.%Res% eSigner - Plugin
+echo  %G%5.%Res% Thoat ve menu chinh
 echo %C%==========================================%Res%
 set /p choice="Chon lua chon cua ban (1-5): "
 
-if "%choice%"=="1" goto :htkk
-if "%choice%"=="2" goto :itaxviewer
-if "%choice%"=="3" goto :ctHub
-if "%choice%"=="4" goto :esigner
+if "%choice%"=="1" goto :proc_htkk
+if "%choice%"=="2" goto :proc_itax
+if "%choice%"=="3" goto :proc_cthub
+if "%choice%"=="4" goto :proc_esigner
 if "%choice%"=="5" goto menu
 goto :dichvucong
 
-:htkk
+:: =========================================================================
+:: KHỐI XỬ LÝ RIÊNG CHO TỪNG PHẦN MỀM (Cấu hình tham số và gọi hàm dùng chung)
+:: =========================================================================
+
+:proc_htkk
 cls
-:: Cấu hình biến môi trường cố định
-set "SRC=%TEMP%\HTKK_Src"
-set "BAK=%TEMP%\HTKK_Bak"
-set "URL=https://vnshort.com/58Bq"
-
-:: Xác định thư mục cài đặt gốc (Xử lý cho cả Win 32/64 bit)
-set "HTKK=C:\Program Files (x86)\HTKK"
-if not exist "%HTKK%" if exist "C:\Program Files\HTKK" set "HTKK=C:\Program Files\HTKK"
-
-echo [1/6] Kiem tra va Kich hoat .NET Framework 3.5...
+echo %C%[1/6]%Res% Kiem tra va Kich hoat .NET Framework 3.5...
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% neq 0 (
     dism /online /enable-feature /featurename:NetFx3 /all /quiet /norestart
-    if %errorlevel% neq 0 (echo [X] Loi: Thieu .NET 3.5, khong the tiep tuc! & pause & exit)
+    if %errorlevel% neq 0 (echo %R%[X] Loi: Thieu .NET 3.5!%Res% & pause & goto dichvucong)
 )
 
-echo [2/6] Sao luu du lieu co san...
-if exist "%HTKK%\Datafiles" (
+:: Xác định thư mục cài đặt gốc & Sao lưu dữ liệu HTKK
+set "HTKK_DIR=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK_DIR%" if exist "C:\Program Files\HTKK" set "HTKK_DIR=C:\Program Files\HTKK"
+set "BAK=%TEMP%\HTKK_Bak"
+
+echo %C%[2/6]%Res% Sao luu du lieu HTKK co san...
+if exist "%HTKK_DIR%\Datafiles" (
     if exist "%BAK%" rmdir /s /q "%BAK%"
-    xcopy "%HTKK%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
+    xcopy "%HTKK_DIR%\Datafiles" "%BAK%\" /E /I /H /Y /C >nul
 )
 
-echo [3/6] Don dep phien ban cu...
-powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'HTKK'}; if ($app) { $app.Uninstall() }" >nul 2>&1
+:: Gọi hàm cài đặt chung cho HTKK (Bước 3, 4, 5 nằm trong hàm này)
+call :InstallApp "HTKK" "https://vnshort.com/58Bq" "HTKK.zip" "setup.exe" "%HTKK_DIR%"
 
-:: Xóa sạch thư mục còn sót lại để dọn đường cho bộ cài mới
-if exist "%HTKK%" rmdir /s /q "%HTKK%" 2>nul
-
-echo [4/6] Tai va Giai nen bo cai dat HTKK moi...
-if exist "%SRC%" rmdir /s /q "%SRC%"
-md "%SRC%"
-curl --ssl-no-revoke -L -# -o "%SRC%\HTKK.zip" "%URL%"
-if not exist "%SRC%\HTKK.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
-powershell -Command "Expand-Archive -Path '%SRC%\HTKK.zip' -DestinationPath '%SRC%' -Force"
-
-echo [5/6] Tien hanh cai dat voi thanh tien trinh hien thi...
-set "SETUP_EXE="
-for /r "%SRC%" %%F in (setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
-if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
-
-:: Chạy cài đặt ngầm cấu trúc MSI gốc của HTKK
-start /wait "" "%SETUP_EXE%"
-
-:: Cập nhật lại biến đường dẫn thực tế sau khi cài
-set "HTKK=%Program Files (x86)%\HTKK"
-if not exist "%HTKK%" set "HTKK=%Program Files%\HTKK"
-
-:: Khôi phục dữ liệu mã số thuế cũ
-echo [6/6] Dang tien hanh khoi phuc datafiles...
+:: Khôi phục dữ liệu HTKK sau khi cài xong
+echo %C%[6/6]%Res% Dang tien hanh khoi phuc datafiles...
+set "HTKK_DIR=C:\Program Files (x86)\HTKK"
+if not exist "%HTKK_DIR%" set "HTKK_DIR=C:\Program Files\HTKK"
 if exist "%BAK%" (
-    xcopy "%BAK%" "%HTKK%\Datafiles\" /E /I /H /Y /C >nul
+    xcopy "%BAK%" "%HTKK_DIR%\Datafiles\" /E /I /H /Y /C >nul
     rmdir /s /q "%BAK%"
 )
-rmdir /s /q "%SRC%"
+goto end_process
 
-echo ===================================================
-echo [OK] DA HOAN THANH CAP NHAT HTKK!
-echo ===================================================
+:proc_itax
+set "DIR=C:\Program Files (x86)\iTaxViewer"
+if not exist "%DIR%" if exist "C:\Program Files\iTaxViewer" set "DIR=C:\Program Files\iTaxViewer"
+call :InstallApp "iTaxViewer" "https://vnshort.com/9oEf" "iTaxViewer.zip" "iTaxViewer2.7.4.exe" "%DIR%"
+goto end_process
+
+:proc_cthub
+set "DIR=C:\Program Files (x86)\CT\CTSigningHub"
+if not exist "%DIR%" if exist "C:\Program Files\CT\CTSigningHub" set "DIR=C:\Program Files\CT\CTSigningHub"
+call :InstallApp "CTSigningHub" "https://vnshort.com/gLzM" "CTSigningHub.zip" "CTSigningHub.exe" "%DIR%"
+goto end_process
+
+:proc_esigner
+set "DIR=C:\Program Files (x86)\eSigner Java"
+if not exist "%DIR%" if exist "C:\Program Files\eSigner Java" set "DIR=C:\Program Files\eSigner Java"
+call :InstallApp "esigner" "https://vnshort.com/MCxM "eSigner_1.1.0_setup.zip" "eSigner_1.1.0_setup.exe" "%DIR%"
+goto end_process
+
+:end_process
+echo %G%===================================================%Res%
+echo %G%[OK] DA HOAN THANH CAP NHAT UNG DUNG!%Res%
+echo %G%===================================================%Res%
 timeout /t 3 >nul
 pause
 goto dichvucong
 
-:itaxviewer
-cls
-:: Cấu hình vùng chạy biệt lập
-set "SRC=%TEMP%\iTax_Tmp_Src"
-set "URL=https://vnshort.com/9oEf"
+:: =========================================================================
+:: HÀM CÀI ĐẶT DÙNG CHUNG (Tích hợp hiển thị màu sắc thông báo)
+:: Tham số: %1=Tên App, %2=Link tải, %3=Tên File Zip, %4=Tên File Setup, %5=Thư mục cài đặt
+:: =========================================================================
+:InstallApp
+set "APP_NAME=%~1"
+set "URL=%~2"
+set "ZIP_NAME=%~3"
+set "EXE_NAME=%~4"
+set "TARGET_DIR=%~5"
+set "SRC=%TEMP%\%APP_NAME%_Tmp_Src"
 
-:: Xác định thư mục cài đặt gốc iTaxViewer
-set "ITAX=C:\Program Files (x86)\iTaxViewer"
-if not exist "%ITAX%" if exist "C:\Program Files\iTaxViewer" set "ITAX=C:\Program Files\iTaxViewer"
+echo %Y%[+] Dang xu ly ung dung: %APP_NAME%%Res%
 
-echo [1/3] Go cai dat phien ban iTaxViewer cu...
-:: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
-powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'iTaxViewer'}; if ($app) { $app.Uninstall() }" >nul 2>&1
-if exist "%ITAX%" rmdir /s /q "%ITAX%" 2>nul
+echo  %B%-%Res% Go cai dat phien ban cu...
+powershell -Command "Get-Package -Name '*%APP_NAME%*' -ErrorAction SilentlyContinue | Uninstall-Package -Force" >nul 2>&1
+if exist "%TARGET_DIR%" rmdir /s /q "%TARGET_DIR%" 2>nul
 
-echo [2/3] Tai va Giai nen bo cai dat iTaxViewer moi...
+echo  %B%-%Res% Tai va Giai nen bo cai dat moi...
 if exist "%SRC%" rmdir /s /q "%SRC%"
 md "%SRC%"
-curl --ssl-no-revoke -L -# -o "%SRC%\iTaxViewer.zip" "%URL%"
-if not exist "%SRC%\iTaxViewer.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
-powershell -Command "Expand-Archive -Path '%SRC%\iTaxViewer.zip' -DestinationPath '%SRC%' -Force"
+curl --ssl-no-revoke -L -# -o "%SRC%\%ZIP_NAME%" "%URL%"
+if not exist "%SRC%\%ZIP_NAME%" (echo %R%[X] Loi: Khong tai duoc file!%Res% & pause & exit)
+powershell -Command "Expand-Archive -Path '%SRC%\%ZIP_NAME%' -DestinationPath '%SRC%' -Force"
 
-echo [3/3] Tien hanh cai dat voi thanh tien trinh hien thi...
+echo  %B%-%Res% Tien hanh cai dat...
 set "SETUP_EXE="
-for /r "%SRC%" %%F in (iTaxViewer2.7.4.exe) do if exist "%%F" set "SETUP_EXE=%%F"
-if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file iTaxViewer2.7.4.exe! & rmdir /s /q "%SRC%" & pause & exit)
+for /r "%SRC%" %%F in (%EXE_NAME%) do if exist "%%F" set "SETUP_EXE=%%F"
+if not defined SETUP_EXE (echo %R%[X] Loi: Khong tim thay file %EXE_NAME%!%Res% & rmdir /s /q "%SRC%" & pause & exit)
 
-:: Chạy lệnh cài đặt hiện thanh tiến trình Basic UI
-cd /d "%SRC%"
 start /wait "" "%SETUP_EXE%"
-
-:: Dọn dẹp thư mục tạm sau khi hoàn tất
 rmdir /s /q "%SRC%"
+exit /b
 
-echo ===================================================
-echo [OK] DA HOAN THANH CAP NHAT ITAXVIEWER MOI NHAT!
-echo ===================================================
-timeout /t 3 >nul
-pause
-goto dichvucong
-
-:ctHub
-cls
-:: Cấu hình vùng chạy biệt lập
-set "SRC=%TEMP%\cthub_Tmp_Src"
-set "URL=https://vnshort.com/gLzM"
-
-:: Xác định thư mục cài đặt gốc iTaxViewer
-set "CTHub=C:\Program Files (x86)\CT\CTSigningHub\"
-if not exist "%CTHub%" if exist "C:\Program Files\CT\CTSigningHub" set "CTHub=C:\Program Files\CT\CTSigningHub"
-
-echo [1/3] Go cai dat phien ban CTSigningHub cu...
-:: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
-powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'CTSigningHub'}; if ($app) { $app.Uninstall() }" >nul 2>&1
-if exist "%CTHub%" rmdir /s /q "%CTHub%" 2>nul
-
-echo [2/3] Tai va Giai nen bo cai dat CTSigningHub moi...
-if exist "%SRC%" rmdir /s /q "%SRC%"
-md "%SRC%"
-curl --ssl-no-revoke -L -# -o "%SRC%\CTSigningHub.zip" "%URL%"
-if not exist "%SRC%\CTSigningHub.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
-powershell -Command "Expand-Archive -Path '%SRC%\CTSigningHub.zip' -DestinationPath '%SRC%' -Force"
-
-echo [3/3] Tien hanh cai dat voi thanh tien trinh hien thi...
-set "SETUP_EXE="
-for /r "%SRC%" %%F in (CTSigningHub.exe) do if exist "%%F" set "SETUP_EXE=%%F"
-if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file CTSigningHub.exe! & rmdir /s /q "%SRC%" & pause & exit)
-
-:: Chạy lệnh cài đặt hiện thanh tiến trình Basic UI
-cd /d "%SRC%"
-start /wait "" "%SETUP_EXE%"
-
-:: Dọn dẹp thư mục tạm sau khi hoàn tất
-rmdir /s /q "%SRC%"
-echo ===================================================
-echo [OK] DA HOAN THANH CAP NHAT CTSigningHub MOI NHAT!
-echo ===================================================
-timeout /t 3 >nul
-pause
-goto dichvucong
-
-
-:esigner
-cls
-:: Cấu hình vùng chạy biệt lập
-set "SRC=%TEMP%\esigner_Tmp_Src"
-set "URL=https://vnshort.com/MCxM"
-
-:: Xác định thư mục cài đặt gốc esigner
-set "esigner=C:\Program Files (x86)\eSigner Java\"
-if not exist "%esigner%" if exist "C:\Program Files\eSigner Java\" set "esigner=C:\Program Files\eSigner Java\"
-
-echo [1/3] Go cai dat phien ban esigner cu...
-:: Ép hệ thống gỡ tận gốc ID đăng ký cũ ngầm dưới nền
-powershell -Command "$app = Get-WmiObject Win32_Product | Where-Object {$_.Name -match 'esigner'}; if ($app) { $app.Uninstall() }" >nul 2>&1
-if exist "%esigner%" rmdir /s /q "%esigner%" 2>nul
-
-echo [2/3] Tai va Giai nen bo cai dat esigner moi...
-if exist "%SRC%" rmdir /s /q "%SRC%"
-md "%SRC%"
-curl --ssl-no-revoke -L -# -o "%SRC%\eSigner_1.1.0_setup.zip" "%URL%"
-if not exist "%SRC%\eSigner_1.1.0_setup.zip" (echo [X] Loi: Khong tai duoc file! & pause & exit)
-powershell -Command "Expand-Archive -Path '%SRC%\eSigner_1.1.0_setup.zip' -DestinationPath '%SRC%' -Force"
-
-echo [3/3] Tien hanh cai dat voi thanh tien trinh hien thi...
-set "SETUP_EXE="
-for /r "%SRC%" %%F in (eSigner_1.1.0_setup.exe) do if exist "%%F" set "SETUP_EXE=%%F"
-if not defined SETUP_EXE (echo [X] Loi: Khong tim thay file eSigner_1.1.0_setup.exe! & rmdir /s /q "%SRC%" & pause & exit)
-
-:: Chạy lệnh cài đặt hiện thanh tiến trình Basic UI
-cd /d "%SRC%"
-start /wait "" "%SETUP_EXE%"
-
-:: Dọn dẹp thư mục tạm sau khi hoàn tất
-rmdir /s /q "%SRC%"
-echo ===================================================
-echo [OK] DA HOAN THANH CAP NHAT esigner MOI NHAT!
-echo ===================================================
-timeout /t 3 >nul
-pause
-goto dichvucong
 
 
 :foxiteditor
