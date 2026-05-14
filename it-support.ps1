@@ -36,7 +36,7 @@ echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracertcp     %G%22.%Res% Liet ke d/s in
 echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----13th5-------
-echo      %G%6.%Res% Kiem tra             %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%6.%Res% Kiem tra ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
@@ -56,7 +56,7 @@ if /i "%opt%"=="2" goto hddInfo
 if /i "%opt%"=="3" goto ramInfo
 if /i "%opt%"=="4" goto listUsers
 if /i "%opt%"=="5" goto bitlocker
-if /i "%opt%"=="6" goto listapp
+if /i "%opt%"=="6" goto checklicense
 if /i "%opt%"=="7" goto cleanJunk
 if /i "%opt%"=="8" goto repairSys
 if /i "%opt%"=="9" goto killTaskres
@@ -101,6 +101,73 @@ if /i "%opt%"=="0" exit
 goto menu
 
 :: --- CAC HAM XU LY ---
+
+:checklicense
+cls
+echo %C%====================================================================%Res%
+echo %Y%                     LICENSE CHECKER SYSTEM %Res%
+echo %C%====================================================================%Res%
+
+:: ==========================================
+:: 1. KIỂM TRA WINDOWS
+:: ==========================================
+echo:
+echo %C% KIEM TRA BAN QUYEN WINDOWS:%Res%
+powershell -Command "$status = cscript //nologo $env:windir\system32\slmgr.vbs /dli; $kms = $status | Select-String 'KMS', 'kms host', '180 days'; $per = $status | Select-String 'permanently'; if ($kms) { Write-Host '  [-] Trang thai: BI CRACK / SUDUNG KEY KMS GIA LAP' -ForegroundColor Red; Write-Host \"  [-] Chi tiet: $kms\" -ForegroundColor DarkRed } elseif ($per) { Write-Host '  [+] Trang thai: BAN QUYEN XIN / CO DINH (Permanent)' -ForegroundColor Green } else { Write-Host '  [-] Trang thai: Chua kich hoat hoac dung thu (Trial)' -ForegroundColor Yellow }"
+
+:: ==========================================
+:: 2. KIỂM TRA OFFICE
+:: ==========================================
+echo:
+echo %C% KIEM TRA BAN QUYEN MICROSOFT OFFICE:%Res%
+powershell -Command "$paths = @(\"${env:ProgramFiles}\Microsoft Office\Office16\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office16\", \"${env:ProgramFiles}\Microsoft Office\Office15\", \"${env:ProgramFiles(x86)}\Microsoft Office\Office15\"); $found = $false; foreach ($p in $paths) { if (Test-Path \"$p\ospp.vbs\") { $found = $true; $out = cscript //nologo \"$p\ospp.vbs\" /dstatus; $kms = $out | Select-String 'KMS', '180 days'; $lic = $out | Select-String 'LICENSE STATUS: LICENSED'; if ($kms) { Write-Host '  [-] Trang thai: BI CRACK / DUNG KMS CO HAN' -ForegroundColor Red } elseif ($lic) { Write-Host '  [+] Trang thai: BAN QUYEN HOP LE / TAI KHOAN O365' -ForegroundColor Green } else { Write-Host '  [-] Trang thai: Chua co ban quyen' -ForegroundColor Yellow } } }; if (-not $found) { Write-Host '  [-] Khong tim thay phien ban Office nao tren may.' -ForegroundColor Gray }"
+
+:: ==========================================
+:: 3. KIỂM TRA ADOBE
+:: ==========================================
+echo:
+echo %C% KIEM TRA UNG DUNG ADOBE:%Res%
+powershell -Command "$hosts = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue; $hasAdobeBlock = $hosts | Select-String 'adobe.com', 'adobe.io'; $acc = Get-Process -Name 'Creative Cloud', 'Adobe Desktop Service' -ErrorAction SilentlyContinue; if ($hasAdobeBlock) { Write-Host '  [-] CANH BAO: Phat hien chan IP Adobe trong file Hosts (Dau hieu Crack/GenP/Monkrus)' -ForegroundColor Red }; if (Test-Path 'C:\Program Files\Adobe') { Write-Host '  [+] Tim thay cac thu muc Adobe dang cai dat.' -ForegroundColor Cyan; if ($acc) { Write-Host '  [+] Adobe Creative Cloud dang chay (Co the co tai khoan ban quyen).' -ForegroundColor Green } else { Write-Host '  [-] Khong thay tien trinh Creative Cloud (Dau hieu xai thuoc offline).' -ForegroundColor Yellow } } else { Write-Host '  [-] Khong co phan mem Adobe tren may.' -ForegroundColor Gray }"
+
+:: ==========================================
+:: 4. KIỂM TRA CHUYÊN SÂU AUTODESK (AUTOCAD, 3DS MAX, MAYA...)
+:: ==========================================
+echo:
+echo %C% KIEM TRA TOAN BO PHAN MEM AUTODESK:%Res%
+powershell -Command " ^
+$hostsAdsk = Get-Content $env:windir\system32\drivers\etc\hosts -ErrorAction SilentlyContinue | Select-String 'autodesk.com', 'autodesk.com'; ^
+$adskService = Get-Service -Name 'AdskLicensingService' -ErrorAction SilentlyContinue; ^
+$lmgrdProcess = Get-Process -Name 'lmgrd', 'adskflex' -ErrorAction SilentlyContinue; ^
+$hasNLM = Test-Path 'C:\Autodesk\Network License Manager'; ^
+$hasCrackXF = Test-Path 'C:\Program Files (x86)\Common Files\Autodesk Shared\AdskLicensing\AdskLicensingService.data'; ^
+if ($hostsAdsk) { ^
+    Write-Host '  [-] CANH BAO: File Hosts co chèn dòng chan IP tu xa cua Autodesk (Hanh vi Crack/X-Force/Xoá Genuine Service)' -ForegroundColor Red ^
+}; ^
+if (Test-Path 'C:\Program Files\Autodesk') { ^
+    Write-Host '  [+] He thong co cài dat cac phan mem Autodesk.' -ForegroundColor Cyan; ^
+    if ($lmgrdProcess -or $hasNLM) { ^
+        Write-Host '  [-] CHÚ Ý: Phat hien ban dang gia lap Network License Server offline (Kieu Crack NLM x-force / MAGNiTUDE)' -ForegroundColor Yellow ^
+    }; ^
+    if ($adskService) { ^
+        if ($adskService.Status -eq 'Running') { ^
+            Write-Host '  [+] Dich vu cap phep AdskLicensingService dang chay hop le.' -ForegroundColor Green ^
+        } else { ^
+            Write-Host '  [-] CANH BAO: Dich vu xac thuc bi TẮT (Dau hieu xai thuoc ghi de file dll / AdskLicensingBypass)' -ForegroundColor Red ^
+        } ^
+    } else { ^
+        Write-Host '  [-] CANH BAO: Khong tim thay dich vu xac thuc goc cua Autodesk (Có the bi gỡ bỏ de chay crack)' -ForegroundColor Red ^
+    } ^
+} else { ^
+    Write-Host '  [-] Khong co phan mem Autodesk/AutoCAD nao tren may.' -ForegroundColor Gray ^
+}"
+
+echo:
+echo %C%====================================================================%Res%
+echo %G%                QUET HE THONG DA HOAN THANH!%Res%
+echo %C%====================================================================%Res%
+pause
+goto menu
+
 
 :dichvucong
 cls
