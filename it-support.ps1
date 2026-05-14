@@ -28,11 +28,19 @@ set "FAIL_COUNT=0"
 
 :login
 cls
+set "input_pass="
 echo %C%==========================================%Res%
 echo %Y%       XAC THUC QUYEN TRUY CAP TOOL%Res%
 echo %C%==========================================%Res%
 echo.
 set /p "input_pass=Nhap mat khau de mo Tool: "
+
+if "%input_pass%"=="" (
+    echo.
+    echo %R%[X] Ban chua nhap mat khau. Vui long khong de trong!%Res%
+    timeout /t 2 >nul
+    goto login
+)
 
 if "%input_pass%"=="%PASSWORD%" (
     echo.
