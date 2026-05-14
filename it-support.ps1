@@ -22,6 +22,39 @@ set "R=%ESC%[91m"
 set "B=%ESC%[94m"
 set "Res=%ESC%[0m"
 
+:: Cấu hình mật khẩu truy cập và số lần nhập sai ban đầu
+set "PASSWORD=1223334444"
+set "FAIL_COUNT=0"
+
+:login
+cls
+echo %C%==========================================%Res%
+echo %Y%       XAC THUC QUYEN TRUY CAP%Res%
+echo %C%==========================================%Res%
+echo.
+set /p "input_pass=Nhap mat khau de mo Menu: "
+
+if "%input_pass%"=="%PASSWORD%" (
+    echo.
+    echo %G%[OK] Mat khau chinh xac!%Res%
+    timeout /t 1 >nul
+    goto menu
+) else (
+    set /a "FAIL_COUNT+=1"
+    echo.
+    if %FAIL_COUNT% geq 3 (
+        echo %R%[X] SAI MAT KHAU 3 LAN! BAN KHONG CO QUYEN TRUY CAP!%Res%
+        timeout /t 3 >nul
+        exit
+    ) else (
+        set /a "REMAIN=3-FAIL_COUNT"
+        echo %R%[X] Sai mat khau. Ban con %REMAIN% lan thu!%Res%
+        timeout /t 2 >nul
+        goto login
+    )
+)
+
+
 :menu
 cls
 echo.
