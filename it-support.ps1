@@ -184,6 +184,7 @@ goto :dichvucong
 
 :proc_htkk
 cls
+set "CURRENT_APP=HTKK"
 echo %C%[1/6]%Res% Kiem tra va Kich hoat .NET Framework 3.5...
 reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v3.5" /v Install 2>nul | findstr "0x1" >nul
 if %errorlevel% neq 0 (
@@ -217,6 +218,7 @@ goto end_process
 
 :proc_itax
 cls
+set "CURRENT_APP=iTaxViewer"
 set "DIR=C:\Program Files (x86)\iTaxViewer"
 if not exist "%DIR%" if exist "C:\Program Files\iTaxViewer" set "DIR=C:\Program Files\iTaxViewer"
 call :InstallApp "iTaxViewer" "https://vnshort.com/9oEf" "iTaxViewer.zip" "iTaxViewer2.7.4.exe" "%DIR%"
@@ -224,6 +226,7 @@ goto end_process
 
 :proc_cthub
 cls
+set "CURRENT_APP=CTSigningHub"
 set "DIR=C:\Program Files (x86)\CT\CTSigningHub"
 if not exist "%DIR%" if exist "C:\Program Files\CT\CTSigningHub" set "DIR=C:\Program Files\CT\CTSigningHub"
 call :InstallApp "CTSigningHub" "https://vnshort.com/gLzM" "CTSigningHub.zip" "CTSigningHub.exe" "%DIR%"
@@ -231,6 +234,7 @@ goto end_process
 
 :proc_esigner
 cls
+set "CURRENT_APP=eSigner"
 set "DIR=C:\Program Files (x86)\eSigner Java"
 if not exist "%DIR%" if exist "C:\Program Files\eSigner Java" set "DIR=C:\Program Files\eSigner Java"
 call :InstallApp "esigner" "https://vnshort.com/MCxM "eSigner_1.1.0_setup.zip" "eSigner_1.1.0_setup.exe" "%DIR%"
@@ -238,7 +242,7 @@ goto end_process
 
 :end_process
 echo %G%===================================================%Res%
-echo %G%[OK] DA HOAN THANH CAP NHAT UNG DUNG!%Res%
+echo %G%[OK] DA HOAN THANH CAP NHAT %CURRENT_APP%!%Res%
 echo %G%===================================================%Res%
 timeout /t 3 >nul
 pause
