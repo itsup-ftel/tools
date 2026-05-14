@@ -216,18 +216,21 @@ if exist "%BAK%" (
 goto end_process
 
 :proc_itax
+cls
 set "DIR=C:\Program Files (x86)\iTaxViewer"
 if not exist "%DIR%" if exist "C:\Program Files\iTaxViewer" set "DIR=C:\Program Files\iTaxViewer"
 call :InstallApp "iTaxViewer" "https://vnshort.com/9oEf" "iTaxViewer.zip" "iTaxViewer2.7.4.exe" "%DIR%"
 goto end_process
 
 :proc_cthub
+cls
 set "DIR=C:\Program Files (x86)\CT\CTSigningHub"
 if not exist "%DIR%" if exist "C:\Program Files\CT\CTSigningHub" set "DIR=C:\Program Files\CT\CTSigningHub"
 call :InstallApp "CTSigningHub" "https://vnshort.com/gLzM" "CTSigningHub.zip" "CTSigningHub.exe" "%DIR%"
 goto end_process
 
 :proc_esigner
+cls
 set "DIR=C:\Program Files (x86)\eSigner Java"
 if not exist "%DIR%" if exist "C:\Program Files\eSigner Java" set "DIR=C:\Program Files\eSigner Java"
 call :InstallApp "esigner" "https://vnshort.com/MCxM "eSigner_1.1.0_setup.zip" "eSigner_1.1.0_setup.exe" "%DIR%"
