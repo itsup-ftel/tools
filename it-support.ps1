@@ -729,18 +729,27 @@ start /wait "" "%source%\GenP\GenP-v4.0.4.exe"
 
 :task_security
 cls
-echo:     [==^> Dang thiet lap bao mat chong quet ban quyen...]
+set "common64=%ProgramFiles%\Common Files\Adobe"
+set "common32=%ProgramFiles(x86)%\Common Files\Adobe"
 
-:: Chặn Firewall bằng vòng lặp (gộp toàn bộ lệnh netsh cũ)
-echo     ==^> Dang thiet lap Firewall Rules cho %appName%...
-for %%P in ("%path64%" "%path32%") do (
-    for %%D in (in out) do (
-        netsh advfirewall firewall add rule name="Adobe_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
-        netsh advfirewall firewall add rule name="Adobe_Folder_!appExe!_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
+echo     %W%==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...%Res%
+
+:: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
+for %%P in ("%path64%" "%%path32%%" "%common64%" "%common32%") do (
+    :: Kiểm tra nếu thư mục tồn tại thì mới tiến hành chặn để tránh rác Firewall
+    if exist "%%~P" (
+        for %%D in (in out) do (
+            :: Chặn file thực thi chính của ứng dụng (chỉ áp dụng nếu là thư mục ứng dụng gốc)
+            if exist "%%~P\%appExe%" (
+                netsh advfirewall firewall add rule name="Adobe_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
+            )
+            :: Chặn toàn bộ kết nối từ thư mục (bao gồm cả thư mục cài đặt và thư mục Common Files)
+            netsh advfirewall firewall add rule name="Adobe_Folder_Block_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
+        )
     )
 )
 netsh advfirewall set allprofiles state on >nul 2>&1
-echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
+echo:     %G%[[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.]%Res%
 
 :: Tải danh sách Hosts
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
