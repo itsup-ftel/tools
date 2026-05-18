@@ -67,14 +67,14 @@ echo  %G%=======================================================================
 echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo  %G%====================================================================================================================%Res%
 echo.
-echo     %Y%[ 1. PHAN CUNG]%Res%          %Y%[ 2. HE THONG ]%Res%         %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
+echo     %Y%[ 1. KIEM TRA]%Res%          %Y%[ 2. HE THONG ]%Res%         %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
-echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.%Res% Lay MAC ^& Serial     %G%19.%Res% Restart Spooler
-echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
-echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
-echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----pdf-------
-echo      %G%6.%Res% Kiem tra ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.%Res% Lay MAC ^& Serial     %G%19.%Res% Restart Spooler
+echo      %G%2.%Res% Thong tin o cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
+echo      %G%3.%Res% Thong tin RAM         %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
+echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
+echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----pdf-------
+echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
@@ -502,8 +502,8 @@ if %errorLevel% neq 0 (
 winget source update >nul 2>&1
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
-    "@{Name='Autodesk AutoCAD 2024 - English'; ID='7zip.7zip'}," ^
-    "@{Name='Coc Coc'; ID='ARP\Machine\X64\{CC46AD7F-5075-3702-B2BF-CFCC5AB8468B}'}," ^
+    "@{Name='Adobe CreativeCloud'; ID='Adobe.CreativeCloud'}," ^
+    "@{Name='Autodesk AutodeskAccess'; ID='Autodesk.AutodeskAccess'}," ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
