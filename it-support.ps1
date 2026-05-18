@@ -607,15 +607,15 @@ set "source=%TEMP%\GenP_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
-echo:     ______________________________________________________________
+echo:     %C%______________________________________________________________%Res%
 echo:
-echo:                    %C%[ADOBE LIST]%Res%
-echo:     ______________________________________________________________
-echo:         [1] Acrobat DC
-echo:         [2] Photoshop
-echo:         [3] Illustrator
-echo:         [0] Thoat ve menu chinh
-echo:     ______________________________________________________________
+echo:                    %Y%[ADOBE PREMIUM LIST]%Res%
+echo:     %C%______________________________________________________________%Res%
+echo:         %G%[1]%Res% Acrobat DC Pro
+echo:         %G%[2]%Res% Adobe Photoshop
+echo:         %G%[3]%Res% Adobe Illustrator
+echo:         %R%[0]%Res% Thoat ve menu chinh
+echo:     %C%______________________________________________________________%Res%
 echo.
 choice /C:1230 /N
 set "choice=%errorlevel%"
@@ -639,15 +639,15 @@ set "path32=%ProgramFiles(x86)%\Adobe\%appName%"
 :sub_menu
 cls
 title %titleName%
-echo:     ______________________________________________________________
+echo:     %C%______________________________________________________________%Res%
 echo:
-echo:                    %C%[%titleName% x64]%Res%
-echo:     ______________________________________________________________
-echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
-echo:         [2] Chi kich hoat Adobe (Neu da cai san)
-echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
-echo:         [0] Quay lai menu chinh
-echo:     ______________________________________________________________
+echo:                    %Y%[%titleName% x64]%Res%
+echo:     %C%______________________________________________________________%Res%
+echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
+echo:         %B%[2]%Res% Chi kich hoat Adobe %W%(Neu da cai san)%Res%
+echo:         %B%[3]%Res% Chan Firewall ^& Update Hosts %W%(Chan quet ban quyen)%Res%
+echo:         %R%[0]%Res% Quay lai menu chinh
+echo:     %C%______________________________________________________________%Res%
 echo.
 choice /C:1230 /N
 set "subChoice=%errorlevel%"
