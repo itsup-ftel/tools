@@ -1,0 +1,16 @@
+0.0.0.0 *.pubnubapi.com
+0.0.0.0 access.clic.autodesk.com
+0.0.0.0 account.autodesk.com
+0.0.0.0 api.autodesk.com
+0.0.0.0 api.pserver.sou.autodesk.com
+0.0.0.0 api.userprofile.autodesk.com
+0.0.0.0 ase-cdn-stg.autodesk.com
+0.0.0.0 ase.autodesk.com
+0.0.0.0 auth.autodesk.com
+0.0.0.0 authn.autodesk.com
+0.0.0.0 autodesk-prod.okta.com
+0.0.0.0 autodesk.pubnubapi.com
+0.0.0.0 autologon.microsoftazuread-sso.com
+0.0.0.0 cdn.accounts.autodesk.com
+0.0.0.0 cdn.web-platform.io
+0.0.0.0 clm.clic.autodesk.com
