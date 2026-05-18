@@ -81,8 +81,8 @@ echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
 echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup Win/Office  %G%42.%Res% Foxit PDF Editor
-echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi   %G%43.%Res% Autodesk
-echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung Ban Quyen   %G%--%Res% ---------------
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi   %G%43.%Res% Adobe
+echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung Ban Quyen  %G%44.%Res% Autodesk
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
 echo  %G%====================================================================================================================%Res%
@@ -131,8 +131,8 @@ if /i "%opt%"=="39" goto appvip
 if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto dichvucong
 if /i "%opt%"=="42" goto foxiteditor
-if /i "%opt%"=="43" goto autodesk
-if /i "%opt%"=="44" goto
+if /i "%opt%"=="43" goto adobe
+if /i "%opt%"=="44" goto autodesk
 if /i "%opt%"=="r" goto restart
 if /i "%opt%"=="s" goto shutdown
 if /i "%opt%"=="0" exit
@@ -486,6 +486,85 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
 pause
 goto menu
 
+:appvip
+cls
+winget --version >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [!] Khong tim thay Winget. Dang tien hanh tai va cai dat...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+        "$progressPreference = 'SilentlyContinue';" ^
+        "Invoke-WebRequest -Uri https://github.com/microsoft/winget-cli/releases/latest/download/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle -OutFile .\winget.msixbundle;" ^
+        "Add-AppxPackage -Path .\winget.msixbundle;" ^
+        "Remove-Item .\winget.msixbundle;"
+    echo [OK] Da kich hoat Winget.
+)
+
+winget source update >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$apps = @(" ^
+    "@{Name='Autodesk AutoCAD 2024 - English'; ID='7zip.7zip'}," ^
+    "@{Name='Coc Coc'; ID='ARP\Machine\X64\{CC46AD7F-5075-3702-B2BF-CFCC5AB8468B}'}," ^
+    ");" ^
+    "while($true) {" ^
+    "    Clear-Host;" ^
+    "    Write-Host '--- DANG QUET UNG DUNG TREN MAY... ---' -ForegroundColor Yellow;" ^
+    "    $installedList = winget list --accept-source-agreements 2>$null | Out-String;" ^
+    "    $validChoice = $false;" ^
+    "    while(-not $validChoice) {" ^
+    "        Clear-Host;" ^
+    "        Write-Host '----- DANH SACH UNG DUNG (OFFICIAL) -----' -ForegroundColor Cyan;" ^
+    "        for ($i=0; $i -lt $apps.Count; $i++) {" ^
+    "            $displayName = '{0,2}. {1}' -f ($i+1), $apps[$i].Name;" ^
+    "            if ($installedList -like \"*$($apps[$i].ID)*\") {" ^
+    "                Write-Host $displayName -ForegroundColor Green;" ^
+    "            } else {" ^
+    "                Write-Host $displayName;" ^
+    "            }" ^
+    "        };" ^
+    "        Write-Host '----------------------------------';" ^
+    "        Write-Host 'A. Cai dat/Nang cap TAT CA';" ^
+    "        Write-Host 'U. CAP NHAT TOAN BO app tren may';" ^
+    "        Write-Host 'Q. THOAT VE MENU CHINH' -ForegroundColor Red;" ^
+    "        $choice = Read-Host 'Nhap lua chon (vd: 1,3,5)';" ^
+    "        if ($choice -eq 'Q' -or $choice -eq 'q') { return } " ^
+    "        if ($choice -eq 'U' -or $choice -eq 'u') { $validChoice = $true; break } " ^
+    "        if ($choice -eq 'A' -or $choice -eq 'a') { $targets = $apps; $validChoice = $true; break } " ^
+    "        try {" ^
+    "            if ([string]::IsNullOrWhiteSpace($choice)) { throw };" ^
+    "            $indices = $choice.Split(',').Trim();" ^
+    "            $targets = foreach ($idx in $indices) {" ^
+    "                $n = [int]$idx;" ^
+    "                if ($n -lt 1 -or $n -gt $apps.Count) { throw };" ^
+    "                $apps[$n-1]" ^
+    "            };" ^
+    "            $validChoice = $true;" ^
+    "        } catch {" ^
+    "            Write-Host 'Lua chon khong hop le!' -ForegroundColor Red;" ^
+    "            Start-Sleep -Seconds 2; Clear-Host; break;" ^
+    "        }" ^
+    "    }" ^
+    "    if ($validChoice) {" ^
+    "        foreach ($app in $targets) {" ^
+    "            Write-Host \"`n[*] Dang kiem tra: $($app.Name)...\" -ForegroundColor Cyan;" ^
+    "            $isInstalled = winget list --id $app.ID -e --accept-source-agreements 2>$null;" ^
+    "            if ($isInstalled -match $app.ID) {" ^
+    "                Write-Host '   -> Da co. Dang check Update...' -ForegroundColor Yellow;" ^
+    "                $res = winget upgrade --id $app.ID --silent --accept-package-agreements --accept-source-agreements 2>$null;" ^
+    "                if ($res -match 'No available upgrade found') { Write-Host '   -> Ung dung da o phien ban moi nhat.' -ForegroundColor Blue } else { Write-Host '   -> Cap nhat thanh cong!' -ForegroundColor Green }" ^
+    "            } else {" ^
+    "                Write-Host '   -> Chua co, dang cai dat...' -ForegroundColor Red;" ^
+    "                winget install --id $app.ID -e --silent --accept-package-agreements --accept-source-agreements;" ^
+    "                Write-Host '   -> Da cai dat hoan tat!' -ForegroundColor Green;" ^
+    "            }" ^
+    "        }" ^
+    "        Write-Host 'Xoa rac va lam moi danh sach...';" ^
+    "        Remove-Item \"$env:TEMP\*\" -Recurse -Force -ErrorAction SilentlyContinue;" ^
+    "        Start-Sleep -Seconds 3;" ^
+    "    }" ^
+    "}"
+pause
+goto menu
+
 
 :bitlocker
 cls
@@ -600,10 +679,10 @@ pause
 goto menu
 
 
-:appvip
+:adobe
 cls
 mode 85, 35
-title Menu cai dat Adobe
+title Adobe Install
 set "source=%TEMP%\GenP_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
@@ -656,7 +735,7 @@ set "subChoice=%errorlevel%"
 if %subChoice%==1 goto task_full
 if %subChoice%==2 goto task_patch
 if %subChoice%==3 goto task_security
-if %subChoice%==4 goto appvip
+if %subChoice%==4 goto adobe
 goto sub_menu
 
 :task_full
@@ -797,7 +876,7 @@ echo:     %G%______________________________________________________________%Res%
 echo:              %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
 echo:     %G%______________________________________________________________%Res%
 pause
-goto appvip
+goto adobe
 
 
 :MENU_OFFICE
