@@ -421,6 +421,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
     "@{Name='UniKey'; ID='UniKey.UniKey'}," ^
+    "@{Name='VLC media player'; ID='VideoLAN.VLC'}," ^
     "@{Name='WeChat'; ID='Tencent.WeChat'}," ^
     "@{Name='WinRAR'; ID='RARLab.WinRAR'}," ^
     "@{Name='Zalo'; ID='Zalo.Zalo'}" ^
