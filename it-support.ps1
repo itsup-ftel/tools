@@ -679,7 +679,7 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\app.zip' -DestinationPath '%source%' -Force"
 echo:     %W%[==^> Dang tim file setup.exe trong cac thu muc con...]%Res%
 set "setupPath="
-for /r "%source%" %%F in (setup.exe) do (
+for /r "%source%" %%F in (setup.exe set-up.exe) do (
     if exist "%%F" (
         set "setupPath=%%F"
         goto :found_setup
