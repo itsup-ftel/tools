@@ -127,7 +127,7 @@ if /i "%opt%"=="35" goto MENU_OFFICE
 if /i "%opt%"=="36" goto activeMAS
 if /i "%opt%"=="37" goto cleanup
 if /i "%opt%"=="38" goto installappfree
-if /i "%opt%"=="39" gotoacrobat
+if /i "%opt%"=="39" goto acrobat
 if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto dichvucong
 if /i "%opt%"=="42" goto foxiteditor
