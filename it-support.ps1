@@ -81,7 +81,7 @@ echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
 echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup Win/Office  %G%42.%Res% Foxit PDF Editor
-echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi    %G%43.%Res% Autodesk
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi   %G%43.%Res% Autodesk
 echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung Ban Quyen   %G%--%Res% ---------------
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
@@ -793,7 +793,7 @@ if exist "%source%" rmdir /s /q "%source%"
 if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
 
 echo:     %G%______________________________________________________________%Res%
-echo:                %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
+echo:              %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
 echo:     %G%______________________________________________________________%Res%
 pause
 goto appvip
