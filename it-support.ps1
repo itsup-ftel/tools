@@ -504,6 +504,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$apps = @(" ^
     "@{Name='Adobe CreativeCloud'; ID='Adobe.CreativeCloud'}," ^
     "@{Name='Autodesk AutodeskAccess'; ID='Autodesk.AutodeskAccess'}," ^
+    "@{Name='SketchUp 2023'; ID='Trimble.SketchUp.2023'}," ^
+    "@{Name='SketchUp 2025'; ID='Trimble.SketchUp.2025'}," ^
+    "@{Name='SketchUp 2026'; ID='Trimble.SketchUp.2026'}," ^
     ");" ^
     "while($true) {" ^
     "    Clear-Host;" ^
