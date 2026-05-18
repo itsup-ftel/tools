@@ -73,7 +73,7 @@ echo      %G%1.%Res% Xem thong so PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Kiem tra o cung       %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Kiem tra RAM          %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Kiem tra User        %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----adobe-------
+echo      %G%5.%Res% Kiem tra Bitlocker   %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----pdf-------
 echo      %G%6.%Res% Kiem tra ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
@@ -694,7 +694,7 @@ for /r "%source%" %%F in (setup.exe set-up.exe) do (
 :found_setup
 if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
-    echo:     %W%[==^> Hien popup va thuc hien cai dat...]%Res%
+    echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
@@ -717,13 +717,13 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableB
 echo:     %W%[==^> Dang giai nen GenP...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
-echo:     ________________________________________________________________________
+echo:     %C%______________________________________________________________%Res%
 echo: %Y%[HUONG DAN THAO TAC:]%Res%
 echo:     1. Cua so GenP se mo len ngay sau day.
 echo:     2. Nhan nut %B%["Search"]%Res% de GenP tim kiem trong may.
 echo:     3. Nhan nut %G%["Patch"]%Res% va cho den khi chay xong.
 echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
-echo:     ________________________________________________________________________
+echo:     %C%______________________________________________________________%Res%
 timeout /t 5
 start /wait "" "%source%\GenP\GenP-v4.0.4.exe"
 
@@ -749,7 +749,7 @@ for %%P in ("%path64%" "%%path32%%" "%common64%" "%common32%") do (
     )
 )
 netsh advfirewall set allprofiles state on >nul 2>&1
-echo:     %G%[[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.]%Res%
+echo:     %G%[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.%Res%
 
 :: Tải danh sách Hosts
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
@@ -759,7 +759,7 @@ if %errorlevel% neq 0 (
     echo:     %R%[[!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu manual...]%Res%
     (echo 127.0.0.1 192.150.14.69 & echo 127.0.0.1 192.150.18.101) > "%tempHosts%"
 ) else (
-    echo:     %G%[[OK] Da tai danh sach chan adobe thanh cong.]%Res%
+    echo:     %G%[OK] Da tai danh sach chan adobe thanh cong.%Res%
 )
 
 :: Trộn vào file Hosts hệ thống bằng PowerShell
@@ -779,20 +779,22 @@ powershell -NoProfile -Command ^
     "}; " ^
     "$finalList.Add($s); foreach ($nl in $newLines) { $finalList.Add($nl) }; $finalList.Add($e); " ^
     "[System.IO.File]::WriteAllLines($path, $finalList);"
-echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
+echo:     %G%[OK] Da update file hosts thanh cong.%Res%
 
 :: Thêm thư mục cài đặt vào Defender Exclusion
-echo     - Dang them thu muc cai dat vao danh sach loai tru...
+echo:     %W%[==^> Dang them thu muc cai dat vao danh sach loai tru...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe', '%ProgramFiles(x86)%\Adobe'" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Common Files\Adobe', '%ProgramFiles(x86)%\Common Files\Adobe'" >nul 2>&1
+echo:     %G%[OK] Da them loai tru thanh cong.%Res%
 
 :: Dọn dẹp hệ thống an toàn
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false -DisableScriptScanning $false" >nul 2>&1
 if exist "%source%" rmdir /s /q "%source%"
 if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
 
-echo:     ________________________________________________________________________
-echo:                   %G%[HOAN THANH KICH HOAT %titleName% TRIET DE!]%Res%
-echo:     ________________________________________________________________________
+echo:     %G%______________________________________________________________%Res%
+echo:                %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
+echo:     %G%______________________________________________________________%Res%
 pause
 goto appvip
 
