@@ -126,8 +126,8 @@ if /i "%opt%"=="34" start Appwiz.cpl & goto menu
 if /i "%opt%"=="35" goto MENU_OFFICE
 if /i "%opt%"=="36" goto activeMAS
 if /i "%opt%"=="37" goto cleanup
-if /i "%opt%"=="38" goto installappfree
-if /i "%opt%"=="39" goto acrobat
+if /i "%opt%"=="38" goto appfree
+if /i "%opt%"=="39" goto appvip
 if /i "%opt%"=="40" goto saoluuphuchoi
 if /i "%opt%"=="41" goto dichvucong
 if /i "%opt%"=="42" goto foxiteditor
@@ -385,7 +385,7 @@ echo:     ______________________________________________________________________
 pause
 goto foxiteditor
 
-:installappfree
+:appfree
 cls
 winget --version >nul 2>&1
 if %errorLevel% neq 0 (
@@ -484,6 +484,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "}"
 pause
 goto menu
+
 
 :bitlocker
 cls
@@ -597,68 +598,116 @@ echo %R%==========================================%Res%
 pause
 goto menu
 
-:acrobat
+
+:appvip
 cls
 mode 85, 35
-set "ver=2026"
-set "path64=%ProgramFiles%\Adobe\Acrobat DC\Acrobat"
-set "path32=%ProgramFiles(x86)%\Adobe\Acrobat DC\Acrobat"
+title Menu cai dat Adobe
 set "source=%TEMP%\GenP_Source"
-title Adobe Acrobat DC Pro x64 - V%ver%
-
+set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
+set "tempHosts=%TEMP%\adobe_hosts.txt"
+set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
 echo:     ______________________________________________________________
 echo:
-echo:                    %C%[ADOBE ACROBAT DC PRO x64]%Res%
+echo:                    %C%[ADOBE LIST]%Res%
 echo:     ______________________________________________________________
-echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
-echo:         [2] Chi kich hoat Adobe (Neu da cai san Acrobat)
-echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
+echo:         [1] Acrobat DC
+echo:         [2] Photoshop
+echo:         [3] Illustrator
 echo:         [0] Thoat ve menu chinh
 echo:     ______________________________________________________________
 echo.
 choice /C:1230 /N
-set "userChoice=%errorlevel%"
+set "choice=%errorlevel%"
 
-if %userChoice%==1 goto DownloadInstall
-if %userChoice%==2 goto RunGenP
-if %userChoice%==3 goto ExtraSecurity
-if %userChoice%==0 goto menu
+if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
+if %choice%==2 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
+if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "ADOBE ILLUSTRATOR" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
+if %choice%==4 goto menu
 goto menu
 
-:DownloadInstall
+:app_menu
+:: %1: Thư mục cha, %2: Tên file exe, %3: Tiêu đề hiển thị, %4: Link tải ứng dụng
+set "appName=%~1"
+set "appExe=%~2"
+set "titleName=%~3"
+set "downloadURL=%~4"
+
+set "path64=%ProgramFiles%\Adobe\%appName%"
+set "path32=%ProgramFiles(x86)%\Adobe\%appName%"
+
+:sub_menu
+cls
+title %titleName%
+echo:     ______________________________________________________________
+echo:
+echo:                    %C%[%titleName% x64]%Res%
+echo:     ______________________________________________________________
+echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
+echo:         [2] Chi kich hoat Adobe (Neu da cai san)
+echo:         [3] Chan Firewall ^& Update Hosts (Chan quet ban quyen)
+echo:         [0] Quay lai menu chinh
+echo:     ______________________________________________________________
+echo.
+choice /C:1230 /N
+set "subChoice=%errorlevel%"
+
+if %subChoice%==1 goto task_full
+if %subChoice%==2 goto task_patch
+if %subChoice%==3 goto task_security
+if %subChoice%==4 goto appvip
+goto sub_menu
+
+:task_full
 cls
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
-
 set "foundPath="
-if exist "%path64%\Acrobat.exe" (set "foundPath=%path64%")
-if exist "%path32%\Acrobat.exe" (set "foundPath=%path32%")
+if exist "%path64%\%appExe%" set "foundPath=%path64%"
+if exist "%path32%\%appExe%" set "foundPath=%path32%"
 
 if defined foundPath (
-    echo:
-    echo:    %R%[[!] Phat hien Adobe Acrobat da duoc cai dat tai:]%Res%
-    echo:         "%foundPath%"
+    echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
     echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
     timeout /t 3 >nul
-    goto RunGenP
+    goto task_patch
 )
 
-echo:     %W%[==^> Dang tai Adobe Acrobat DC x64...]%Res%
+echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\Acrobat.zip" https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\app.zip" "%downloadURL%"
 echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
-powershell -Command "Expand-Archive -Path '%source%\Acrobat.zip' -DestinationPath '%source%' -Force"
-start /wait "" "%source%\Adobe Acrobat\setup.exe" /quiet
-goto RunGenP
+powershell -Command "Expand-Archive -Path '%source%\app.zip' -DestinationPath '%source%' -Force"
+echo:     %W%[==^> Dang tim file setup.exe trong cac thu muc con...]%Res%
+set "setupPath="
+for /r "%source%" %%F in (setup.exe) do (
+    if exist "%%F" (
+        set "setupPath=%%F"
+        goto :found_setup
+    )
+)
 
-:RunGenP
+:found_setup
+if defined setupPath (
+    echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
+    echo:     %W%[==^> Hien popup va thuc hien cai dat...]%Res%
+    start /wait "" "%setupPath%"
+) else (
+    echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
+    pause
+)
+
+:: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
+del /f /q "%source%\app.zip" >nul 2>&1
+
+:task_patch
 cls
 echo:     %W%[==^> Dang chuan bi tien hanh kich hoat...]%Res%
 if not exist "%source%" md "%source%"
-curl --ssl-no-revoke --progress-bar -L -# -o "%source%\GenP.zip" https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\GenP.zip" "https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/GenP-v4.0.4.zip"
 
 echo:     %W%[==^> Tam tat Antivirus de chay GenP...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
-powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
 
 echo:     %W%[==^> Dang giai nen GenP...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
@@ -666,92 +715,72 @@ powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '
 echo:     ________________________________________________________________________
 echo: %Y%[HUONG DAN THAO TAC:]%Res%
 echo:     1. Cua so GenP se mo len ngay sau day.
-echo:     2. Nhan nut %B%["Search"]%Res% de GenP tim Acrobat trong may.
-echo:     3. Nhan nut %G%["Patch"]%Res% (bieu tuong vien thuoc) va cho chay xong.
+echo:     2. Nhan nut %B%["Search"]%Res% de GenP tim kiem trong may.
+echo:     3. Nhan nut %G%["Patch"]%Res% va cho den khi chay xong.
 echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
 echo:     ________________________________________________________________________
 timeout /t 5
-start "" "%source%\GenP\GenP-v4.0.4.exe"
-pause
-goto ExtraSecurity
+start /wait "" "%source%\GenP\GenP-v4.0.4.exe"
 
-:ExtraSecurity
+:task_security
 cls
-echo:     [==^> Dang thiet lap bao mat chong nha Patch...]
+echo:     [==^> Dang thiet lap bao mat chong quet ban quyen...]
 
-:: Chan Firewall
-echo     ==^> Dang thiet lap Firewall Rules cho Acrobat...
-netsh advfirewall firewall add rule name="Adobe_Acrobat_64_Block_Out" dir=out program="%path64%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_64_Block_Out" dir=out program="%path64%" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_64_Block_In" dir=in program="%path64%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_64_Block_In" dir=in program="%path64%" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_32_Block_Out" dir=out program="%path32%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_Folder_32_Block_Out" dir=out program="%path32%" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acrobat_32_Block_In" dir=in program="%path32%\Acrobat.exe" action=block >nul 2>&1
-netsh advfirewall firewall add rule name="Adobe_Acroba_Folder_32_Block_In" dir=in program="%path32%" action=block >nul 2>&1
+:: Chặn Firewall bằng vòng lặp (gộp toàn bộ lệnh netsh cũ)
+echo     ==^> Dang thiet lap Firewall Rules cho %appName%...
+for %%P in ("%path64%" "%path32%") do (
+    for %%D in (in out) do (
+        netsh advfirewall firewall add rule name="Adobe_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
+        netsh advfirewall firewall add rule name="Adobe_Folder_!appExe!_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
+    )
+)
 netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[[OK] Da thiet lap Firewall thanh cong.]%Res%
 
-:: Chan Hosts
+:: Tải danh sách Hosts
 echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
-set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
-set "tempHosts=%TEMP%\adobe_hosts.txt"
-set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
-
-:: Thử tải từ GitHub
-echo:     %W%[==^> Dang thu tai danh sach adobe xuong...]%Res%
 curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
 
-:: Kiểm tra nếu tải thất bại (file không tồn tại hoặc rỗng)
 if %errorlevel% neq 0 (
-    echo:     %R%[[!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu cong...]%Res%
-    (
-        echo 127.0.0.1 192.150.14.69
-        echo 127.0.0.1 192.150.18.101
-
-    ) > "%tempHosts%"
+    echo:     %R%[[!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu manual...]%Res%
+    (echo 127.0.0.1 192.150.14.69 & echo 127.0.0.1 192.150.18.101) > "%tempHosts%"
 ) else (
     echo:     %G%[[OK] Da tai danh sach chan adobe thanh cong.]%Res%
 )
 
-:: Tiến hành trộn vào file Hosts hệ thống
+:: Trộn vào file Hosts hệ thống bằng PowerShell
 echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
 attrib -r "%hPath%" >nul 2>&1
 powershell -NoProfile -Command ^
-    "$path='%hPath%'; $txt='%tempHosts%'; " ^
-    "$s='#region Adobe'; $e='#endregion'; " ^
+    "$path='%hPath%'; $txt='%tempHosts%'; $s='#region Adobe'; $e='#endregion'; " ^
     "if (!(Test-Path $txt)) { exit }; " ^
     "$newLines = Get-Content $txt | Where-Object { $_.Trim() -ne '' }; " ^
     "$oldContent = Get-Content $path -ErrorAction SilentlyContinue; " ^
     "if (!$oldContent) { $oldContent = @() }; " ^
-    "$finalList = New-Object System.Collections.Generic.List[string]; " ^
-    "$skip = $false; " ^
+    "$finalList = New-Object System.Collections.Generic.List[string]; $skip = $false; " ^
     "foreach ($line in $oldContent) { " ^
     "    if ($line.Trim() -eq $s) { $skip = $true; continue }; " ^
     "    if ($line.Trim() -eq $e) { $skip = $false; continue }; " ^
     "    if (!$skip) { $finalList.Add($line) }; " ^
     "}; " ^
-    "$finalList.Add($s); " ^
-    "foreach ($nl in $newLines) { $finalList.Add($nl) }; " ^
-    "$finalList.Add($e); " ^
+    "$finalList.Add($s); foreach ($nl in $newLines) { $finalList.Add($nl) }; $finalList.Add($e); " ^
     "[System.IO.File]::WriteAllLines($path, $finalList);"
 echo:     %G%[[OK] Da update file hosts thanh cong.]%Res%
 
-:: 3. Loai tru thu muc khoi Defender
+:: Thêm thư mục cài đặt vào Defender Exclusion
 echo     - Dang them thu muc cai dat vao danh sach loai tru...
-powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe'" >nul 2>&1
-powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Adobe'" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Adobe', '%ProgramFiles(x86)%\Adobe'" >nul 2>&1
 
-:: 4. Don dep
-powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
-rmdir /s /q "%source%"
-del /f "%tempHosts%" >nul 2>&1
+:: Dọn dẹp hệ thống an toàn
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false -DisableScriptScanning $false" >nul 2>&1
+if exist "%source%" rmdir /s /q "%source%"
+if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
 
 echo:     ________________________________________________________________________
-echo:                   %G%[HOAN THANH KICH HOAT ADOBE TRIET DE!]%Res%
+echo:                   %G%[HOAN THANH KICH HOAT %titleName% TRIET DE!]%Res%
 echo:     ________________________________________________________________________
 pause
-goto acrobat
+goto appvip
 
 
 :MENU_OFFICE
