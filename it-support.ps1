@@ -73,7 +73,7 @@ echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Thong tin o cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Thong tin RAM         %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----44-c------
+echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----44-d------
 echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
@@ -904,8 +904,8 @@ echo.
 choice /C:12340 /N
 set "choice=%errorlevel%"
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://sinfoniavn-my.sharepoint.com/:u:/g/personal/debug_sinfo-mt_com_vn/IQAqKTWcMesuQ6vkm5k7J0R1AVREP4lTLDjLnQV0UinESr4?download=1"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://sinfoniavn-my.sharepoint.com/:u:/g/personal/debug_sinfo-mt_com_vn/IQCU86Slv0W0RITeZcCKQtcqAfd7P6EwXJD8biLK4RRJdxw?download=1"
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly9zaW5mb25pYXZuLW15LnNoYXJlcG9pbnQuY29tLzp1Oi9nL3BlcnNvbmFsL2RlYnVnX3NpbmZvLW10X2NvbV92bi9JUUNVODZTbHYwVzBSSVRlWmNDS1F0Y3FBZmQ3UDZFd1hKRDhiaUxLNFJSSmR4dw=/root/content"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://api.onedrive.com/v1.0/shares/u!aHR0cHM6Ly9zaW5mb25pYXZuLW15LnNoYXJlcG9pbnQuY29tLzp1Oi9nL3BlcnNvbmFsL2RlYnVnX3NpbmZvLW10X2NvbV92bi9JUUNVODZTbHYwVzBSSVRlWmNDS1F0Y3FBZmQ3UDZFd1hKRDhiaUxLNFJSSmR4dw=/root/content"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
 if %choice%==5 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
