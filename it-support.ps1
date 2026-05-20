@@ -73,7 +73,7 @@ echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Thong tin o cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Thong tin RAM         %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----pdf-------
+echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----44-------
 echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
@@ -881,6 +881,194 @@ echo:     %G%______________________________________________________________%Res%
 pause
 goto adobe
 
+:autodesk
+cls
+mode 85, 35
+title AUTODESK Install
+set "source=%TEMP%\Autodesk_Source"
+set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostautodesk.txt"
+set "tempHosts=%TEMP%\autodesk_hosts.txt"
+set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
+echo:     %C%______________________________________________________________%Res%
+echo:
+echo:                    %Y%[AUTODESK PREMIUM LIST]%Res%
+echo:     %C%______________________________________________________________%Res%
+echo:         %G%[1]%Res% AutoCAD 2021
+echo:         %G%[1]%Res% AutoCAD 2023
+echo:         %G%[2]%Res% Inventor
+echo:         %G%[3]%Res% Revit	
+echo:         %G%[4]%Res% SketchUp
+echo:         %R%[0]%Res% Thoat ve menu chinh
+echo:     %C%______________________________________________________________%Res%
+echo.
+choice /C:12340 /N
+set "choice=%errorlevel%"
+
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://vnshort.com/nMaV"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://vnshort.com/Z4KR"
+if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
+if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
+if %choice%==5 goto menu
+goto menu
+
+:autodesk_menu
+:: %1: Thư mục cha, %2: Tên file exe, %3: Tiêu đề hiển thị, %4: Link tải ứng dụng
+set "appName=%~1"
+set "appExe=%~2"
+set "titleName=%~3"
+set "downloadURL=%~4"
+
+set "path64=%ProgramFiles%\Autodesk\%appName%"
+set "path32=%ProgramFiles(x86)%\Autodesk\%appName%"
+
+:subdesk_menu
+cls
+title %titleName%
+echo:     %C%______________________________________________________________%Res%
+echo:
+echo:                    %Y%[%titleName% x64]%Res%
+echo:     %C%______________________________________________________________%Res%
+echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
+echo:         %B%[2]%Res% Chi kich hoat Autodesk %W%(Neu da cai san)%Res%
+echo:         %B%[3]%Res% Chan Firewall ^& Update Hosts %W%(Chan quet ban quyen)%Res%
+echo:         %R%[0]%Res% Quay lai menu chinh
+echo:     %C%______________________________________________________________%Res%
+echo.
+choice /C:1230 /N
+set "subChoice=%errorlevel%"
+
+if %subChoice%==1 goto job_full
+if %subChoice%==2 goto job_patch
+if %subChoice%==3 goto job_security
+if %subChoice%==4 goto autodesk
+goto subdesk_menu
+
+:job_full
+cls
+echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
+set "foundPath="
+if exist "%path64%\%appExe%" set "foundPath=%path64%"
+if exist "%path32%\%appExe%" set "foundPath=%path32%"
+
+if defined foundPath (
+    echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
+    echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
+    timeout /t 3 >nul
+    goto job_patch
+)
+
+echo:     %W%[==^> Dang tai %appName%...]%Res%
+if not exist "%source%" md "%source%"
+curl --ssl-no-revoke --progress-bar -L -# -o "%source%\autodesk.zip" "%downloadURL%"
+
+echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
+powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
+
+echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
+powershell -Command "Expand-Archive -Path '%source%\autodesk.zip' -DestinationPath '%source%' -Force"
+echo:     %W%[==^> Dang tim file setup.exe trong cac thu muc con...]%Res%
+set "setupPath="
+for /r "%source%" %%F in (setup.exe set-up.exe) do (
+    if exist "%%F" (
+        set "setupPath=%%F"
+        goto :found_setup
+    )
+)
+
+:found_setup
+if defined setupPath (
+    echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
+    echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
+    start /wait "" "%setupPath%"
+) else (
+    echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
+    pause
+)
+
+:: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
+del /f /q "%source%\autodesk.zip" >nul 2>&1
+
+:job_patch
+cls
+echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
+xcopy "%source%\Fix\*.*" "%foundPath%\%appExe%\" /E /I /H /Y /R /Q >nul
+
+
+:job_security
+cls
+set "autodesk64=%ProgramFiles%\Autodesk"
+set "autodesk32=%ProgramFiles(x86)%\Autodesk"
+set "common64=%ProgramFiles%\Common Files\Autodesk Shared"
+set "common32=%ProgramFiles(x86)%\Common Files\Autodesk Shared"
+set "roamingdesk=%AppData%\Autodesk"
+set "localdesk=%localappdata%\Autodesk"
+
+echo     %W%==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...%Res%
+
+:: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
+for %%P in ("%path64%" "%%path32%%" "%autodesk64%" "%autodesk32%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
+    :: Kiểm tra nếu thư mục tồn tại thì mới tiến hành chặn để tránh rác Firewall
+    if exist "%%~P" (
+        for %%D in (in out) do (
+            :: Chặn file thực thi chính của ứng dụng (chỉ áp dụng nếu là thư mục ứng dụng gốc)
+            if exist "%%~P\%appExe%" (
+                netsh advfirewall firewall add rule name="Autodesk_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
+            )
+            :: Chặn toàn bộ kết nối từ thư mục (bao gồm cả thư mục cài đặt và thư mục Common Files)
+            netsh advfirewall firewall add rule name="Autodesk_Folder_Block_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
+        )
+    )
+)
+netsh advfirewall set allprofiles state on >nul 2>&1
+echo:     %G%[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.%Res%
+
+:: Tải danh sách Hosts
+echo:     %C%[==^> Dang tai danh sach host Autodesk..]%Res%
+curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
+
+if %errorlevel% neq 0 (
+    echo:     %R%[[!] Khong the ket noi GitHub. Dang chuyen sang danh sach thu manual...]%Res%
+    (echo 127.0.0.1 192.150.14.69 & echo 127.0.0.1 192.150.18.101) > "%tempHosts%"
+) else (
+    echo:     %G%[OK] Da tai danh sach chan Autodesk thanh cong.%Res%
+)
+
+:: Trộn vào file Hosts hệ thống bằng PowerShell
+echo:     %W%[==^> Dang ghi du lieu vao file Hosts...]%Res%
+attrib -r "%hPath%" >nul 2>&1
+powershell -NoProfile -Command ^
+    "$path='%hPath%'; $txt='%tempHosts%'; $s='#region Autodesk'; $e='#endregion'; " ^
+    "if (!(Test-Path $txt)) { exit }; " ^
+    "$newLines = Get-Content $txt | Where-Object { $_.Trim() -ne '' }; " ^
+    "$oldContent = Get-Content $path -ErrorAction SilentlyContinue; " ^
+    "if (!$oldContent) { $oldContent = @() }; " ^
+    "$finalList = New-Object System.Collections.Generic.List[string]; $skip = $false; " ^
+    "foreach ($line in $oldContent) { " ^
+    "    if ($line.Trim() -eq $s) { $skip = $true; continue }; " ^
+    "    if ($line.Trim() -eq $e) { $skip = $false; continue }; " ^
+    "    if (!$skip) { $finalList.Add($line) }; " ^
+    "}; " ^
+    "$finalList.Add($s); foreach ($nl in $newLines) { $finalList.Add($nl) }; $finalList.Add($e); " ^
+    "[System.IO.File]::WriteAllLines($path, $finalList);"
+echo:     %G%[OK] Da update file hosts thanh cong.%Res%
+
+:: Thêm thư mục cài đặt vào Defender Exclusion
+echo:     %W%[==^> Dang them thu muc cai dat vao danh sach loai tru...]%Res%
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Autodesk', '%ProgramFiles(x86)%\Autodesk'" >nul 2>&1
+powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles%\Common Files\Autodesk', '%ProgramFiles(x86)%\Common Files\Autodesk'" >nul 2>&1
+echo:     %G%[OK] Da them loai tru thanh cong.%Res%
+
+:: Dọn dẹp hệ thống an toàn
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false -DisableBehaviorMonitoring $false -DisableIOAVProtection $false -DisableIntrusionPreventionSystem $false -DisableScriptScanning $false" >nul 2>&1
+if exist "%source%" rmdir /s /q "%source%"
+if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
+
+echo:     %G%______________________________________________________________%Res%
+echo:              %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
+echo:     %G%______________________________________________________________%Res%
+pause
+goto autodesk
 
 :MENU_OFFICE
 cls
