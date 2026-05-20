@@ -824,7 +824,7 @@ for %%P in ("%path64%" "%%path32%%" "%common64%" "%common32%") do (
         for %%D in (in out) do (
             :: Chặn file thực thi chính của ứng dụng (chỉ áp dụng nếu là thư mục ứng dụng gốc)
             if exist "%%~P\%appExe%" (
-                netsh advfirewall firewall add rule name="Adobe_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
+                netsh advfirewall firewall add rule name="Adobe_%appExe%_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
             )
             :: Chặn toàn bộ kết nối từ thư mục (bao gồm cả thư mục cài đặt và thư mục Common Files)
             netsh advfirewall firewall add rule name="Adobe_Folder_Block_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
