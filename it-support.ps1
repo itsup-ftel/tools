@@ -904,7 +904,7 @@ echo.
 choice /C:12340 /N
 set "choice=%errorlevel%"
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://vnshort.com/nMaV"
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://sinfoniavn-my.sharepoint.com/:u:/g/personal/debug_sinfo-mt_com_vn/IQAqKTWcMesuQ6vkm5k7J0R1AVREP4lTLDjLnQV0UinESr4?download=1"
 if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://vnshort.com/b5ie"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
