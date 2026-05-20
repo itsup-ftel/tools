@@ -905,7 +905,7 @@ choice /C:12340 /N
 set "choice=%errorlevel%"
 
 if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://sinfoniavn-my.sharepoint.com/:u:/g/personal/debug_sinfo-mt_com_vn/IQAqKTWcMesuQ6vkm5k7J0R1AVREP4lTLDjLnQV0UinESr4?download=1"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://vnshort.com/b5ie"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://sinfoniavn-my.sharepoint.com/:u:/g/personal/debug_sinfo-mt_com_vn/IQCU86Slv0W0RITeZcCKQtcqAfd7P6EwXJD8biLK4RRJdxw?download=1"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
 if %choice%==5 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
@@ -962,6 +962,20 @@ echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\autodesk.zip" "%downloadURL%"
 
+:: KIỂM TRA LỖI TẢI FILE (MỚI THÊM)
+if %errorlevel% neq 0 (
+    echo:     %R%[[!] LOI: Khong the tai file tu duong dan. Vui long kiem tra lai mang hoac Link.]%Res%
+    pause
+    goto subdesk_menu
+)
+
+:: KIỂM TRA DUNG LƯỢNG FILE TẢI VỀ (MỚI THÊM - Tránh file rác, file lỗi vài KB)
+for %%I in ("%source%\autodesk.zip") do if %%~zI LSS 1048576 (
+    echo:     %R%[[!] LOI: File tai ve qua nho (< 1MB). Link tai co the da bi chan hoac thay doi.]%Res%
+    del /f /q "%source%\autodesk.zip" >nul 2>&1
+    pause
+    goto subdesk_menu
+)
 echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
