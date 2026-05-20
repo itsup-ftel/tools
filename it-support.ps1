@@ -706,7 +706,7 @@ set "choice=%errorlevel%"
 if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
 if %choice%==2 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
 if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "ADOBE ILLUSTRATOR" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
-if %choice%==4 goto menu
+if %choice%==0 goto menu
 goto menu
 
 :app_menu
@@ -894,10 +894,10 @@ echo:
 echo:                    %Y%[AUTODESK PREMIUM LIST]%Res%
 echo:     %C%______________________________________________________________%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
-echo:         %G%[1]%Res% AutoCAD 2023
-echo:         %G%[2]%Res% Inventor
-echo:         %G%[3]%Res% Revit	
-echo:         %G%[4]%Res% SketchUp
+echo:         %G%[2]%Res% AutoCAD 2023
+echo:         %G%[3]%Res% Inventor
+echo:         %G%[4]%Res% Revit	
+echo:         %G%[5]%Res% SketchUp
 echo:         %R%[0]%Res% Thoat ve menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
@@ -908,7 +908,8 @@ if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "htt
 if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://vnshort.com/Z4KR"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
-if %choice%==5 goto menu
+if %choice%==5 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
+if %choice%==0 goto menu
 goto menu
 
 :autodesk_menu
