@@ -904,8 +904,8 @@ echo.
 choice /C:12340 /N
 set "choice=%errorlevel%"
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://sinfoniavn-my.sharepoint.com/personal/debug_sinfo-mt_com_vn/_layouts/15/download.aspx?SourceUrl=%2Fpersonal%2Fdebug_sinfo-mt_com_vn%2FDocuments%2FPublic%2FACAD21.zip"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://sinfoniavn-my.sharepoint.com/personal/debug_sinfo-mt_com_vn/_layouts/15/download.aspx?SourceUrl=%2Fpersonal%2Fdebug_sinfo-mt_com_vn%2FDocuments%2FPublic%2FACAD23.zip"
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "http://118.71.27.159:5000/fsdownload/LYKqYx9qN/ACAD21.zip"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "http://118.71.27.159:5000/fsdownload/RQjDCZWHj/ACAD23.zip"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
 if %choice%==5 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
