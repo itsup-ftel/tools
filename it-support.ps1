@@ -867,6 +867,7 @@ echo:         %G%[3]%Res% Adobe Illustrator
 echo:         %R%[0]%Res% Thoat ve menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
+echo: Nhap lua chon (0-3):
 choice /C:1230 /N
 set "choice=%errorlevel%"
 
