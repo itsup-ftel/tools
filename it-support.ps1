@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Them may in moi
 echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2- ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2+ ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -1127,7 +1127,7 @@ if defined foundPath (
 
 echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
-curl --insecure -u "itman:jf6lFQnUbhMp2z0SYGWxBjNO6aPOyX01GgCvf0PiS3TcKdIPdE" -L# --ssl-no-revoke -o "%source%\autodesk.zip" "%downloadURL%"
+curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\autodesk.zip" "%downloadURL%"
 
 
 echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
