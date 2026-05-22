@@ -253,23 +253,23 @@ cls
 echo %C%=====================================================================%Res%
 echo %C%                       DANH SACH MA LOI MAY IN                       %Res%
 echo %C%=====================================================================%Res%
-echo  [%G%01%Res%]. %R%0x0000011B%Res%: Loi xac thuc RPC khi chia se may in mang
-echo  [%G%02%Res%]. %R%0x00000709%Res%: Loi ten hoac IP thiet bi khong hop le
-echo  [%G%03%Res%]. %R%0x0000bc4%Res% : Loi khong tim thay may in trong mang
-echo  [%G%04%Res%]. %R%0x00004005%Res%: Loi phan quyen truy cap luong TCP
-echo  [%G%05%Res%]. %R%0x0000007c%Res%: Loi xung dot dinh dang goi tin in
-echo  [%G%06%Res%]. %R%0x00000012%Res%: Loi truy cap/dong bo Driver tu xa
-echo  [%G%07%Res%]. %R%0x00000bcb%Res%: Loi chan driver co chung chi tu ky
-echo  [%G%08%Res%]. %B%0x00000002%Res%: Loi can quet, don sach file Driver loi
-echo  [%G%09%Res%]. %B%0x0000007a%Res%: Loi cau hinh sai giao thuc Port truyen tai
+echo   [%G%1%Res%]. %R%0x0000011B%Res%: Loi xac thuc RPC khi chia se may in mang
+echo   [%G%2%Res%]. %R%0x00000709%Res%: Loi ten hoac IP thiet bi khong hop le
+echo   [%G%3%Res%]. %R%0x0000bc4%Res% : Loi khong tim thay may in trong mang
+echo   [%G%4%Res%]. %R%0x00004005%Res%: Loi phan quyen truy cap luong TCP
+echo   [%G%5%Res%]. %R%0x0000007c%Res%: Loi xung dot dinh dang goi tin in
+echo   [%G%6%Res%]. %R%0x00000012%Res%: Loi truy cap/dong bo Driver tu xa
+echo   [%G%7%Res%]. %R%0x00000bcb%Res%: Loi chan driver co chung chi tu ky
+echo   [%G%8%Res%]. %B%0x00000002%Res%: Loi can quet, don sach file Driver loi
+echo   [%G%9%Res%]. %B%0x0000007a%Res%: Loi cau hinh sai giao thuc Port truyen tai
 echo  [%G%10%Res%]. %B%0x00004002%Res%: Loi ket cu, xoa sach hang doi in (Queue)
 echo  [%G%11%Res%]. %B%0x000003e3%Res%: Loi chan Policy tai Driver tu may chu
 echo  [%G%12%Res%]. %B%0x00000006%Res%: Loi cache / Handle ket noi may in cu hỏng
-echo  [%G%13%Res%]. Quay lai Menu chinh
+echo   [%G%0%Res%]. Quay lai Menu chinh
 echo %C%=====================================================================%Res%
 echo.
 
-set /p err_opt="%Y%Chon ma loi ban dang gap (01-13): %Res%"
+set /p err_opt="%Y%Chon ma loi ban dang gap (0-12): %Res%"
 
 if "%err_opt%"=="1" set "fix_mode=11B" & goto thuc_hien_fix
 if "%err_opt%"=="2" set "fix_mode=709" & goto thuc_hien_fix
@@ -283,7 +283,7 @@ if "%err_opt%"=="9" set "fix_mode=7A" & goto thuc_hien_fix
 if "%err_opt%"=="10" set "fix_mode=4002" & goto thuc_hien_fix
 if "%err_opt%"=="11" set "fix_mode=3E3" & goto thuc_hien_fix
 if "%err_opt%"=="12" set "fix_mode=006" & goto thuc_hien_fix
-if "%err_opt%"=="13" goto print
+if "%err_opt%"=="0" goto print
 goto menu_loi
 
 :thuc_hien_fix
@@ -1161,6 +1161,7 @@ if defined setupPath (
 del /f /q "%source%\autodesk.zip" >nul 2>&1
 
 :job_patch
+cls
 echo:     %W%[==^> Dang tai kich hoat cho %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\Fix.zip" "%downloadFix%"
@@ -1169,9 +1170,9 @@ powershell -Command "Expand-Archive -Path '%source%\Fix.zip' -DestinationPath '%
 echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
 xcopy "%source%\Fix\*.*" "%path64%\" /E /I /H /Y /R /Q >nul
 xcopy "%source%\Fix\*.*" "%path32%\" /E /I /H /Y /R /Q >nul
+echo:     %G%[OK] Da fix file %appName% thanh cong.%Res%
 
 :job_security
-cls
 set "autodesk64=%ProgramFiles%\Autodesk"
 set "autodesk32=%ProgramFiles(x86)%\Autodesk"
 set "common64=%ProgramFiles%\Common Files\Autodesk Shared"
