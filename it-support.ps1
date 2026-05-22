@@ -25,9 +25,9 @@ set "FAIL_COUNT=0"
 :login
 cls
 set "input_pass="
-echo %C%==========================================%Res%
-echo %Y%       XAC THUC QUYEN TRUY CAP TOOL%Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
+echo %Y%             XAC THUC QUYEN TRUY CAP TOOL          %Res%
+echo %C%==================================================%Res%
 echo.
 set /p "input_pass=Nhap mat khau de vao su dung Tool: "
 
@@ -142,9 +142,9 @@ goto menu
 
 :checklicense
 cls
-echo %C%====================================================================%Res%
-echo %Y%                  CONG CU QUET KIEM TRA BAN QUYEN %Res%
-echo %C%====================================================================%Res%
+echo %C%==================================================%Res%
+echo %Y%          CONG CU QUET KIEM TRA BAN QUYEN          %Res%
+echo %C%==================================================%Res%
 echo:
 echo %C% KIEM TRA BAN QUYEN WINDOWS:%Res%
 powershell -Command "$w = cscript //nologo $env:windir\system32\slmgr.vbs /dli | Out-String; $x = Get-CimInstance -ClassName SoftwareLicensingProduct -Filter \"PartialProductKey is not null and LicenseStatus=1\" -ErrorAction SilentlyContinue; if (-not $x -and -not ($w.ToUpper().Contains('LICENSED'))) { Write-Host '  [-] Ket qua: WINDOWS CHUA KICH HOAT HOAC HET HAN DUNG THU' -ForegroundColor Yellow } else { $fullX = $x | Out-String; $isKMS = ($w.ToUpper().Contains('KMS') -or $fullX.ToUpper().Contains('VOLUME_KMS') -or $w.ToUpper().Contains('180 DAYS') -or $w.ToUpper().Contains('127.0.0.1')); $isVolume = ($fullX.ToUpper().Contains('VOLUME_KMS') -or ($fullX.ToUpper().Contains('VOLUME') -and -not ($fullX.ToUpper().Contains('MAK')))); $isOEM = ($w.ToUpper().Contains('OEM') -or $fullX.ToUpper().Contains('OEM')); $OEMObj = Get-CimInstance -ClassName Win32_ComputerSystemProduct -ErrorAction SilentlyContinue; $isFakeOEM = ($isOEM -and (-not $OEMObj.DigitalProductId)); $partialKey = ($x | Select-Object -First 1).PartialProductKey; $isGenericKey = @('3V66T', '2YT43', '4863V', '6TPF9', '6F4BT', '8439J', 'H8Q99', 'GHM43', 'X4DBX', 'D6R8H', 'WYT23', 'XQQ8S', 'YG64T', '92443', 'B7836') -contains $partialKey; if ($isKMS) { Write-Host '  [-] Ket qua: WINDOWS CRACK (Su dung may chu KMS gia lap hoac tool KMSPico/AIO Tools)' -ForegroundColor Red } elseif ($isGenericKey -and -not $isOEM) { Write-Host '  [-] Ket qua: WINDOWS CRACK (Phat hien su dung tool MAS gia lap ve nang cap ky thuat so HWID bang Generic Product Key)' -ForegroundColor Red } elseif ($isVolume) { Write-Host '  [-] Ket qua: WINDOWS CRACK (Su dung tool MAS luan chuyen khoa vao kenh Doanh Nghiep Volume)' -ForegroundColor Red } elseif ($isFakeOEM) { Write-Host '  [-] Ket qua: WINDOWS CRACK (Gia lap chung chi OEM, bo mach chu khong co chip ban quyen goc)' -ForegroundColor Red } else { Write-Host '  [+] Ket qua: BAN QUYEN XIN THUONG MAI (Giay phep Retail hoac OEM tu chip phan cung chuan hang)' -ForegroundColor Green } }"
@@ -174,9 +174,9 @@ powershell -Command "$nDirs = Get-ChildItem -Path 'C:\Program Files\Nitro\*', 'C
 powershell -Command "$aDirs = Get-ChildItem -Path 'C:\Program Files\ABBYY FineReader *', 'C:\Program Files (x86)\ABBYY FineReader *' -ErrorAction SilentlyContinue | Where-Object { $_.PSIsContainer }; foreach ($d in $aDirs) { $exe = Get-ChildItem -Path $d.FullName -Filter 'FineReader.exe' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1; if ($exe) { $crack = $false; $aSvc = Get-Service -Name 'ABBYY FineReader * Licensing Service' -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -match $d.Name.Split(' ')[-1] } | Select-Object -First 1; if ($aSvc -and $aSvc.Status -ne 'Running') { $crack = $true } else { $checkList = @($exe.FullName); $commonLic = 'C:\Program Files\Common Files\ABBYY\FineReader'; if (Test-Path $commonLic) { $checkList += (Get-ChildItem -Path $commonLic -Include *.dll,*.exe -Recurse -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName }) }; foreach ($f in $checkList) { $sig = Get-AuthenticodeSignature $f -ErrorAction SilentlyContinue; if ($sig.Status -and $sig.Status -ne 'Valid') { $crack = $true } else { if ($sig.SignerCertificate) { $isValidRoot = $sig.SignerCertificate.Verify(); if (-not $isValidRoot) { $crack = $true } } } } }; if ($crack) { Write-Host \"  [-] Ket qua: $($d.Name) BI CRACK (Dich vu ngat hoac mo phung module xac thuc trai phep)\" -ForegroundColor Red } else { Write-Host \"  [+] Ket qua: $($d.Name) BAN QUYEN SACH (Module ma hoa dat chung chi bao mat chuan)\" -ForegroundColor Green } } }"
 
 echo:
-echo %C%====================================================================%Res%
-echo %G%                 TIEN TRINH KIEM TRA HOAN TAT !%Res%
-echo %C%====================================================================%Res%
+echo %C%==================================================%Res%
+echo %G%             TIEN TRINH KIEM TRA HOAN TAT          %Res%
+echo %C%==================================================%Res%
 pause
 goto menu
 
@@ -251,7 +251,7 @@ goto print
 :menu_loi
 cls
 echo %C%=====================================================================%Res%
-echo %C%                       DANH SACH MA LOI MAY IN                       %Res%
+echo %Y%                       DANH SACH MA LOI MAY IN                       %Res%
 echo %C%=====================================================================%Res%
 echo   [%G%1%Res%]. %R%0x0000011B%Res%: Loi xac thuc RPC khi chia se may in mang
 echo   [%G%2%Res%]. %R%0x00000709%Res%: Loi ten hoac IP thiet bi khong hop le
@@ -351,16 +351,16 @@ goto menu_loi
 
 :dichvucong
 cls
-echo %C%==========================================%Res%
-echo %Y%        [ CAI DAT DICH VU CONG ]%Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
+echo %Y%               TIEN ICH DICH VU CONG          %Res%
+echo %C%==================================================%Res%
 echo.
 echo  %G%1.%Res% HTKK - Ho tro ke khai
 echo  %G%2.%Res% iTaxViewer - Doc ho so thue
 echo  %G%3.%Res% CT SigningHub - Ky dien tu
 echo  %G%4.%Res% eSigner - Plugin
 echo  %G%0.%Res% Thoat ve Menu chinh
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
 set /p choice="Chon lua chon (0-4): "
 
 if "%choice%"=="1" goto :proc_htkk
@@ -426,9 +426,9 @@ call :InstallApp "%CURRENT_APP%" "https://vnshort.com/MCxM" "eSigner_1.1.0_setup
 goto end_process
 
 :end_process
-echo %G%===================================================%Res%
-echo %G%[OK] DA HOAN THANH CAP NHAT %CURRENT_APP%!%Res%
-echo %G%===================================================%Res%
+echo %C%==================================================%Res%
+echo   %G%[OK] DA HOAN THANH CAP NHAT %CURRENT_APP%!%Res%
+echo %C%==================================================%Res%
 timeout /t 3 >nul
 pause
 goto dichvucong
@@ -470,15 +470,14 @@ set "pathfoxit=%ProgramFiles(x86)%\Foxit Software\Foxit PDF Editor"
 set "source=%TEMP%\Foxit_Source"
 title Foxit PDF Editor - V%ver%
 
-echo:     ______________________________________________________________
-echo:
-echo:                    %C%[Foxit PDF Editor x2024]%Res%
-echo:     ______________________________________________________________
+echo %C%==================================================%Res%
+echo %Y%             Foxit PDF Editor v2024         %Res%
+echo %C%==================================================%Res%
 echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         [2] Chi kich hoat Editor %Y%(Neu da cai san app)%Res%
 echo:         [3] Chan Firewall (Chan quet ban quyen)
 echo: %R%        [0] Thoat ve Menu chinh%Res%
-echo:     ______________________________________________________________
+echo %C%==================================================%Res%
 echo.
 set /p userChoice="Nhap lua chon (0-3): "
 
@@ -546,9 +545,9 @@ powershell -Command "Add-MpPreference -ExclusionPath '%ProgramFiles(x86)%\Foxit 
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false" >nul 2>&1
 rmdir /s /q "%source%"
 
-echo:     ________________________________________________________________________
-echo:                   %G%[HOAN THANH CAI DAT FOXIT PDF EDITOR!]%Res%
-echo:     ________________________________________________________________________
+echo %C%==================================================%Res%
+echo %G%      HOAN THANH CAI DAT FOXIT PDF EDITOR          %Res%
+echo %C%==================================================%Res%
 pause
 goto foxiteditor
 
@@ -738,15 +737,15 @@ goto menu
 
 :bitlocker
 cls
-echo ======================================================
-echo           %Y%[ CONG CU QUAN LY BITLOCKER]%Res%
-echo ======================================================
+echo %C%==================================================%Res%
+echo %Y%             CONG CU QUAN LY BITLOCKER         %Res%
+echo %C%==================================================%Res%
 echo 1. Kiem tra trang thai BitLocker tat ca o dia
 echo 2. %R%[Tat Bitlocker]%Res% cho 1 o dia cu the (Vi du: C:)
 echo 3. %R%[Tat BitLocker]%Res% cho TAT CA o dia dang bao ve
 echo 4. Theo doi tien trinh giai ma (Real-time)
 echo 5. Thoat ve Menu chinh
-echo ======================================================
+echo %C%==================================================%Res%
 set /p choice="Chon lua chon cua ban (1-5): "
 
 if "%choice%"=="1" goto :status
@@ -790,9 +789,9 @@ goto :bitlocker
 
 :activeMAS
 cls
-echo %C%==========================================%Res%
-echo %Y%   [ DANG KET NOI DEN MAY CHU MAS... ]%Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
+echo %Y%          DANG KET NOI DEN MAY CHU MAS...          %Res%
+echo %C%==================================================%Res%
 echo.
 echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
@@ -800,9 +799,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activate
 goto menu
 :cleanup
 cls
-echo %C%==========================================%Res%
-echo %Y%   CLEANUP ACTIVATION WINDOWS ^& OFFICE%Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
+echo %Y%       CLEANUP ACTIVATION WINDOWS ^& OFFICE          %Res%
+echo %C%==================================================%Res%
 echo:
 echo %Y%--- CAC KEY HIEN CO TREN HE THONG ---%Res%
 
@@ -813,10 +812,10 @@ echo %W%[?] Dang quet tim vi tri Office va kiem tra Key...%Res%
 powershell -Command "$found=$false; $spp = Get-CimInstance -Query 'SELECT * FROM SoftwareLicensingProduct WHERE (Name LIKE \"%%Office%%\" OR Description LIKE \"%%Office%%\") AND PartialProductKey IS NOT NULL' -ErrorAction SilentlyContinue; if($spp){ foreach($p in $spp){ Write-Host ('  San pham: ' + $p.Name + ' | Key: ' + $p.PartialProductKey) -ForegroundColor Green; $found=$true } }; $regPaths = @('HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Office\ClickToRun\Configuration'); foreach($rp in $regPaths){ if(Test-Path $rp){ $pKey = Get-ItemProperty -Path $rp -Name 'ProductReleaseIds' -ErrorAction SilentlyContinue; if($pKey){ Write-Host ('  Office CTR: ' + $pKey.ProductReleaseIds) -ForegroundColor Green; $found=$true } } }; if(-not $found){ Write-Host '  - Khong tim thay bat ky san pham hoac Key Office nao.' -ForegroundColor Yellow }"
 
 echo:
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
 echo %W% 1. Bat dau xoa sach key%Res%
 echo %W% 0. Huy bo va quay lai Menu%Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
 echo:
 
 :: --- XỬ LÝ LỰA CHỌN PHÍM BẤM ---
@@ -842,9 +841,9 @@ powershell -Command "$win = cscript //nologo $env:windir\system32\slmgr.vbs /dli
 echo %Y%Office Status:%Res%
 powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; $found = $false; foreach ($p in $vbsPaths) { $res = cscript //nologo \"$p\" /dstatus | Select-String 'Last 5 characters'; if ($res) { Write-Host \"  $res\"; $found = $true } }; if (-not $found) { Write-Host '  - Khong con Key Office.' -ForegroundColor Red }"
 echo:
-echo %R%==========================================%Res%
-echo %G% DA HOAN TAT! KHONG CON KEY TREN HE THONG.%Res%
-echo %R%==========================================%Res%
+echo %C%==================================================%Res%
+echo %G%     DA HOAN TAT! KHONG CON KEY TREN HE THONG     %Res%
+echo %C%==================================================%Res%
 pause
 goto menu
 
@@ -856,15 +855,14 @@ set "source=%TEMP%\GenP_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
-echo:     %C%______________________________________________________________%Res%
-echo:
-echo:                    %Y%[ADOBE PREMIUM LIST]%Res%
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
+echo %Y%               ADOBE PREMIUM LIST          %Res%
+echo %C%==================================================%Res%
 echo:         %G%[1]%Res% Acrobat DC Pro
 echo:         %G%[2]%Res% Adobe Photoshop
 echo:         %G%[3]%Res% Adobe Illustrator
 echo:         %R%[0]%Res% Thoat ve Menu chinh
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo.
 set /p choice="Nhap lua chon (0-3): "
 
@@ -887,15 +885,15 @@ set "path32=%ProgramFiles(x86)%\Adobe\%appName%"
 :sub_menu
 cls
 title %titleName%
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo:
-echo:                    %Y%[%titleName% x64]%Res%
-echo:     %C%______________________________________________________________%Res%
+echo:                   %Y%[%titleName% x64]%Res%
+echo %C%==================================================%Res%
 echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         %B%[2]%Res% Chi kich hoat Adobe %W%(Neu da cai san)%Res%
 echo:         %B%[3]%Res% Chan Firewall ^& Update Hosts %W%(Chan quet ban quyen)%Res%
 echo:         %R%[0]%Res% Quay lai menu chinh
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo.
 set /p subChoice="Nhap lua chon (0-3): "
 
@@ -964,13 +962,13 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableB
 echo:     %W%[==^> Dang giai nen GenP...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '%source%\GenP' -Force"
 
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo: %Y%[HUONG DAN THAO TAC:]%Res%
 echo:     Buoc 1. Cua so GenP se mo len ngay sau day.
 echo:     Buoc 2. Nhan nut %B%["Search"]%Res% de GenP tim kiem trong may.
 echo:     Buoc 3. Nhan nut %G%["Patch"]%Res% va cho den khi chay xong.
 echo:     Buoc 4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 timeout /t 5
 start /wait "" "%source%\GenP\GenP-v4.0.4.exe"
 
@@ -1039,9 +1037,9 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false -Disable
 if exist "%source%" rmdir /s /q "%source%"
 if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
 
-echo:     %G%______________________________________________________________%Res%
-echo:              %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
-echo:     %G%______________________________________________________________%Res%
+echo %C%==================================================%Res%
+echo:     %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
+echo %C%==================================================%Res%
 pause
 goto adobe
 
@@ -1053,17 +1051,17 @@ set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main
 set "tempHosts=%TEMP%\autodesk_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
 set "LinkDL=https://118.71.27.159:5006/Public"
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo:
-echo:                    %Y%[AUTODESK PREMIUM LIST]%Res%
-echo:     %C%______________________________________________________________%Res%
+echo:                %Y%[AUTODESK PREMIUM LIST]%Res%
+echo %C%==================================================%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
 echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% Inventor
 echo:         %G%[4]%Res% Revit	
 echo:         %G%[5]%Res% SketchUp
 echo:         %R%[0]%Res% Thoat ve Menu chinh
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo.
 set /p choice="Nhap lua chon (0-5): "
 
@@ -1089,15 +1087,15 @@ set "path32=%ProgramFiles(x86)%\Autodesk\%appName%"
 :subdesk_menu
 cls
 title %titleName%
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo:
-echo:                    %Y%[%titleName% x64]%Res%
-echo:     %C%______________________________________________________________%Res%
+echo:                %Y%[%titleName% x64]%Res%
+echo %C%==================================================%Res%
 echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         %B%[2]%Res% Chi kich hoat Autodesk %W%(Neu da cai san)%Res%
 echo:         %B%[3]%Res% Chan Firewall ^& Update Hosts %W%(Chan quet ban quyen)%Res%
 echo:         %R%[0]%Res% Quay lai menu chinh
-echo:     %C%______________________________________________________________%Res%
+echo %C%==================================================%Res%
 echo.
 set /p subChoice="Nhap lua chon (0-3): "
 
@@ -1234,9 +1232,9 @@ powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $false -Disable
 if exist "%source%" rmdir /s /q "%source%"
 if exist "%tempHosts%" del /f "%tempHosts%" >nul 2>&1
 
-echo:     %G%______________________________________________________________%Res%
-echo:              %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
-echo:     %G%______________________________________________________________%Res%
+echo %C%==================================================%Res%
+echo:     %G%[HOAN TAT QUY TRINH KICH HOAT %titleName%]%Res%
+echo %C%==================================================%Res%
 pause
 goto autodesk
 
@@ -1255,9 +1253,9 @@ if not exist "setup.exe" (
 )
 set "prodID="
 set "channel=Current"
-echo ====================================================
+echo %C%==================================================%Res%
 echo        %Y%[ BUOC 1: CHON PHIEN BAN OFFICE]%Res%
-echo ====================================================
+echo %C%==================================================%Res%
 echo 1. Office 365 (Retail)
 echo 2. Office 2024 (Retail)
 echo 3. Office 2024 (LTSC - Volume)
@@ -1267,7 +1265,7 @@ echo 6. Office 2019 (Retail)
 echo 7. Office 2019 (Volume)
 echo 8. Office 2016 (Retail)
 echo 0. Thoat ve Menu chinh
-echo ====================================================
+echo %C%==================================================%Res%
 set /p choice_ver="Nhap lua chon (0-8): "
 
 :: Cập nhật chuẩn ProductID và Channel
@@ -1285,14 +1283,14 @@ if not defined prodID (goto MENU_OFFICE)
 :: --- BƯỚC 2: CHỌN CHẾ ĐỘ CÀI ---
 :MENU_MODE
 cls
-echo ====================================================
+echo %C%==================================================%Res%
 echo             BUOC 2: CHON CHE DO CAI DAT
 echo       (Dang chon: %verName%)
-echo ====================================================
+echo %C%==================================================%Res%
 echo 1. Cai day du (Full Suite)
 echo 2. Cai rut gon (Chi Word, Excel, PP, Teams, Outlook)
 echo 0. QUAY LAI BUOC 1
-echo ====================================================
+echo %C%==================================================%Res%
 set /p choice_mode="Nhap lua chon (0-2): "
 if "%choice_mode%"=="1" (set "modeName=Full")
 if "%choice_mode%"=="2" (set "modeName=Lite")
@@ -1302,13 +1300,13 @@ if not defined modeName (goto MENU_MODE)
 :: --- BƯỚC 3: CHỌN KIẾN TRÚC ---
 :MENU_BIT
 cls
-echo ====================================================
+echo %C%==================================================%Res%
 echo             BUOC 3: CHON KIEN TRUC (BIT)
-echo ====================================================
+echo %C%==================================================%Res%
 echo 1. Phien ban 64-bit (Khuyen dung)
 echo 2. Phien ban 32-bit (Cho may cu)
 echo 0. QUAY LAI BUOC 2
-echo ====================================================
+echo %C%==================================================%Res%
 set /p choice_bit="Nhap lua chon (0-2): "
 
 if "%choice_bit%"=="1" (set "bitVer=64")
@@ -1341,22 +1339,22 @@ echo ^</Configuration^>
 
 :: --- PHẦN 5: CHẠY CÀI ĐẶT ---
 cls
-echo ====================================================
+echo %C%==================================================%Res%
 echo   DANG TIEN HANH CAI DAT %verName%...
-echo ====================================================
+echo %C%==================================================%Res%
 setup.exe /configure configuration.xml
 
 :: Xóa file tạm
 if exist "configuration.xml" del /f /q "configuration.xml"
 
 echo.
-echo ====================================================
+echo %C%==================================================%Res%
 echo   CAI DAT %verName% THANH CONG! 
 echo   BAN MUON ACTIVE NGAY KHONG?
-echo ====================================================
+echo %C%==================================================%Res%
 echo Yes. Dong y (Yeu cau Internet)
 echo No. Thoat ve Menu chinh
-echo ====================================================
+echo %C%==================================================%Res%
 set /p choice_act="Lua chon cua ban (y/n): "
 if "%choice_act%"=="y" goto :activeMAS else goto MENU_OFFICE
 pause > nul
@@ -1515,14 +1513,14 @@ goto menu
 
 :wuchange
 cls
-echo =========================================
-echo   %Y%[ QUAN LY WINDOWS UPDATE (REG)]%Res%
-echo =========================================
+echo %C%==================================================%Res%
+echo %Y%           QUAN LY WINDOWS UPDATE (REG)         %Res%
+echo %C%==================================================%Res%
 echo [1] TAT HAN Windows Update (Registry)
 echo [2] MO LAI Windows Update
 echo [3] RESET Windows Update
 echo [0] Thoat ve Menu chinh
-echo =========================================
+echo %C%==================================================%Res%
 
 set /p choice="Nhap lua chon cua ban (0-2): "
 
@@ -1563,14 +1561,14 @@ goto menu
 
 :Navigation
 cls
-echo =======================================================
+echo %C%==================================================%Res%
 echo         %Y%[ HE THONG QUAN LY MANG TU DONG]%Res%
-echo =======================================================
+echo %C%==================================================%Res%
 echo 1. Xem thong tin IP chi tiet
 echo 2. Lam moi mang (FlushDNS + Renew)
 echo 3. Cau hinh IP/DNS (Chon card mang)
 echo 0. Thoat ve menu chinh
-echo =======================================================
+echo %C%==================================================%Res%
 set /p choice="Chon (0-3): "
 
 if %choice%==1 goto getIP
@@ -1581,9 +1579,9 @@ goto Navigation
 
 :getIP
 cls
-echo =======================================================
+echo %C%==================================================%Res%
 echo           %Y%[THONG TIN MANG CHI TIET]%Res%
-echo =======================================================
+echo %C%==================================================%Res%
 powershell -Command "Get-NetIPConfiguration | ForEach-Object { [PSCustomObject]@{ 'Interface'=$_.InterfaceAlias; 'IP Address'=$_.IPv4Address.IPAddress; 'Gateway'=$_.IPv4DefaultGateway.NextHop; 'DNS Servers'=$_.DNSServer.ServerAddresses -join ', ' } } | Format-Table -AutoSize"
 echo -------------------------------------------------------
 pause
@@ -1602,7 +1600,7 @@ goto Navigation
 :selectCard
 cls
 echo  %Y%[ DANH SACH CARD MANG DANG KET NOI ]%Res%
-echo -------------------------------------------------------
+echo %C%==================================================%Res%
 set i=0
 :: Sử dụng "delims=" để lấy trọn vẹn tên card kể cả khi có khoảng trắng
 for /f "delims=" %%a in ('powershell -Command "Get-NetAdapter | Where-Object Status -eq 'Up' | Select-Object -ExpandProperty Name"') do (
@@ -1616,7 +1614,7 @@ if %i%==0 (
     pause & goto Navigation
 )
 
-echo -------------------------------------------------------
+echo %C%==================================================%Res%
 set /p csel="Chon so thu tu card mang: "
 
 :: Lấy giá trị từ mảng ảo card!i! dựa trên số người dùng nhập
@@ -1634,12 +1632,12 @@ goto submenu
 :submenu
 cls
 echo Card dang chon: [ %interface% ]
-echo -------------------------------------------------------
+echo %C%==================================================%Res%
 echo 1. Dat IP Tinh (Static)
 echo 2. Chuyen sang IP Dong (DHCP)
 echo 3. Chi thay doi DNS (Google: 8.8.8.8)
 echo 0. Thoat ve Menu chinh
-echo -------------------------------------------------------
+echo %C%==================================================%Res%
 set /p subch="Chon (0-3): "
 
 if %subch%==1 (
@@ -1687,14 +1685,14 @@ if not exist "C:\Windows\System32\tracetcp.exe" (
     powershell -Command "Start-BitsTransfer -Source 'https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/tracetcp.exe' -Destination 'C:\Windows\System32\tracetcp.exe'"
 )
 cls
-echo ==========================================
+echo %C%==================================================%Res%
 echo     %Y%[CONG CU KIEM TRA KET NOI TCP]%Res%
-echo ==========================================
+echo %C%==================================================%Res%
 echo 1. Chay TCPING (Ping lien tuc)
 echo 2. Chay TRACERTCP (Do duong tung chang)
 echo 3. CHAY DONG THOI CA 2 (2 Cua so moi)
 echo 0. Thoat ve Menu chinh
-echo ==========================================
+echo %C%==================================================%Res%
 set "choice="
 set /p choice="Chon chuc nang (1-4): "
 
@@ -1757,13 +1755,13 @@ goto menu
 
 :runTasks
 cls
-echo ===============================
+echo %C%==================================================%Res%
 echo     %Y%[QUAN LY TAC VU]%Res%
-echo ===============================
+echo %C%==================================================%Res%
 echo 1. Xem danh sach cac tac vu dang chay
 echo 2. Ket thuc mot tac vu (Kill Task)
 echo 0. Thoat ve Menu chinh
-echo ===============================
+echo %C%==================================================%Res%
 set /p choice=Nhap lua chon cua ban (1-3): 
 
 if "%choice%"=="1" goto showList
@@ -1804,15 +1802,15 @@ goto menu
 
 :listUsers
 cls
-echo ======================================================
+echo %C%==================================================%Res%
 echo          %Y%[ DANH SACH USER CHI TIET]%Res%
-echo ======================================================
+echo %C%==================================================%Res%
 powershell -Command "Get-LocalUser | Select-Object Name, Enabled, Description | Format-Table -AutoSize"
-echo ======================================================
+echo %C%==================================================%Res%
 echo.
 echo Y. Co doi mat khau nguoi dung
 echo N. Thoat ve Menu chinh
-echo -----------------------------------------
+echo %C%==================================================%Res%
 set /p chon="Moi ban chon (y/n): "
 if "%chon%"=="y" goto changePass
 if "%chon%"=="n" goto menu
@@ -1858,9 +1856,9 @@ goto menu
 
 :printTest
 cls
-echo =========================================
+echo %C%==================================================%Res%
 echo     %Y%[ DANH SACH MAY IN HIEN CO]%Res%
-echo =========================================
+echo %C%==================================================%Res%
 
 :: Lấy danh sách máy in và đánh số thứ tự
 powershell -command "$printers = Get-Printer | Select-Object Name; for ($i=0; $i -lt $printers.Count; $i++) { write-host ('[' + ($i+1) + '] ' + $printers[$i].Name) }"
