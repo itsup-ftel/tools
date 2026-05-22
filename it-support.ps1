@@ -250,21 +250,26 @@ goto print
 
 :menu_loi
 cls
-echo %C%==================================================%Res%
-echo %C%             DANH SACH MA LOI MAY IN              %Res%
-echo %C%==================================================%Res%
-echo  [%G%1%Res%]. Sua loi %R%0x0000011B%Res% (Loi xac thuc RPC khi chia se)
-echo  [%G%2%Res%]. Sua loi %R%0x00000709%Res% (Loi ten/IP chia se khong hop le)
-echo  [%G%3%Res%]. Sua loi %R%0x0000bc4%Res%  (Loi khong tim thay may in tren mang)
-echo  [%G%4%Res%]. Sua loi %R%0x00004005%Res% (Loi quyen truy cap luong TCP)
-echo  [%G%5%Res%]. Sua loi %R%0x0000007c%Res% (Loi dịnh dang goi tin in an)
-echo  [%G%6%Res%]. Sua loi %R%0x00000012%Res% (Loi truy cap phan quyen Driver)
-echo  [%G%7%Res%]. Sua loi %R%0x00000bcb%Res% (Loi chung chi Driver tu ky)
-echo  [%G%8%Res%]. Quay lai Menu chinh
-echo %C%==================================================%Res%
+echo %C%=====================================================================%Res%
+echo %C%                       DANH SACH MA LOI MAY IN                       %Res%
+echo %C%=====================================================================%Res%
+echo  [%G%01%Res%]. %R%0x0000011B%Res%: Loi xac thuc RPC khi chia se may in mang
+echo  [%G%02%Res%]. %R%0x00000709%Res%: Loi ten hoac IP thiet bi khong hop le
+echo  [%G%03%Res%]. %R%0x0000bc4%Res% : Loi khong tim thay may in trong mang
+echo  [%G%04%Res%]. %R%0x00004005%Res%: Loi phan quyen truy cap luong TCP
+echo  [%G%05%Res%]. %R%0x0000007c%Res%: Loi xung dot dinh dang goi tin in
+echo  [%G%06%Res%]. %R%0x00000012%Res%: Loi truy cap/dong bo Driver tu xa
+echo  [%G%07%Res%]. %R%0x00000bcb%Res%: Loi chan driver co chung chi tu ky
+echo  [%G%08%Res%]. %B%0x00000002%Res%: Loi can quet, don sach file Driver loi
+echo  [%G%09%Res%]. %B%0x0000007a%Res%: Loi cau hinh sai giao thuc Port truyen tai
+echo  [%G%10%Res%]. %B%0x00004002%Res%: Loi ket cu, xoa sach hang doi in (Queue)
+echo  [%G%11%Res%]. %B%0x000003e3%Res%: Loi chan Policy tai Driver tu may chu
+echo  [%G%12%Res%]. %B%0x00000006%Res%: Loi cache / Handle ket noi may in cu hỏng
+echo  [%G%13%Res%]. Quay lai Menu chinh
+echo %C%=====================================================================%Res%
 echo.
 
-set /p err_opt="%Y%Chon ma loi ban dang gap (1-8): %Res%"
+set /p err_opt="%Y%Chon ma loi ban dang gap (01-13): %Res%"
 
 if "%err_opt%"=="1" set "fix_mode=11B" & goto thuc_hien_fix
 if "%err_opt%"=="2" set "fix_mode=709" & goto thuc_hien_fix
@@ -273,16 +278,22 @@ if "%err_opt%"=="4" set "fix_mode=4005" & goto thuc_hien_fix
 if "%err_opt%"=="5" set "fix_mode=7C" & goto thuc_hien_fix
 if "%err_opt%"=="6" set "fix_mode=12" & goto thuc_hien_fix
 if "%err_opt%"=="7" set "fix_mode=BCB" & goto thuc_hien_fix
-if "%err_opt%"=="8" goto print
+if "%err_opt%"=="8" set "fix_mode=002" & goto thuc_hien_fix
+if "%err_opt%"=="9" set "fix_mode=7A" & goto thuc_hien_fix
+if "%err_opt%"=="10" set "fix_mode=4002" & goto thuc_hien_fix
+if "%err_opt%"=="11" set "fix_mode=3E3" & goto thuc_hien_fix
+if "%err_opt%"=="12" set "fix_mode=006" & goto thuc_hien_fix
+if "%err_opt%"=="13" goto print
 goto menu_loi
 
 :thuc_hien_fix
-echo %Y%Dang tien hanh va Registry rieng biet cho lua chon cua ban...%Res%
+echo %Y%Dang xu ly nghiep vu cho ma loi ban chon...%Res%
 powershell -NoProfile -ExecutionPolicy Bypass -Command "^
 $c_green = [char]27 + '[92m'; $c_red = [char]27 + '[91m'; $c_reset = [char]27 + '[0m';^
 try{^
     $pathPrint = 'HKLM:\System\CurrentControlSet\Control\Print';^
     $pathRpc = 'HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC';^
+    $pathPoint = 'HKLM:\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint';^
     $mode = '%fix_mode%';^
     ^
     if($mode -eq '11B'){^
@@ -308,11 +319,31 @@ try{^
     elseif($mode -eq 'BCB'){^
         Set-ItemProperty -Path $pathPrint -Name 'ForceSelfSignedCertificates' -Value 0 -Type DWord -Force;^
     }^
+    elseif($mode -eq '002'){^
+        Stop-Service -Name 'Spooler' -Force;^
+        Get-ChildItem -Path ^"$env:SystemRoot\System32\spool\PRINTERS\*^" -Recurse | Remove-Item -Force -Recurse;^
+    }^
+    elseif($mode -eq '7A'){^
+        Set-ItemProperty -Path $pathPrint -Name 'SNMP' -Value 1 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '4002'){^
+        Stop-Service -Name 'Spooler' -Force;^
+        Remove-Item -Path ^"$env:SystemRoot\System32\spool\PRINTERS\*^" -Force -Recurse -ErrorAction SilentlyContinue;^
+    }^
+    elseif($mode -eq '3E3'){^
+        if(!(Test-Path $pathPoint)){ New-Item -Path $pathPoint -Force | Out-Null };^
+        Set-ItemProperty -Path $pathPoint -Name 'NoWarningNoElevationOnInstall' -Value 1 -Type DWord -Force;^
+        Set-ItemProperty -Path $pathPoint -Name 'UpdatePromptSettings' -Value 2 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '006'){^
+        $pathPrnConnections = 'HKCU:\Printers\Connections';^
+        if(Test-Path $pathPrnConnections){ Remove-Item -Path ^"$pathPrnConnections\*^" -Recurse -Force -ErrorAction SilentlyContinue };^
+    }^
     ^
-    echo ^"$c_greenDang khoi dong lai dich vu Print Spooler de ap dung thay doi...$c_reset^";^
+    echo ^"$c_greenDang khoi dong lai dich vu Print Spooler de ap dung...$c_reset^";^
     Restart-Service -Name 'Spooler' -Force;^
     echo ^"$c_greenDA SUA LOI XONG! Vui long kiem tra lai ket noi.$c_reset^";^
-}catch{ echo ^"$c_redCo loi khi ghi Registry: $_$c_reset^" }"
+}catch{ echo ^"$c_redCo loi khi thu thi script: $_$c_reset^" }"
 echo.
 pause
 goto menu_loi
