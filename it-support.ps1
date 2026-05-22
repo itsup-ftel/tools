@@ -73,8 +73,8 @@ echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.
 echo      %G%2.%Res% Thong tin o cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Thong tin RAM         %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
-echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% ----44-ftp------
-echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% ---------------
+echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Them may in moi
+echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
@@ -111,8 +111,8 @@ if /i "%opt%"=="19" goto restartSpooler
 if /i "%opt%"=="20" goto clearQueue
 if /i "%opt%"=="21" goto printTest
 if /i "%opt%"=="22" goto listPrinters
-if /i "%opt%"=="23" goto 
-if /i "%opt%"=="24" goto 
+if /i "%opt%"=="23" goto print
+if /i "%opt%"=="24" goto menu_loi
 if /i "%opt%"=="25" start control & goto menu
 if /i "%opt%"=="26" start taskmgr & goto menu
 if /i "%opt%"=="27" start services.msc & goto menu
@@ -179,6 +179,144 @@ echo %G%                 TIEN TRINH KIEM TRA HOAN TAT !%Res%
 echo %C%====================================================================%Res%
 pause
 goto menu
+
+:print
+cls
+echo %C%==================================================%Res%
+echo %C%             HE THONG QUAN LY MAY IN          %Res%
+echo %C%==================================================%Res%
+echo  [%G%1%Res%]. Quet tim kiem may in trong he thong mang
+echo  [%G%2%Res%]. Add thu cong may in qua IPv4
+echo  [%G%3%Res%]. Fix loi theo ma (0x0000011B, 0x00000709,...)
+echo  [%G%0%Res%]. Thoat ve Menu chinh
+echo %C%==================================================%Res%
+echo.
+
+set /p opt="%Y%Chon mot tinh nang (1-4): %Res%"
+
+if "%opt%"=="1" goto quet_mang
+if "%opt%"=="2" goto add_mayin
+if "%opt%"=="3" goto menu_loi
+if "%opt%"=="0" goto menu
+goto print
+
+:quet_mang
+echo %Y%Dang tu dong kiem tra lop mang cua may...%Res%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "^
+$c_cyan = [char]27 + '[96m'; $c_yellow = [char]27 + '[93m'; $c_green = [char]27 + '[92m'; $c_red = [char]27 + '[91m'; $c_reset = [char]27 + '[0m';^
+$activeIPs = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' };^
+if(-not $activeIPs){ echo ^"$c_redKhong tim thay ket noi mang IPv4 hop le!$c_reset^" }else{^
+    foreach($ipAddr in $activeIPs){^
+        $ipStr = $ipAddr.IPAddress;^
+        if($ipStr -match '^"(\d+\.\d+\.\d+)\.\d+'^){^
+            $subnet = $Matches;^
+            echo ^"$c_cyanPhat hien lop mang: $subnet.0/24 (IP cua ban: $ipStr)$c_reset^";^
+            echo ^"$c_yellowDang quet toan bo may in trong lop mang nay, vui long doi...$c_reset^";^
+            for($i=1; $i -le 254; $i++){^
+                $ip = ^"$subnet.$i^";^
+                if(Test-Connection -ComputerName $ip -Count 1 -Quiet -TimeoutMilliSecs 60){^
+                    try{^
+                        $snmp = New-Object -ComObject 'OlePrn.OleSNMP';^
+                        $snmp.Open($ip, 'public', 2, 100);^
+                        $model = $snmp.Get('.1.3.6.1.2.1.25.3.2.1.3.1');^
+                        $sn = $snmp.Get('.1.3.6.1.2.1.43.5.1.1.17.1');^
+                        if($model){ echo ^"$c_green Phat hien May In -> IP: $ip | Model: $model | SN: $sn$c_reset^" };^
+                        $snmp.Close();^
+                    }catch{}^
+                }^
+            }^
+        }^
+    }^
+}"
+echo.
+pause
+goto print
+
+:add_mayin
+set /p prnIP="%Y%Nhap IP cua may in: %Res%"
+set /p prnName="%Y%Nhap ten may in muon dat: %Res%"
+set /p driverName="%Y%Nhap chinh xac ten Driver san co tren may: %Res%"
+echo %Y%Dang tien hanh add may in...%Res%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "^
+$c_green = [char]27 + '[92m'; $c_red = [char]27 + '[91m'; $c_reset = [char]27 + '[0m';^
+try{^
+    Add-PrinterPort -Name ^"IP_$prnIP^" -PrinterHostAddress '%prnIP%';^
+    Add-Printer -Name '%prnName%' -DriverName '%driverName%' -PortName ^"IP_$prnIP^";^
+    echo ^"$c_greenDa them may in thanh cong!$c_reset^";^
+}catch{ echo ^"$c_redLoi: $_$c_reset^" }"
+echo.
+pause
+goto print
+
+:menu_loi
+cls
+echo %C%==================================================%Res%
+echo %C%             DANH SACH MA LOI MAY IN              %Res%
+echo %C%==================================================%Res%
+echo  [%G%1%Res%]. Sua loi %R%0x0000011B%Res% (Loi xac thuc RPC khi chia se)
+echo  [%G%2%Res%]. Sua loi %R%0x00000709%Res% (Loi ten/IP chia se khong hop le)
+echo  [%G%3%Res%]. Sua loi %R%0x0000bc4%Res%  (Loi khong tim thay may in tren mang)
+echo  [%G%4%Res%]. Sua loi %R%0x00004005%Res% (Loi quyen truy cap luong TCP)
+echo  [%G%5%Res%]. Sua loi %R%0x0000007c%Res% (Loi dịnh dang goi tin in an)
+echo  [%G%6%Res%]. Sua loi %R%0x00000012%Res% (Loi truy cap phan quyen Driver)
+echo  [%G%7%Res%]. Sua loi %R%0x00000bcb%Res% (Loi chung chi Driver tu ky)
+echo  [%G%8%Res%]. Quay lai Menu chinh
+echo %C%==================================================%Res%
+echo.
+
+set /p err_opt="%Y%Chon ma loi ban dang gap (1-8): %Res%"
+
+if "%err_opt%"=="1" set "fix_mode=11B" & goto thuc_hien_fix
+if "%err_opt%"=="2" set "fix_mode=709" & goto thuc_hien_fix
+if "%err_opt%"=="3" set "fix_mode=BC4" & goto thuc_hien_fix
+if "%err_opt%"=="4" set "fix_mode=4005" & goto thuc_hien_fix
+if "%err_opt%"=="5" set "fix_mode=7C" & goto thuc_hien_fix
+if "%err_opt%"=="6" set "fix_mode=12" & goto thuc_hien_fix
+if "%err_opt%"=="7" set "fix_mode=BCB" & goto thuc_hien_fix
+if "%err_opt%"=="8" goto print
+goto menu_loi
+
+:thuc_hien_fix
+echo %Y%Dang tien hanh va Registry rieng biet cho lua chon cua ban...%Res%
+powershell -NoProfile -ExecutionPolicy Bypass -Command "^
+$c_green = [char]27 + '[92m'; $c_red = [char]27 + '[91m'; $c_reset = [char]27 + '[0m';^
+try{^
+    $pathPrint = 'HKLM:\System\CurrentControlSet\Control\Print';^
+    $pathRpc = 'HKLM:\Software\Policies\Microsoft\Windows NT\Printers\RPC';^
+    $mode = '%fix_mode%';^
+    ^
+    if($mode -eq '11B'){^
+        Set-ItemProperty -Path $pathPrint -Name 'RpcAuthnLevelPrivacyEnabled' -Value 0 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '709'){^
+        Set-ItemProperty -Path $pathPrint -Name 'RpcOverNamedPipes' -Value 1 -Type DWord -Force;^
+    }^
+    elseif($mode -eq 'BC4'){^
+        if(!(Test-Path $pathRpc)){ New-Item -Path $pathRpc -Force | Out-Null };^
+        Set-ItemProperty -Path $pathRpc -Name 'RpcOverNamesPipes' -Value 1 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '4005'){^
+        if(!(Test-Path $pathRpc)){ New-Item -Path $pathRpc -Force | Out-Null };^
+        Set-ItemProperty -Path $pathRpc -Name 'RpcOverTcp' -Value 0 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '7C'){^
+        Set-ItemProperty -Path $pathPrint -Name 'RpcAuthnLevelPrivacyEnabled' -Value 0 -Type DWord -Force;^
+    }^
+    elseif($mode -eq '12'){^
+        Set-ItemProperty -Path $pathPrint -Name 'RpcOverNamedPipes' -Value 1 -Type DWord -Force;^
+    }^
+    elseif($mode -eq 'BCB'){^
+        Set-ItemProperty -Path $pathPrint -Name 'ForceSelfSignedCertificates' -Value 0 -Type DWord -Force;^
+    }^
+    ^
+    echo ^"$c_greenDang khoi dong lai dich vu Print Spooler de ap dung thay doi...$c_reset^";^
+    Restart-Service -Name 'Spooler' -Force;^
+    echo ^"$c_greenDA SUA LOI XONG! Vui long kiem tra lai ket noi.$c_reset^";^
+}catch{ echo ^"$c_redCo loi khi ghi Registry: $_$c_reset^" }"
+echo.
+pause
+goto menu_loi
+
 
 :dichvucong
 cls
