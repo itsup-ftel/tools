@@ -984,7 +984,7 @@ cls
 set "common64=%ProgramFiles%\Common Files\Adobe"
 set "common32=%ProgramFiles(x86)%\Common Files\Adobe"
 
-echo     %W%==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...%Res%
+echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
 
 :: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
 for %%P in ("%path64%" "%%path32%%" "%common64%" "%common32%") do (
@@ -1004,7 +1004,7 @@ netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.%Res%
 
 :: Tải danh sách Hosts
-echo:     %C%[==^> Dang tai danh sach host adobe..]%Res%
+echo:     %W%[==^> Dang tai danh sach host adobe..]%Res%
 curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
 
 if %errorlevel% neq 0 (
@@ -1200,7 +1200,7 @@ netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.%Res%
 
 :: Tải danh sách Hosts
-echo:     %C%[==^> Dang tai danh sach host Autodesk..]%Res%
+echo:     %W%[==^> Dang tai danh sach host Autodesk..]%Res%
 curl --ssl-no-revoke -L -s -f -o "%tempHosts%" "%hostsURL%"
 
 if %errorlevel% neq 0 (
