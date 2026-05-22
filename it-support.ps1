@@ -465,7 +465,6 @@ exit /b
 
 :foxiteditor
 cls
-mode 85, 35
 set "ver=2024.4.0.27683"
 set "pathfoxit=%ProgramFiles(x86)%\Foxit Software\Foxit PDF Editor"
 set "source=%TEMP%\Foxit_Source"
@@ -853,7 +852,6 @@ goto menu
 
 :adobe
 cls
-mode 85, 35
 title Adobe Install
 set "source=%TEMP%\GenP_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
@@ -1052,7 +1050,6 @@ goto adobe
 
 :autodesk
 cls
-mode 85, 35
 title AUTODESK Install
 set "source=%TEMP%\Autodesk_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostautodesk.txt"
