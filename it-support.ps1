@@ -1110,7 +1110,7 @@ set /p subChoice="Nhap lua chon (0-3): "
 if %subChoice%==1 goto job_full
 if %subChoice%==2 goto job_patch
 if %subChoice%==3 goto job_security
-if %subChoice%==4 goto autodesk
+if %subChoice%==0 goto autodesk
 goto subdesk_menu
 
 :job_full
@@ -1180,7 +1180,7 @@ set "common32=%ProgramFiles(x86)%\Common Files\Autodesk Shared"
 set "roamingdesk=%AppData%\Autodesk"
 set "localdesk=%localappdata%\Autodesk"
 
-echo     %W%==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...%Res%
+echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
 
 :: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
 for %%P in ("%path64%" "%%path32%%" "%autodesk64%" "%autodesk32%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
