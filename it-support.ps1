@@ -192,7 +192,7 @@ echo  [%G%0%Res%]. Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
 
-set /p opt="%Y%Chon mot tinh nang (1-4): %Res%"
+set /p opt="%Y%Nhap lua chon (0-3): %Res%"
 
 if "%opt%"=="1" goto quet_mang
 if "%opt%"=="2" goto add_mayin
@@ -359,15 +359,15 @@ echo  %G%1.%Res% HTKK - Ho tro ke khai
 echo  %G%2.%Res% iTaxViewer - Doc ho so thue
 echo  %G%3.%Res% CT SigningHub - Ky dien tu
 echo  %G%4.%Res% eSigner - Plugin
-echo  %G%5.%Res% Thoat ve menu chinh
+echo  %G%0.%Res% Thoat ve menu chinh
 echo %C%==========================================%Res%
-set /p choice="Chon lua chon cua ban (1-5): "
+set /p choice="Chon lua chon (0-4): "
 
 if "%choice%"=="1" goto :proc_htkk
 if "%choice%"=="2" goto :proc_itax
 if "%choice%"=="3" goto :proc_cthub
 if "%choice%"=="4" goto :proc_esigner
-if "%choice%"=="5" goto menu
+if "%choice%"=="0" goto menu
 goto :dichvucong
 
 :proc_htkk
@@ -480,8 +480,7 @@ echo:         [3] Chan Firewall (Chan quet ban quyen)
 echo: %R%        [0] Thoat ve menu chinh%Res%
 echo:     ______________________________________________________________
 echo.
-choice /C:1230 /N
-set "userChoice=%errorlevel%"
+set /p userChoice="Nhap lua chon (0-3): "
 
 if %userChoice%==1 goto Downloadfoxit
 if %userChoice%==2 goto Activefoxit
@@ -867,9 +866,7 @@ echo:         %G%[3]%Res% Adobe Illustrator
 echo:         %R%[0]%Res% Thoat ve menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
-echo: Nhap lua chon (0-3):
-choice /C:1230 /N
-set "choice=%errorlevel%"
+set /p choice="Nhap lua chon (0-3): "
 
 if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
 if %choice%==2 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
@@ -900,8 +897,7 @@ echo:         %B%[3]%Res% Chan Firewall ^& Update Hosts %W%(Chan quet ban quyen)
 echo:         %R%[0]%Res% Quay lai menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
-choice /C:1230 /N
-set "subChoice=%errorlevel%"
+set /p subChoice="Nhap lua chon (0-3): "
 
 if %subChoice%==1 goto task_full
 if %subChoice%==2 goto task_patch
@@ -970,10 +966,10 @@ powershell -Command "Expand-Archive -Path '%source%\GenP.zip' -DestinationPath '
 
 echo:     %C%______________________________________________________________%Res%
 echo: %Y%[HUONG DAN THAO TAC:]%Res%
-echo:     1. Cua so GenP se mo len ngay sau day.
-echo:     2. Nhan nut %B%["Search"]%Res% de GenP tim kiem trong may.
-echo:     3. Nhan nut %G%["Patch"]%Res% va cho den khi chay xong.
-echo:     4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
+echo:     Buoc 1. Cua so GenP se mo len ngay sau day.
+echo:     Buoc 2. Nhan nut %B%["Search"]%Res% de GenP tim kiem trong may.
+echo:     Buoc 3. Nhan nut %G%["Patch"]%Res% va cho den khi chay xong.
+echo:     Buoc 4. Dong GenP va quay lai day de chay buoc bao mat (Muc 3).
 echo:     %C%______________________________________________________________%Res%
 timeout /t 5
 start /wait "" "%source%\GenP\GenP-v4.0.4.exe"
@@ -1270,9 +1266,9 @@ echo 5. Office 2021 (LTSC - Volume)
 echo 6. Office 2019 (Retail)
 echo 7. Office 2019 (Volume)
 echo 8. Office 2016 (Retail)
-echo 9. THOAT CAI DAT
+echo 0. Thoat tro ve Menu chinh
 echo ====================================================
-set /p choice_ver="Nhap lua chon (1-9): "
+set /p choice_ver="Nhap lua chon (0-8): "
 
 :: Cập nhật chuẩn ProductID và Channel
 if "%choice_ver%"=="1" (set "prodID=O365ProPlusRetail" & set "verName=Office 365" & set "channel=Current")
@@ -1283,7 +1279,7 @@ if "%choice_ver%"=="5" (set "prodID=ProPlus2021Volume" & set "verName=Office 202
 if "%choice_ver%"=="6" (set "prodID=ProPlus2019Retail" & set "verName=Office 2019" & set "channel=Current")
 if "%choice_ver%"=="7" (set "prodID=ProPlus2019Volume" & set "verName=Office 2019 VL" & set "channel=PerpetualVL2019")
 if "%choice_ver%"=="8" (set "prodID=ProPlusRetail" & set "verName=Office 2016" & set "channel=Current")
-if "%choice_ver%"=="9" goto menu else goto menu
+if "%choice_ver%"=="0" goto menu else goto menu
 if not defined prodID (goto MENU_OFFICE)
 
 :: --- BƯỚC 2: CHỌN CHẾ ĐỘ CÀI ---
@@ -1298,9 +1294,9 @@ echo 2. Cai rut gon (Chi Word, Excel, PP, Teams, Outlook)
 echo 0. QUAY LAI BUOC 1
 echo ====================================================
 set /p choice_mode="Nhap lua chon (0-2): "
-if "%choice_mode%"=="0" goto MENU_OFFICE
 if "%choice_mode%"=="1" (set "modeName=Full")
 if "%choice_mode%"=="2" (set "modeName=Lite")
+if "%choice_mode%"=="0" goto MENU_OFFICE
 if not defined modeName (goto MENU_MODE)
 
 :: --- BƯỚC 3: CHỌN KIẾN TRÚC ---
@@ -1314,9 +1310,10 @@ echo 2. Phien ban 32-bit (Cho may cu)
 echo 0. QUAY LAI BUOC 2
 echo ====================================================
 set /p choice_bit="Nhap lua chon (0-2): "
-if "%choice_bit%"=="0" goto MENU_MODE
-if "%choice_bit%"=="1" (set "bitVer=64") else (set "bitVer=32")
 
+if "%choice_bit%"=="1" (set "bitVer=64")
+if "%choice_bit%"=="2" (set "bitVer=32")
+if "%choice_bit%"=="0" goto MENU_MODE
 :: --- PHẦN 4: TẠO FILE CONFIG XML ---
 cls
 echo [+] Dang khoi tao file cau hinh XML...
@@ -1357,11 +1354,11 @@ echo ====================================================
 echo   CAI DAT %verName% THANH CONG! 
 echo   BAN MUON ACTIVE NGAY KHONG?
 echo ====================================================
-echo 1. Co (Yeu cau Internet)
-echo 2. Khong, thoat ve menu chinh
+echo Yes. Co (Yeu cau Internet)
+echo No. Khong, thoat ve menu chinh
 echo ====================================================
-set /p choice_act="Lua chon cua ban (1-2): "
-if "%choice_act%"=="1" goto :activeMAS else goto MENU_OFFICE
+set /p choice_act="Lua chon cua ban (y/n): "
+if "%choice_act%"=="y" goto :activeMAS else goto MENU_OFFICE
 pause > nul
 goto menu
 
@@ -1431,12 +1428,12 @@ echo.
 echo %G%[ BAN CO MUON ]%Res%
 echo 1. Thay doi MAC Address (Nhap tay)
 echo 2. Reset MAC ve mac dinh (Goc)
-echo 3. Thoat ve menu chinh
-set /p subOpt="Nhap lua chon (1-3): "
+echo 0. Thoat ve menu chinh
+set /p subOpt="Nhap lua chon (0-2): "
 
 if "%subOpt%"=="1" goto changeMac
 if "%subOpt%"=="2" goto resetMac
-if "%subOpt%"=="3" goto menu
+if "%subOpt%"=="0" goto menu
 goto getMacSN
 
 :changeMac
@@ -1572,14 +1569,14 @@ echo =======================================================
 echo 1. Xem thong tin IP chi tiet
 echo 2. Lam moi mang (FlushDNS + Renew)
 echo 3. Cau hinh IP/DNS (Chon card mang)
-echo 4. Thoat ve menu chinh
+echo 0. Thoat ve menu chinh
 echo =======================================================
-set /p choice="Chon (1-4): "
+set /p choice="Chon (0-3): "
 
 if %choice%==1 goto getIP
 if %choice%==2 goto refreshNet
 if %choice%==3 goto selectCard
-if %choice%==4 goto menu
+if %choice%==0 goto menu
 goto Navigation
 
 :getIP
@@ -1641,9 +1638,9 @@ echo -------------------------------------------------------
 echo 1. Dat IP Tinh (Static)
 echo 2. Chuyen sang IP Dong (DHCP)
 echo 3. Chi thay doi DNS (Google: 8.8.8.8)
-echo 4. Thoat ve Menu chinh
+echo 0. Thoat ve Menu chinh
 echo -------------------------------------------------------
-set /p subch="Chon (1-4): "
+set /p subch="Chon (0-3): "
 
 if %subch%==1 (
     set /p ip="Nhap IP: "
@@ -1665,7 +1662,7 @@ if %subch%==3 (
     goto checkResult
 )
 
-if %subch%==4 goto Navigation
+if %subch%==0 goto Navigation
 goto submenu
 
 :checkResult
@@ -1696,7 +1693,7 @@ echo ==========================================
 echo 1. Chay TCPING (Ping lien tuc)
 echo 2. Chay TRACERTCP (Do duong tung chang)
 echo 3. CHAY DONG THOI CA 2 (2 Cua so moi)
-echo 4. Thoat ve Menu chinh
+echo 0. Thoat ve Menu chinh
 echo ==========================================
 set "choice="
 set /p choice="Chon chuc nang (1-4): "
@@ -1704,7 +1701,7 @@ set /p choice="Chon chuc nang (1-4): "
 if "%choice%"=="1" goto TCPING
 if "%choice%"=="2" goto TRACERTCP
 if "%choice%"=="3" goto RUNBOTH
-if "%choice%"=="4" goto menu
+if "%choice%"=="0" goto menu
 goto checkport
 
 :TCPING
@@ -1765,13 +1762,13 @@ echo     %Y%[QUAN LY TAC VU]%Res%
 echo ===============================
 echo 1. Xem danh sach cac tac vu dang chay
 echo 2. Ket thuc mot tac vu (Kill Task)
-echo 3. Thoat ve Menu chinh
+echo 0. Thoat ve Menu chinh
 echo ===============================
 set /p choice=Nhap lua chon cua ban (1-3): 
 
 if "%choice%"=="1" goto showList
 if "%choice%"=="2" goto killTask
-if "%choice%"=="3" goto menu
+if "%choice%"=="0" goto menu
 goto runTasks
 
 :showList
@@ -1813,12 +1810,12 @@ echo ======================================================
 powershell -Command "Get-LocalUser | Select-Object Name, Enabled, Description | Format-Table -AutoSize"
 echo ======================================================
 echo.
-echo 1. Ban co muon doi mat khau nguoi dung
-echo 2. Thoat
+echo Y. Co doi mat khau nguoi dung
+echo N. Thoat
 echo -----------------------------------------
-set /p chon="Moi ban chon (1-2): "
-if "%chon%"=="1" goto changePass
-if "%chon%"=="2" goto menu
+set /p chon="Moi ban chon (y/n): "
+if "%chon%"=="y" goto changePass
+if "%chon%"=="n" goto menu
 goto menu
 
 :changePass
