@@ -1159,10 +1159,9 @@ if defined setupPath (
 del /f /q "%source%\autodesk.zip" >nul 2>&1
 
 :job_patch
-cls
 echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
-xcopy "%source%\Fix\*.*" "%foundPath%\%appExe%\" /E /I /H /Y /R /Q >nul
-
+xcopy "%source%\Fix\*.*" "%path64%\" /E /I /H /Y /R /Q >nul
+xcopy "%source%\Fix\*.*" "%path32%\" /E /I /H /Y /R /Q >nul
 
 :job_security
 cls
