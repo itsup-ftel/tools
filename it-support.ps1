@@ -359,7 +359,7 @@ echo  %G%1.%Res% HTKK - Ho tro ke khai
 echo  %G%2.%Res% iTaxViewer - Doc ho so thue
 echo  %G%3.%Res% CT SigningHub - Ky dien tu
 echo  %G%4.%Res% eSigner - Plugin
-echo  %G%0.%Res% Thoat ve menu chinh
+echo  %G%0.%Res% Thoat ve Menu chinh
 echo %C%==========================================%Res%
 set /p choice="Chon lua chon (0-4): "
 
@@ -477,7 +477,7 @@ echo:     ______________________________________________________________
 echo:         [1] %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
 echo:         [2] Chi kich hoat Editor %Y%(Neu da cai san app)%Res%
 echo:         [3] Chan Firewall (Chan quet ban quyen)
-echo: %R%        [0] Thoat ve menu chinh%Res%
+echo: %R%        [0] Thoat ve Menu chinh%Res%
 echo:     ______________________________________________________________
 echo.
 set /p userChoice="Nhap lua chon (0-3): "
@@ -745,7 +745,7 @@ echo 1. Kiem tra trang thai BitLocker tat ca o dia
 echo 2. %R%[Tat Bitlocker]%Res% cho 1 o dia cu the (Vi du: C:)
 echo 3. %R%[Tat BitLocker]%Res% cho TAT CA o dia dang bao ve
 echo 4. Theo doi tien trinh giai ma (Real-time)
-echo 5. Thoat ve menu chinh
+echo 5. Thoat ve Menu chinh
 echo ======================================================
 set /p choice="Chon lua chon cua ban (1-5): "
 
@@ -863,7 +863,7 @@ echo:     %C%______________________________________________________________%Res%
 echo:         %G%[1]%Res% Acrobat DC Pro
 echo:         %G%[2]%Res% Adobe Photoshop
 echo:         %G%[3]%Res% Adobe Illustrator
-echo:         %R%[0]%Res% Thoat ve menu chinh
+echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
 set /p choice="Nhap lua chon (0-3): "
@@ -1062,7 +1062,7 @@ echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% Inventor
 echo:         %G%[4]%Res% Revit	
 echo:         %G%[5]%Res% SketchUp
-echo:         %R%[0]%Res% Thoat ve menu chinh
+echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo:     %C%______________________________________________________________%Res%
 echo.
 set /p choice="Nhap lua chon (0-5): "
@@ -1266,7 +1266,7 @@ echo 5. Office 2021 (LTSC - Volume)
 echo 6. Office 2019 (Retail)
 echo 7. Office 2019 (Volume)
 echo 8. Office 2016 (Retail)
-echo 0. Thoat tro ve Menu chinh
+echo 0. Thoat ve Menu chinh
 echo ====================================================
 set /p choice_ver="Nhap lua chon (0-8): "
 
@@ -1354,8 +1354,8 @@ echo ====================================================
 echo   CAI DAT %verName% THANH CONG! 
 echo   BAN MUON ACTIVE NGAY KHONG?
 echo ====================================================
-echo Yes. Co (Yeu cau Internet)
-echo No. Khong, thoat ve menu chinh
+echo Yes. Dong y (Yeu cau Internet)
+echo No. Thoat ve Menu chinh
 echo ====================================================
 set /p choice_act="Lua chon cua ban (y/n): "
 if "%choice_act%"=="y" goto :activeMAS else goto MENU_OFFICE
@@ -1428,7 +1428,7 @@ echo.
 echo %G%[ BAN CO MUON ]%Res%
 echo 1. Thay doi MAC Address (Nhap tay)
 echo 2. Reset MAC ve mac dinh (Goc)
-echo 0. Thoat ve menu chinh
+echo 0. Thoat ve Menu chinh
 set /p subOpt="Nhap lua chon (0-2): "
 
 if "%subOpt%"=="1" goto changeMac
@@ -1811,7 +1811,7 @@ powershell -Command "Get-LocalUser | Select-Object Name, Enabled, Description | 
 echo ======================================================
 echo.
 echo Y. Co doi mat khau nguoi dung
-echo N. Thoat
+echo N. Thoat ve Menu chinh
 echo -----------------------------------------
 set /p chon="Moi ban chon (y/n): "
 if "%chon%"=="y" goto changePass
