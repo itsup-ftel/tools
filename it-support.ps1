@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Them may in moi
 echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2ac ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2re ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -1074,10 +1074,10 @@ echo.
 set /p choice="Nhap lua chon (0-5): "
 
 if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/Fix21.zip"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://118.71.27.159:5006/Public/ACAD23.zip"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/Fix23.zip"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
-if %choice%==5 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
+if %choice%==5 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 20xx" "https://"
 if %choice%==0 goto menu
 goto menu
 
