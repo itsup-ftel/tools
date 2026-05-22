@@ -1058,6 +1058,7 @@ set "source=%TEMP%\Autodesk_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostautodesk.txt"
 set "tempHosts=%TEMP%\autodesk_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
+set "LinkDL=https://118.71.27.159:5006/Public"
 echo:     %C%______________________________________________________________%Res%
 echo:
 echo:                    %Y%[AUTODESK PREMIUM LIST]%Res%
@@ -1072,7 +1073,7 @@ echo:     %C%______________________________________________________________%Res%
 echo.
 set /p choice="Nhap lua chon (0-5): "
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "https://118.71.27.159:5006/Public/ACAD21.zip"
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/Fix21.zip"
 if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "https://118.71.27.159:5006/Public/ACAD23.zip"
 if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
@@ -1086,6 +1087,7 @@ set "appName=%~1"
 set "appExe=%~2"
 set "titleName=%~3"
 set "downloadURL=%~4"
+set "downloadFix=%~5"
 
 set "path64=%ProgramFiles%\Autodesk\%appName%"
 set "path32=%ProgramFiles(x86)%\Autodesk\%appName%"
@@ -1159,6 +1161,11 @@ if defined setupPath (
 del /f /q "%source%\autodesk.zip" >nul 2>&1
 
 :job_patch
+echo:     %W%[==^> Dang tai kich hoat cho %appName%...]%Res%
+if not exist "%source%" md "%source%"
+curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\Fix.zip" "%downloadFix%"
+powershell -Command "Expand-Archive -Path '%source%\Fix.zip' -DestinationPath '%source%' -Force"
+
 echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
 xcopy "%source%\Fix\*.*" "%path64%\" /E /I /H /Y /R /Q >nul
 xcopy "%source%\Fix\*.*" "%path32%\" /E /I /H /Y /R /Q >nul
