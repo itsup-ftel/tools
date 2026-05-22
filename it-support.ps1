@@ -67,14 +67,14 @@ echo  %G%=======================================================================
 echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo  %G%====================================================================================================================%Res%
 echo.
-echo     %Y%[ 1. KIEM TRA]%Res%          %Y%[ 2. HE THONG ]%Res%         %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
+echo     %Y%[ 1. KIEM TRA]%Res%            %Y%[ 2. HE THONG ]%Res%       %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
 echo.
 echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.%Res% Lay MAC ^& Serial     %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Thong tin o cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
 echo      %G%3.%Res% Thong tin RAM         %G%9.%Res% Dong ung dung treo  %G%15.%Res% Ping check GW/DNS    %G%21.%Res% In trang Test
 echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.%Res% TCPing/Tracetcp      %G%22.%Res% Liet ke d/s in
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Them may in moi
-echo      %G%6.%Res% Chi tiet ban quyen   %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
+echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
 echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2re ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
