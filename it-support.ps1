@@ -820,8 +820,8 @@ echo:
 
 :: --- XỬ LÝ LỰA CHỌN PHÍM BẤM ---
 choice /c 10 /n /m "Nhap lua chon cua ban: "
-if errorlevel 2 goto menu
 if errorlevel 1 goto start_clean
+if errorlevel 0 goto menu
 
 :start_clean
 echo:
