@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Them may in moi
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2-3ds ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2-auto ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -744,7 +744,7 @@ echo 1. Kiem tra trang thai BitLocker tat ca o dia
 echo 2. %R%[Tat Bitlocker]%Res% cho 1 o dia cu the (Vi du: C:)
 echo 3. %R%[Tat BitLocker]%Res% cho TAT CA o dia dang bao ve
 echo 4. Theo doi tien trinh giai ma (Real-time)
-echo 5. Thoat ve Menu chinh
+echo 0. Thoat ve Menu chinh
 echo %C%==================================================%Res%
 set /p choice="Chon lua chon cua ban (1-5): "
 
@@ -752,40 +752,40 @@ if "%choice%"=="1" goto :bitlockerstatus
 if "%choice%"=="2" goto :disable_one
 if "%choice%"=="3" goto :disable_all
 if "%choice%"=="4" goto :monitor
-if "%choice%"=="5" goto menu
-goto :menu
+if "%choice%"=="0" goto menu
+goto bitlocker
 
 :bitlockerstatus
 echo.
 echo %C%[--- TRANG THAI BITLOCKER ---]%Res%
 powershell -command "Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize"
 pause
-goto :bitlocker
+goto bitlocker
 
 :disable_one
 set "drive="
 set /p drive="Nhap ky tu o dia (Vi du C hoac C:): "
-if "%drive%"=="" goto :bitlocker
+if "%drive%"=="" goto bitlocker
 
 if "%drive:~-1%" NEQ ":" set "drive=%drive%:"
 
 echo [!] Dang kiem tra o %drive%...
 powershell -command "$v = Get-BitLockerVolume -MountPoint '%drive%'; if ($v.ProtectionStatus -eq 'On') { Disable-BitLocker -MountPoint '%drive%'; Write-Host '[OK] Da bat dau giai ma o %drive%.' -ForegroundColor Green } else { Write-Host '[!] O %drive% hien dang TAT BitLocker, khong can giai ma.' -ForegroundColor Yellow }"
 pause
-goto :bitlocker
+goto bitlocker
 
 :disable_all
 echo.
 echo [!] Dang kiem tra tat ca cac o dia...
 powershell -command "$vols = Get-BitLockerVolume | Where-Object { $_.ProtectionStatus -eq 'On' }; if ($vols) { Disable-BitLocker -MountPoint $vols; Write-Host '[OK] Da kich hoat giai ma cho cac o dang bat.' -ForegroundColor Green } else { Write-Host '[!] Khong tim thay o dia nao dang bat BitLocker.' -ForegroundColor Yellow }"
 pause
-goto :bitlocker
+goto bitlocker
 
 :monitor
 echo.
 echo --- Dang theo doi tien trinh giai ma (Nhan Ctrl+C de dung) ---
 powershell -command "while($true) { Clear-Host; Write-Host '--- Tien trinh giai ma (Nhan Ctrl+C de thoat) ---'; Get-BitLockerVolume | Select-Object MountPoint, ProtectionStatus, EncryptionPercentage | Format-Table -AutoSize; Start-Sleep -Seconds 5 }"
-goto :bitlocker
+goto bitlocker
 
 :activeMAS
 cls
@@ -870,7 +870,7 @@ if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://t
 if %choice%==2 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
 if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "ADOBE ILLUSTRATOR" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
 if %choice%==0 goto menu
-goto menu
+goto adobe
 
 :app_menu
 :: %1: Thư mục cha, %2: Tên file exe, %3: Tiêu đề hiển thị, %4: Link tải ứng dụng
@@ -1071,7 +1071,7 @@ if %auchoice%==3 call :autodesk_menu "3dsMax2022" "3DsMax.exe" "3dsMax 2022" "%L
 if %auchoice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
 if %auchoice%==5 call :autodesk_menu "SketchUp 2021" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
 if %auchoice%==0 goto menu
-goto menu
+goto autodesk
 
 :autodesk_menu
 :: %1: Thư mục cha, %2: Tên file exe, %3: Tiêu đề hiển thị, %4: Link tải ứng dụng
