@@ -900,7 +900,7 @@ set /p subChoice="Nhap lua chon (0-3): "
 if %subChoice%==1 goto task_full
 if %subChoice%==2 goto task_patch
 if %subChoice%==3 goto task_security
-if %subChoice%==4 goto adobe
+if %subChoice%==0 goto adobe
 goto sub_menu
 
 :task_full
@@ -1063,14 +1063,14 @@ echo:         %G%[5]%Res% SketchUp 2021
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
-set /p choice="Nhap lua chon (0-5): "
+set /p auchoice="Nhap lua chon (0-5): "
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
-if %choice%==3 call :autodesk_menu "3dsMax2022" "3DsMax.exe" "3dsMax 2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
-if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
-if %choice%==5 call :autodesk_menu "SketchUp 2021" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
-if %choice%==0 goto menu
+if %auchoice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
+if %auchoice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
+if %auchoice%==3 call :autodesk_menu "3dsMax2022" "3DsMax.exe" "3dsMax 2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
+if %auchoice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
+if %auchoice%==5 call :autodesk_menu "SketchUp 2021" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
+if %auchoice%==0 goto menu
 goto menu
 
 :autodesk_menu
