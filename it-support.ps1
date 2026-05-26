@@ -1059,17 +1059,17 @@ echo:         %G%[1]%Res% AutoCAD 2021
 echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% Inventor
 echo:         %G%[4]%Res% Revit	
-echo:         %G%[5]%Res% SketchUp
+echo:         %G%[5]%Res% SketchUp 2021
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
 set /p choice="Nhap lua chon (0-5): "
 
-if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/Fix21.zip"
-if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/Fix23.zip"
-if %choice%==3 call :autodesk_menu "Inventor" "Inventor.exe" "INVENTOR 20xx" "https://"
+if %choice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
+if %choice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
+if %choice%==3 call :autodesk_menu "3dsMax2022" "3DsMax.exe" "3dsMax 2022" "https://"
 if %choice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
-if %choice%==5 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 20xx" "https://"
+if %choice%==5 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
 if %choice%==0 goto menu
 goto menu
 
