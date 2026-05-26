@@ -1057,7 +1057,7 @@ echo:                %Y%[AUTODESK PREMIUM LIST]%Res%
 echo %C%==================================================%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
 echo:         %G%[2]%Res% AutoCAD 2023
-echo:         %G%[3]%Res% Inventor
+echo:         %G%[3]%Res% 3dsMax 2022
 echo:         %G%[4]%Res% Revit	
 echo:         %G%[5]%Res% SketchUp 2021
 echo:         %R%[0]%Res% Thoat ve Menu chinh
