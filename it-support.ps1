@@ -239,8 +239,8 @@ cls
 echo %C%==================================================%Res%
 echo %C%             HE THONG QUAN LY MAY IN          %Res%
 echo %C%==================================================%Res%
-echo  [%G%1%Res%]. Quet tim kiem may in trong he thong mang
-echo  [%G%2%Res%]. Add thu cong may in qua IPv4
+echo  [%G%1%Res%]. Thao tac quet va add tu dong
+echo  [%G%2%Res%]. Thao tac thu cong
 echo  [%G%3%Res%]. Fix loi theo ma (0x0000011B, 0x00000709,...)
 echo  [%G%0%Res%]. Thoat ve Menu chinh
 echo %C%==================================================%Res%
@@ -248,13 +248,13 @@ echo.
 
 set /p prnchoice="%Y%Nhap lua chon (0-3): %Res%"
 
-if "%prnchoice%"=="1" goto quet_mang
-if "%prnchoice%"=="2" goto add_mayin
+if "%prnchoice%"=="1" goto auto_mayin
+if "%prnchoice%"=="2" goto manual_mayin
 if "%prnchoice%"=="3" goto menu_loi
 if "%prnchoice%"=="0" goto menu
 goto print
 
-:quet_mang
+:auto_mayin
 cls
 :: CẤU HÌNH ĐƯỜNG DẪN CLOUD VÀ THƯ MỤC LƯU DRIVER
 set "DRIVER_PRINT_URL=https://118.71.27.159:5006/Public/PrinterDriver.zip"
@@ -402,6 +402,15 @@ if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res
         }^
     }^
 }"
+echo.
+pause
+goto print
+
+
+:manual_mayin
+cls
+echo %C%Dang mo hop thoai add may in thu cong=%Res%
+powershell -Command "Start-Process rundll32.exe -ArgumentList 'shell32.dll,SHHelpShortcuts_RunDLL AddPrinter' -Verb RunAs"
 echo.
 pause
 goto print
