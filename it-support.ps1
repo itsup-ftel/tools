@@ -264,18 +264,19 @@ set "LOCAL_POOL=C:\DriverMayIn"
 if not exist "%LOCAL_POOL%" (
     echo %Y%[Y] Thu vien driver noi bo chua ton tai. Dang tai tu Cloud...%Res%
     powershell -NoProfile -ExecutionPolicy Bypass -Command "^
+    $G = [char]27 + '[92m'; $Y = [char]27 + '[93m'; $R = [char]27 + '[91m'; $Res = [char]27 + '[0m';^
     try {^
         New-Item -ItemType Directory -Force -Path '%LOCAL_POOL%' | Out-Null;^
         $zipPath = '%LOCAL_POOL%\drivers.zip';^
-        Write-Host '%Y%Dang tai xuong file zip tu Cloud, vui long doi...%Res%';^
+        Write-Host ^"${Y}Dang tai xuong file zip tu Cloud, vui long doi...${Res}^";^
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;^
-        Invoke-WebRequest -Uri '%DRIVER_PRINT_URL%' -OutFile $zipPath -ErrorAction Stop;^
-        Write-Host '%Y%Dang giai nen thu vien driver...%Res%';^
+        Invoke-WebRequest -Uri '%CLOUD_URL%' -OutFile $zipPath -ErrorAction Stop;^
+        Write-Host ^"${Y}Dang giai nen thu vien driver...${Res}^";^
         Expand-Archive -Path $zipPath -DestinationPath '%LOCAL_POOL%' -Force;^
         Remove-Item -Path $zipPath -Force;^
-        Write-Host '%G%[OK] Da tai va giai nen thu vien driver thanh cong!%Res%';^
+        Write-Host ^"${G}[OK] Da tai va giai nen thu vien driver thanh cong!${Res}^";^
     } catch {^
-        Write-Host '%R%[LOI] Khong the tai hoac giai nen file tu Cloud. Vui long kiem tra lai Link hoac ket noi Internet!%Res%';^
+        Write-Host ^"${R}[LOI] Khong the tai hoac giai nen file tu Cloud. Vui long kiem tra lai Link hoac ket noi Internet!${Res}^";^
         exit 1;^
     }"
     if %errorlevel% neq 0 (
@@ -286,9 +287,10 @@ if not exist "%LOCAL_POOL%" (
 
 echo %Y%[Y] Dang tu dong kiem tra lop mang cua may...%Res%
 powershell -NoProfile -ExecutionPolicy Bypass -Command "^
+$G = [char]27 + '[92m'; $Y = [char]27 + '[93m'; $C = [char]27 + '[96m'; $R = [char]27 + '[91m'; $Res = [char]27 + '[0m';^
 $driverPool = '%LOCAL_POOL%';^
 $activeIPs = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' };^
-if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res%' }else{^
+if(-not $activeIPs){ Write-Host ^"${R}Khong tim thay ket noi mang IPv4 hop le!${Res}^" }else{^
     workflow Scan-Network {^
         param([string]$subnet)^
         foreach -parallel ($i in 1..254) {^
@@ -309,8 +311,8 @@ if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res
         $ipStr = $ipAddr.IPAddress;^
         if($ipStr -match '^(\d+\.\d+\.\d+)\.\d+'){^
             $subnet = $Matches;^
-            Write-Host '%C%Phat hien lop mang: '$subnet'.0/24 (IP cua ban: '$ipStr')%Res%';^
-            Write-Host '%Y%Dang quet nhanh toan bo may in, vui long doi...%Res%';^
+            Write-Host ^"${C}Phat hien lop mang: $subnet.0/24 (IP cua ban: $ipStr)${Res}^";^
+            Write-Host ^"${Y}Dang quet nhanh toan bo may in, vui long doi...${Res}^";^
             $results = Scan-Network -subnet $subnet;^
             $printers = @();^
             foreach($res in $results){^
@@ -320,25 +322,26 @@ if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res
                 }^
             };^
             if($printers.Count -eq 0){^
-                Write-Host '%R%Khong tim thay may in nao trong mang!%Res%';^
+                Write-Host ^"${R}Khong tim thay may in nao trong mang!${Res}^";^
             }else{^
                 Write-Host ' ';^
-                Write-Host '%G%--- DANH SACH MAY IN TIM THAY ---%Res%';^
+                Write-Host ^"${G}--- DANH SACH MAY IN TIM THAY ---${Res}^";^
                 for($i=0; $i -lt $printers.Count; $i++){^
-                    Write-Host '%C%['$i'] IP: '$($printers[$i].IP)' | Model: '$($printers[$i].Model)'%Res%';^
+                    $p_ip = $printers[$i].IP; $p_model = $printers[$i].Model;^
+                    Write-Host ^"${C}[$i] IP: $p_ip | Model: $p_model${Res}^";^
                 };^
                 $choice = Read-Host 'Nhap so thu tu [STT] may in ban muon cai dat';^
                 if($choice -match '^\d+$' -and [int]$choice -lt $printers.Count){^
                     $target = $printers[[int]$choice];^
                     $p_ip = $target.IP; $p_model = $target.Model.Trim();^
                     ^
-                    Write-Host '%Y%[1/4] Dang tao Port mang: IP_'$p_ip'...%Res%';^
+                    Write-Host ^"${Y}[1/4] Dang tao Port mang: IP_$p_ip...${Res}^";^
                     $portName = 'IP_' + $p_ip;^
                     if(-not (Get-PrinterPort -Name $portName -ErrorAction SilentlyContinue)){^
                         Add-PrinterPort -Name $portName -PrinterHostAddress $p_ip;^
                     }^
                     ^
-                    Write-Host '%Y%[2/4] Kich hoat AI tim kiem Driver tu thu vien vua tai...%Res%';^
+                    Write-Host ^"${Y}[2/4] Kich hoat AI tim kiem Driver tu thu vien vua tai...${Res}^";^
                     $matchedInf = $null;^
                     $matchedDriverName = $null;^
                     $infFiles = Get-ChildItem -Path $driverPool -Filter *.inf -Recurse;^
@@ -354,50 +357,50 @@ if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res
                     }^
                     ^
                     if($matchedInf){^
-                        Write-Host '%G%[FOUND] Tim thay Driver phu hop tai: '$matchedInf'%Res%';^
+                        Write-Host ^"${G}[FOUND] Tim thay Driver phu hop tai: $matchedInf${Res}^";^
                         pnputil.exe /add-driver $matchedInf /install | Out-Null;^
                         Add-PrinterDriver -Name $matchedDriverName -ErrorAction SilentlyContinue;^
                         $finalDriver = $matchedDriverName;^
                     }else{^
-                        Write-Host '%R%[NOT FOUND] Khong thay driver khop trong thu vien. Dung Driver Generic thay the!%Res%';^
+                        Write-Host ^"${R}[NOT FOUND] Khong thay driver khop trong thu vien. Dung Driver Generic thay the!${Res}^";^
                         $finalDriver = 'Generic / Text Only';^
                     }^
                     ^
-                    Write-Host '%Y%[3/4] Dang add may in vao Windows...%Res%';^
+                    Write-Host ^"${Y}[3/4] Dang add may in vao Windows...${Res}^";^
                     $success = $false;^
                     try {^
                         Add-Printer -Name $p_model -PortName $portName -DriverName $finalDriver -ErrorAction Stop;^
                         $success = $true;^
-                        Write-Host '%G%[OK] Add may in thanh cong!%Res%';^
+                        Write-Host ^"${G}[OK] Add may in thanh cong!${Res}^";^
                     } catch {^
-                        Write-Host '%R%[LOI] Add may in that bai. Thu tu dong kich hoat che do Debug (Dung Generic Driver)...%Res%';^
+                        Write-Host ^"${R}[LOI] Add may in that bai. Thu tu dong kich hoat che do Debug (Dung Generic Driver)...${Res}^";^
                         try {^
                             Add-Printer -Name ($p_model + '_Debug') -PortName $portName -DriverName 'Generic / Text Only' -ErrorAction Stop;^
                             $success = $true;^
-                            Write-Host '%Y%[DEBUG OK] Da cuu ho add thanh cong bang Driver thay the.%Res%';^
+                            Write-Host ^"${Y}[DEBUG OK] Da cuu ho add thanh cong bang Driver thay the.${Res}^";^
                         } catch {^
-                            Write-Host '%R%[CRITICAL] Loi nghiem trong! He thong tu choi add may in.%Res%';^
+                            Write-Host ^"${R}[CRITICAL] Loi nghiem trong! He thong tu choi add may in.${Res}^";^
                         }^
                     }^
                     ^
                     if($success){^
-                        Write-Host '%Y%[4/4] Dang in kiem tra (Print Test Page)...%Res%';^
+                        Write-Host ^"${Y}[4/4] Dang in kiem tra (Print Test Page)...${Res}^";^
                         try {^
                             $p_name = if(Get-Printer -Name $p_model -ErrorAction SilentlyContinue){$p_model}else{$p_model + '_Debug'};^
                             $wmiPrinter = Get-CimInstance -ClassName Win32_Printer -Filter ^"Name = '$p_name'^";^
                             $result = Invoke-CimMethod -InputObject $wmiPrinter -MethodName PrintTestPage;^
                             if($result.ReturnValue -eq 0){^
-                                Write-Host '%G%=== [HOAN THANH] MAY IN DA IN TEST OK! ===%Res%';^
+                                Write-Host ^"${G}=== [HOAN THANH] MAY IN DA IN TEST OK! ===${Res}^";^
                             }else{^
-                                Write-Host '%R%[LOI] Lenh in da gui nhung bi ket. Dang tu dong Reset Spooler de sua loi...%Res%';^
+                                Write-Host ^"${R}[LOI] Lenh in da gui nhung bi ket. Dang tu dong Reset Spooler de sua loi...${Res}^";^
                                 Restart-Service -Name Spooler -Force;^
-                                Write-Host '%G%[FIXED] Da khoi dong lai Spooler, vui long kiem tra lai khay giay.%Res%';^
+                                Write-Host ^"${G}[FIXED] Da khoi dong lai Spooler, vui long kiem tra lai khay giay.${Res}^";^
                             }^
                         } catch {^
-                            Write-Host '%R%Khong the in test do thieu quyen hoac thiet bi offline.%Res%';^
+                            Write-Host ^"${R}Khong the in test do thieu quyen hoac thiet bi offline.${Res}^";^
                         }^
                     }^
-                }else{ Write-Host '%R%STT lua chon khong hop le!%Res%' }^
+                }else{ Write-Host ^"${R}STT lua chon khong hop le!${Res}^" }^
             }^
         }^
     }^
@@ -405,7 +408,6 @@ if(-not $activeIPs){ Write-Host '%R%Khong tim thay ket noi mang IPv4 hop le!%Res
 echo.
 pause
 goto print
-
 
 :manual_mayin
 cls
