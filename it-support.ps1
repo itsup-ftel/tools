@@ -256,63 +256,11 @@ goto print
 
 :auto_mayin
 cls
-set "DRIVER_PRINT_URL=https://118.71.27.159:5006/Public/PrinterDriver.zip"
+set "CLOUD_URL=https://118.71.27.159:5006/Public/PrinterDriver.zip"
 set "LOCAL_POOL=C:\DriverMayIn"
-set "PS_SCRIPT=%TEMP%\PrinterAI_Core.ps1"
+powershell -NoProfile -ExecutionPolicy Bypass -EncodedCommand ^
+JGNsb3VkVXJsID0gJyVDTE9VRF9VUkwlJzsgJGxvY2FsUG9vbCA9ICclTE9DQUxfUE9PTCUnOyAkRSA9IFtjaGFyXTI3OyAkRyA9ICIkRVs5Mm0iOyAkWSA9ICIkRVs5M20iOyAkQyA9ICIkRVs5Nm0iOyAkUiA9ICIkRVs5MW0iOyAkUmVzID0gIiRFWzBtIjsgaWYgKC1ub3QgKFRlc3QtUGF0aCAkbG9jYWxQb29sKSkgeyBXcml0ZS1Ib3N0ICIke1l9W1ldIFRodSB2aWVuIGRyaXZlciBjaHVhIHRvbiB0YWkuIERhbmcgdGFpIHR1IENsb3VkLi4uJHtSZXN9IjsgdHJ5IHsgTmV3LUl0ZW0gLUl0ZW1UeXBlIERpcmVjdG9yeSAtRm9yY2UgLVBhdGggJGxvY2FsUG9vbCB8IE91dC1NdWxsOyAkemlwUGF0aCA9ICIsbG9jYWxQb29sXGRyaXZlcnMuemlwIjsgW05ldC5TZXJ2aWNlUG9pbnRNYW5hZ2VyXTo6U2VjdXJpdHlQcm90b2NvbCA9IFtOZXQuU2VjdXJpdHlQcm90b2NvbFR5cGVdOjpUbHMxMjsgSW52b2tlLVdlYlJlcXVlc3QgLVVyaSAkY2xvdWRVcmwgLU91dEZpbGUgJHppcFBhdGggLUVycm9yQWN0aW9uIFN0b3A7IEV4cGFuZC1BcmNoaXZlIC1QYXRoICR6aXBQYXRoIC1EZXN0aW5hdGlvblBhdGggJGxvY2FsUG9vbCAtRm9yY2U7IFJlbW92ZS1JdGVtIC1QYXRoICR6aXBQYXRoIC1Gb3JjZTsgV3JpdGUtSG9zdCAiJHtHfVtPS10gVGFpIHZhIGdpYWkgbmVuIHRodSB2aWVuIGRyaXZlciB0aGFuaCBjb25nISR7UmVzfSIgfSBjYXRjaCB7IFdyaXRlLUhvc3QgIiR7Un1bTE9JXSBLaG9uZyB0aGUgdGFpIGhvYWMgZ2lhaSBuZW4gdHUgQ2xvdWQhJHtSZXN9IjsgZXhpdCAxIH0gfSBXcml0ZS1Ib3N0ICIke1l9W1ldIERhbmcgdHUgZG9uZyBraWVtIHRyYSBsb3AgbWFuZyBjdWEgbWF5Li4uJHtSZXN9IjsgJGFjdGl2ZUlQcyA9IEdldC1OZXRJUEFkZHJlc3MgLUFkZHJlc3NGYW1pbHkgSVB2NCB8IFdoZXJlLU9iamVjdCB7ICRfLklQQWRkcmVzcyAtbm90bGlrZSAnMTI3LionIC1hbmQgJF8uSVBBZGRyZXNzIC1ub3RsaWtlICcxNjkuMjU0LionIH07IGlmICgtbm90ICRhY3RpdmVJUHMpIHsgV3JpdGUtSG9zdCAiJHtSfUtob25nIHRpbSB0aGF5IGtldCBub2kgbWFuZyBJUHY0IGhvcCBsZSEke1Jlc30iOyBleGl0IH0gd29ya2Zsb3cgU2Nhbi1OZXR3b3JrIHsgcGFyYW0oW3N0cmluZ10kc3VibmV0KSBmb3JlYWNoIC1wYXJhbGxlbCAoJGkgaW4gMS4uMjU0KSB7ICRpcCA9ICIkc3VibmV0LiRpIjsgaWYgKFRlc3QtQ29ubmVjdGlvbiAtQ29tcHV0ZXJOYW1lICRpcCAtQ291bnQgMSAtUXVpZXQgLVdhcm5pbmdBY3Rpb24gU2lsZW50bHlDb250aW51ZSkgeyB0cnkgeyAkc25tcCA9IE5ldy1PYmplY3QgLUNvbU9iamVjdCAnT2xlUHJuLk9sZVNOTVAnOyAkc25tcC5PcGVuKCRpcCwgJ3B1YmxpYycsIDIsIDEwMCk7ICRtb2RlbCA9ICRzbm1wLkdldCgnLjEuMy42LjEuMi4xLjI1LjMuMi4xLjMuMScpOyBpZiAoJG1vZGVsKSB7IFdyaXRlLU91dHB1dCAiRk9VTkR8JGlwfCRtb2RlbCIgfSAkc25tcC5DbG9zZSgpIH0gY2F0Y2gge30gfSB9IH0gZm9yZWFjaCAoJGlwQWRkciBpbiAkYWN0aXZlSVBzKSB7IGlmICgkaXBBZGRyLklQQWRkcmVzcyAtbWF0Y2ggJ14oXGQrXC5cZCtcLlxkKylcLlxkKycpIHsgJHN1Ym5ldCA9ICRNYXRjaGVzWzFdOyBXcml0ZS1Ib3N0ICIke0N9UGhhdCBoaWVuIGxvcCBtYW5nOiAkc3VibmV0LjAvMjQgKElQIGN1YSBiYW46ICQoJGlwQWRkci5JUEFkZHJlc3MpKSR7UmVzfSI7IFdyaXRlLUhvc3QgIiR7WX1EYW5nIHF1ZXQgbmhhbmggdG9hbiBibyBtYXkgaW4sIHZ1aSBsb25nIGRvaS4uLiR7UmVzfSI7ICRyZXN1bHRzID0gU2Nhbi1OZXR3b3JrIC1zdWJuZXQgJHN1Ym5ldDsgJHByaW50ZXJzID0gQCgpOyBmb3JlYWNoICgkcmVzIGluICRyZXN1bHRzKSB7IGlmICgkcmVzIC1saWtlICdGT1VORConKSB7ICRwYXJ0cyA9ICRyZXMuU3BsaXQoJ3wnKTsgJHByaW50ZXJzICs9IFtQU0N1c3RvbU9iamVjdF1AeyBJUCA9ICRwYXJ0c1sxXTsgTW9kZWwgPSAkcGFydHNbMl0gfSB9IGlmICgkcHJpbnRlcnMuQ291bnQgLWVxIDApIHsgV3JpdGUtSG9zdCAiJHtSfUtob25nIHRpbSB0aGF5IG1heSBpbiBuYW8gdHJvbmcgbG9wIG1hbmcgbmF5ISR7UmVzfSIgfSBlbHNlIHsgV3JpdGUtSG9zdCAiIjsgV3JpdGUtSG9zdCAiJHtHfS0tLSBEQU5IIFNBQ0ggTUFZIElOIFRJTSBUSEFZIC0tLSR7UmVzfSI7IGZvciAoJGkgPSAwOyAkaSAtbHQgJHByaW50ZXJzLkNvdW50OyAkaSsrKSB7IFdyaXRlLU91dHB1dCAiJHtDfVskSV0gSVA6ICQoJHByaW50ZXJzWyRpXS5JUCkgfCBNb2RlbDogJCgkcHJpbnRlcnNbJGldLk1vZGVsKSR7UmVzfSIgfSAkY2hvaWNlID0gUmVhZC1Ib3N0ICJOaGFwIHNvIHRodSB0dSBbU1RUXSBtYXkgaW4gYmFuIG11b24gY2FpIGRhdCI7IGlmICgkY2hvaWNlIC1tYXRjaCAnXlxkKyc2IC1hbmQgW2ludF0kY2hvaWNlIC1sdCAkcHJpbnRlcnMuQ291bnQpIHsgJHRhcmdldCA9ICRwcmludGVyc1tbaW50XSRjaG9pY2VdOyAkcF9pcCA9ICR0YXJnZXQuSVA7ICRwX21vZGVsID0gJHRhcmdldC5Nb2RlbC5UcmltKCk7ICRwb3J0TmFtZSA9ICJJUF8kcF9pcCI7IFdyaXRlLUhvc3QgIiR7WX1bMS80XSBEYW5nIHRhbyBQb3J0IG1hbmc6ICRwb3J0TmFtZS4uLiR7UmVzfSI7IGlmICgtbm90IChHZXQtUHJpbnRlclBvcnQgLU5hbWUgJHBvcnROYW1lIC1FcnJvckFjdGlvbiBTaWxlbnRseUNvbnRpbnVlKSkgeyBBZGQtUHJpbnRlclBvcnQgLU5hbWUgJHBvcnROYW1lIC1QcmludGVySG9zdEFkZHJlc3MgJHBfaXAgfSBXcml0ZS1Ib3N0ICIke1l9WzIvNF0gRGFuZyB0aW0ga2llbSBEcml2ZXIgcGh1IGhvcCB0dSB0aHUgdmllbi4uLiR7UmVzfSI7ICRtYXRjaGVkSW5mID0gJG51bGw7ICRtYXRjaGVkRHJpdmVyTmFtZSA9ICRwX21vZGVsOyAkaW5mRmlsZXMgPSBHZXQtQ2hpbGRJdGVtIC1QYXRoICRsb2NhbFBvb2wgLUZpbHRlciAqLmluZiAtUmVjdXJzZTsgZm9yZWFjaCAoJGZpbGUgaW4gJGluZldpbGVzKSB7ICRjb250ZW50ID0gR2V0LUNvbnRlbnQgJGZpbGUuRnVsbE5hbWUgLUVycm9yQWN0aW9uIFN0b3A7ICRmb3VuZExpbmUgPSAkY29udGVudCB8IFdoZXJlLU9iamVjdCB7ICRfIC1saWtlICIqJHBfbW9kZWwqIiB9OyBpZiAoJGZvdW5kTGluZSkgeyAkbWF0Y2hlZEluZiA9ICRmaWxlLkZ1bGxOYW1lOyBpZiAoJGZvdW5kTGluZSAtbWF0Y2ggJyIoW14iXSspIlxzKj0nKSB7ICRtYXRjaGVkRHJpdmVyTmFtZSA9ICRNYXRjaGVzWzFdIH0gYnJlYWsgfSB9IGlmICgkbWF0Y2hlZEluZikgeyBXcml0ZS1Ib3N0ICIke0d9W0ZPVU5EXSBUaW0gdGhheSBEcml2ZXIgaG9wIGxlIHRhaTogJG1hdGNoZWRJbmYke1Jlc30iOyBwbnB1dGlsLmV4ZSAvYWRkLWRyaXZlciAkbWF0Y2hlZEluZiAvaW5zdGFsbCB8IE91dC1NdWxsOyBBZGQtUHJpbnRlckRyaXZlciAtTmFtZSAkbWF0Y2hlZERyaXZlck5hbWUgLUVycm9yQWN0aW9uIFN0b3A7ICRmaW5hbERyaXZlciA9ICRtYXRjaGVkRHJpdmVyTmFtZSB9IGVsc2UgeyBXcml0ZS1Ib3N0ICIke1J9W05PVCBGT1VORF0gS2hvbmcgdGltIHRoYXkgZHJpdmVyIHR1b25nIHRoaWNoLiBEdW5nIERyaXZlciBHZW5lcmljISR7UmVzfSI7ICRmaW5hbERyaXZlciA9ICJHZW5lcmljIC8gVGV4dCBPbmx5IiB9IFdyaXRlLUhvc3QgIike1l9WzMvNF0gRGFuZyBhZGQgbWF5IGluIHZhbyBXaW5kb3dzLi4uJHtSZXN9IjsgJHN1Y2Nlc3MgPSAkZmFsc2U7IHRyeSB7IEFkZC1QcmludGVyIC1OYW1lICRwX21vZGVsIC1Qb3J0TmFtZSAkcG9ydE5hbWUgLURyaXZlck5hbWUgJGZpbmFsRHJpdmVyIC1FcnJvckFjdGlvbiBTdG9wOyAkc3VjY2VzcyA9ICR0cnVlOyBXcml0ZS1Ib3N0ICIke0d9W09LXSBEYSBhZGQgbWF5IGluICRwX21vZGVsIHRoYW5oIGNvbmchJHtSZXN9IiB9IGNhdGNoIHsgV3JpdGUtSG9zdCAiJHtSfVtMT0ldIEtob25nIHRoZSBhZGQgdm9pIGRyaXZlciBnby4gQ3V1IGhvIChEZWJ1ZykuLi4ke1Jlc30iOyB0cnkgeyBBZGQtUHJpbnRlciAtTmFtZSAiJHBfbW9kZWxfR2VuZXJpYyIgLVBvcnROYW1lICRwb3J0TmFtZSAtRHJpdmVyTmFtZSAiR2VuZXJpYyAvIFRleHQgT25seSIgLUVycm9yQWN0aW9uIFN0b3A7ICRzdWNjZXNzID0gJHRydWU7IFdyaXRlLUhvc3QgIiR7WX1bREVCVUcgT0tdIERhIGFkZCB0aGFuaCBjb25nIGJhbmcgR2VuZXJpYyEke1Jlc30iIH0gY2F0Y2ggeyBXcml0ZS1Ib3N0ICIke1J9W0NSSVRJQ0FMXSBXaW5kb3dzIHR1IGNob2kgYWRkISR7UmVzfSIgfSB9IGlmICgkc3VjY2VzcykgeyBXcml0ZS1Ib3N0ICIke1l9WzQvNF0gRGFuZyBpbiBraWVtIHRyYSAoUHJpbnQgVGVzdCBQYWdlKS4uLiR7UmVzfSI7IHRyeSB7ICRwX25hbWUgPSBpZiAoR2V0LVByaW50ZXIgLU5hbWUgJHBfbW9kZWwgLUVycm9yQWN0aW9uIFN0b3ApIHsgJHBfbW9kZWwgfSBlbHNlIHsgIiRwX21vZGVsX0dlbmVyaWMiIH07ICR3bWlQcmludGVyID0gR2V0LUNpbUluc3RhbmNlIC1DbGFzc05hbWUgV2luMzJfUHJpbnRlciAtRmlsdGVyICJOYW1lID0gJyRwX25hbWUnIjsgJHJlc3VsdCA9IEludm9rZS1DaW1NZXRob2QgLUlucHV0T2JqZWN0ICR3bWlQcmludGVyIC1NZXRob2ROYW1lIFByaW50VGVzdFBhZ2U7IGlmICgkcmVzdWx0LlJldHVyblZhbHVlIC1lcSAwKSB7IFdyaXRlLUhvc3QgIiR7R309PT0gW0hPQU4gVEhBTkhdIE1BWSBJTiBEQSBOSEFOIExFTkggT0shID09PSR7UmVzfSIgfSBlbHNlIHsgV3JpdGUtSG9zdCAiJHtSfVtMT0ldIEtldCBsZW5oIGluLiBEYW5nIHJlc2V0IFNwb29sZXIuLi4ke1Jlc30iOyBSZXN0YXJ0LVNlcnZpY2UgLU5hbWUgU3Bvb2xlciAtRm9yY2U7IFWyaXRlLUhvc3QgIiR7R31bRklYRURdIERhIHRob25nIFNwb29sZXIhJHtSZXN9IiB9IH0gY2F0Y2ggeyBXcml0ZS1Ib3N0ICIke1J9S2hvbmcgdGhlIGluIHRlc3QgZG8gbWF5IG9mZmxpbmUuJHtSZXN9IiB9IH0gfSBlbHNlIHsgV3JpdGUtSG9zdCAiJHtSfVNUVCBraG9uZyBob3AgbGUhJHtSZXN9IiB9IH0gfSB9IH0=
 
-(
-echo $G = [char]27 + '[92m'; $Y = [char]27 + '[93m'; $C = [char]27 + '[96m'; $R = [char]27 + '[91m'; $Res = [char]27 + '[0m'
-echo $driverPool = '%LOCAL_POOL%'; $cloudUrl = '%CLOUD_URL%'
-echo if ^(-not ^(Test-Path $driverPool^)^) {
-echo     Write-Host "${Y}[Y] Thu vien chua ton tai. Dang tai tu Cloud...${Res}"
-echo     try {
-echo         New-Item -ItemType Directory -Force -Path $driverPool ^| Out-Null
-echo         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-echo         Invoke-WebRequest -Uri $cloudUrl -OutFile "$driverPool\drivers.zip" -ErrorAction Stop
-echo         Expand-Archive -Path "$driverPool\drivers.zip" -DestinationPath $driverPool -Force
-echo         Remove-Item -Path "$driverPool\drivers.zip" -Force
-echo         Write-Host "${G}[OK] Tai va giai nen thanh cong!${Res}"
-echo     } catch { Write-Host "${R}[LOI] Khong the tai tu Cloud!${Res}"; exit 1 }
-echo }
-echo $activeIPs = Get-NetIPAddress -AddressFamily IPv4 ^| Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' }
-echo if ^(-not $activeIPs^) { Write-Host "${R}Khong tim thay mang IPv4 hop le!${Res}"; exit }
-echo workflow Scan-Network { param^([string]$subnet^) foreach -parallel ^($i in 1..254^) {
-echo     $ip = "$subnet.$i"; if^(Test-Connection -ComputerName $ip -Count 1 -Quiet -WarningAction SilentlyContinue^){
-echo         try { $snmp = New-Object -ComObject 'OlePrn.OleSNMP'; $snmp.Open^($ip, 'public', 2, 100^); $model = $snmp.Get^('.1.3.6.1.2.1.25.3.2.1.3.1'^); if^($model^){ Write-Output "FOUND^|$ip^|$model" }; $snmp.Close^(^); } catch {}
-echo     }
-echo }}
-echo foreach^($ipAddr in $activeIPs^){ if^($ipAddr.IPAddress -match '^(\d+\.\d+\.\d+)\.\d+'^){
-echo     $subnet = $Matches[1]; Write-Host "${C}Lop mang phat hien: $subnet.0/24${Res}"; Write-Host "${Y}Dang quet nhanh may in...${Res}"
-echo     $results = Scan-Network -subnet $subnet; $printers = @^(^); foreach^($res in $results^){ if^($res -like 'FOUND*'^){ $parts = $res.Split^('^|'^); $printers += [PSCustomObject]@{ IP=$parts[1]; Model=$parts[2] } } }
-echo     if^($printers.Count -eq 0^){ Write-Host "${R}Khong tim thay may in!${Res}" } else {
-echo         Write-Host ""; Write-Host "${G}--- DANH SACH MAY IN ---${Res}"
-echo         for^($i=0; $i -lt $printers.Count; $i++^){ Write-Host "${C}[$i] IP: $($printers[$i].IP) ^| Model: $($printers[$i].Model)${Res}" }
-echo         $choice = Read-Host 'Nhap STT may in muon cai dat'; if^($choice -match '^\d+$' -and [int]$choice -lt $printers.Count^){
-echo             $target = $printers[[int]$choice]; $p_ip = $target.IP; $p_model = $target.Model.Trim^(^); $portName = "IP_$p_ip"
-echo             Write-Host "${Y}[1/4] Dang tao Port mang...${Res}"
-echo             if^(-not ^(Get-PrinterPort -Name $portName -ErrorAction SilentlyContinue^)^){ Add-PrinterPort -Name $portName -PrinterHostAddress $p_ip }
-echo             Write-Host "${Y}[2/4] Dang tim Driver noi bo...${Res}"
-echo             $matchedInf = $null; $matchedDriverName = $p_model; $infFiles = Get-ChildItem -Path $driverPool -Filter *.inf -Recurse
-echo             foreach^($file in $infFiles^){ $content = Get-Content $file.FullName -ErrorAction SilentlyContinue; $foundLine = $content ^| Where-Object { $_ -like "*$p_model*" }; if^($foundLine^){ $matchedInf = $file.FullName; if^($foundLine -match '^"([^"]+)"\s*='^){ $matchedDriverName = $Matches[1].Trim^(^) }; break } }
-echo             if^($matchedInf^){ Write-Host "${G}[FOUND] Khop Driver tai: $matchedInf${Res}"; pnputil.exe /add-driver $matchedInf /install ^| Out-Null; Add-PrinterDriver -Name $matchedDriverName -ErrorAction SilentlyContinue; $finalDriver = $matchedDriverName } else { Write-Host "${R}[NOT FOUND] Dung Driver Generic thay the!${Res}"; $finalDriver = 'Generic / Text Only' }
-echo             Write-Host "${Y}[3/4] Dang add may in...${Res}"; $success = $false
-echo             try { Add-Printer -Name $p_model -PortName $portName -DriverName $finalDriver -ErrorAction Stop; $success = $true; Write-Host "${G}[OK] Add thanh cong!${Res}" } catch {
-echo                 try { Add-Printer -Name "$p_model`_Debug" -PortName $portName -DriverName 'Generic / Text Only' -ErrorAction Stop; $success = $true; Write-Host "${Y}[DEBUG OK] Add bang Driver thay the.${Res}" } catch { Write-Host "${R}[CRITICAL] Loi he thong!${Res}" }
-echo             }
-echo             if^($success^){ Write-Host "${Y}[4/4] Dang in kiem tra...${Res}"
-echo                 try { $p_name = if^(Get-Printer -Name $p_model -ErrorAction SilentlyContinue^){$p_model}else{"$p_model`_Debug"}; $wmiPrinter = Get-CimInstance -ClassName Win32_Printer -Filter "Name = '$p_name'"; $result = Invoke-CimMethod -InputObject $wmiPrinter -MethodName PrintTestPage
-echo                     if^($result.ReturnValue -eq 0^){ Write-Host "${G}=== MAY IN DA IN TEST OK! ===${Res}" } else { Write-Host "${R}[LOI] Ket lenh in. Dang Reset Spooler...${Res}"; Restart-Service -Name Spooler -Force; Write-Host "${G}[FIXED] Da Reset Spooler!${Res}" }
-echo                 } catch { Write-Host "${R}Khong the in test!${Res}" }
-echo             }
-echo         } else { Write-Host "${R}STT khong hop le!${Res}" }
-echo     }
-echo }}
-) > "%PS_SCRIPT%"
-
-powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_SCRIPT%"
-del /q /f "%PS_SCRIPT%" >nul 2>&1
-
-echo.
 pause
 goto print
 
