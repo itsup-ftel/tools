@@ -1271,7 +1271,7 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
-    goto job_full
+
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
