@@ -29,7 +29,7 @@ echo %C%==================================================%Res%
 echo %Y%             XAC THUC QUYEN TRUY CAP TOOL          %Res%
 echo %C%==================================================%Res%
 echo.
-set /p "input_pass=Nhap mat khau de vao su dung Tool: "
+set /p "input_pass=Nhap mat khau de su dung: "
 
 if "%input_pass%"=="" (
     echo.
@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2-1do ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -ad ]%Res%         %C%[ 7. CAI DAT ]%Res%           %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -970,20 +970,31 @@ set "source=%TEMP%\GenP_Source"
 set "hostsURL=https://raw.githubusercontent.com/itsup-ftel/tools/refs/heads/main/file/hostsadobe.txt"
 set "tempHosts=%TEMP%\adobe_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
+set "LinkDL=https://118.71.27.159:5006/Public"
 echo %C%==================================================%Res%
 echo %Y%               ADOBE PREMIUM LIST          %Res%
 echo %C%==================================================%Res%
 echo:         %G%[1]%Res% Acrobat DC Pro
-echo:         %G%[2]%Res% Adobe Photoshop
-echo:         %G%[3]%Res% Adobe Illustrator
+echo:         %G%[2]%Res% After Effects
+echo:         %G%[3]%Res% Illustrator
+echo:         %G%[4]%Res% InDesign
+echo:         %G%[5]%Res% Media Encoder
+echo:         %G%[6]%Res% Lightroom Classic
+echo:         %G%[7]%Res% Photoshop
+echo:         %G%[8]%Res% Premiere Pro
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
-set /p choice="Nhap lua chon (0-3): "
+set /p choice="Nhap lua chon (0-8): "
 
 if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
-if %choice%==2 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
+if %choice%==2 call :app_menu "Adobe After Effects" "After Effects" "After Effects 2024" "%LinkDL%/AfterEffects2024"
 if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "ADOBE ILLUSTRATOR" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
+if %choice%==4 call :app_menu "Adobe InDesign" "InDesign" "InDesign 2024" "%LinkDL%/InDesign2024"
+if %choice%==5 call :app_menu "Adobe Media Encoder" "Media Encoder" "Media Encoder 2024" "%LinkDL%/MediaEncoder2024"
+if %choice%==6 call :app_menu "Adobe Lightroom Classic" "Lightroom Classic" "Lightroom Classic 2024" "%LinkDL%/LightroomClassic2024.zip"
+if %choice%==7 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
+if %choice%==8 call :app_menu "Adobe Premiere Pro" "Premiere Pro" "Premiere Pro 2024" "%LinkDL%/PremierePro2024.zip"
 if %choice%==0 goto menu
 goto adobe
 
@@ -1044,7 +1055,7 @@ echo:     %W%[==^> Dang giai nen va cai dat...]%Res%
 powershell -Command "Expand-Archive -Path '%source%\app.zip' -DestinationPath '%source%' -Force"
 echo:     %W%[==^> Dang tim file setup.exe trong cac thu muc con...]%Res%
 set "setupPath="
-for /r "%source%" %%F in (setup.exe set-up.exe) do (
+for /r "%source%" %%F in (setup.exe set-up.exe autoplay.exe) do (
     if exist "%%F" (
         set "setupPath=%%F"
         goto :found_setup
@@ -1059,6 +1070,7 @@ if defined setupPath (
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
+    goto sub_menu
 )
 
 :: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
@@ -1173,7 +1185,7 @@ echo %C%==================================================%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
 echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% 3dsMax 2022
-echo:         %G%[4]%Res% Revit	
+echo:         %G%[4]%Res% Revit	2026
 echo:         %G%[5]%Res% SketchUp 2021
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
@@ -1182,8 +1194,8 @@ set /p auchoice="Nhap lua chon (0-5): "
 
 if %auchoice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
 if %auchoice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
-if %auchoice%==3 call :autodesk_menu "3dsMax2022" "3DsMax.exe" "3dsMax 2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
-if %auchoice%==4 call :autodesk_menu "Revit" "Revit.exe" "REVIT 20xx" "https://"
+if %auchoice%==3 call :autodesk_menu "3dsMax 2022" "3DsMax.exe" "3dsMax 2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
+if %auchoice%==4 call :autodesk_menu "Revit 2026" "Revit.exe" "REVIT 2026" "%LinkDL%/Revit2026.zip" "%LinkDL%/FixRevit2026.zip"
 if %auchoice%==5 call :autodesk_menu "SketchUp 2021" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
 if %auchoice%==0 goto menu
 goto autodesk
@@ -1259,9 +1271,19 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
+    echo:     %Y%[==^> Dang kiem tra lai cai dat...]%Res%
+    set "foundPath="
+    if exist "%path64%\%appExe%" set "foundPath=%path64%"
+    if exist "%path32%\%appExe%" set "foundPath=%path32%"
+    if defined foundPath (
+        echo:    %R%[[!] Kiem tra thay %appName% da duoc cai dat tai:]%Res% "%foundPath%"
+        echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
+        timeout /t 3 >nul
+        goto job_patch
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
+    goto subdesk_menu
 )
 
 :: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
