@@ -1185,7 +1185,7 @@ echo %C%==================================================%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
 echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% 3dsMax 2022
-echo:         %G%[4]%Res% Revit	2026
+echo:         %G%[4]%Res% Revit 2026
 echo:         %G%[5]%Res% SketchUp 2021
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
@@ -1271,15 +1271,7 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
-    echo:     %Y%[==^> Dang kiem tra lai cai dat...]%Res%
-    set "foundPath="
-    if exist "%path64%\%appExe%" set "foundPath=%path64%"
-    if exist "%path32%\%appExe%" set "foundPath=%path32%"
-    if defined foundPath (
-        echo:    %R%[[!] Kiem tra thay %appName% da duoc cai dat tai:]%Res% "%foundPath%"
-        echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
-        timeout /t 3 >nul
-        goto job_patch
+    goto job_full
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
