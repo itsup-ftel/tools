@@ -67,7 +67,7 @@ echo  %G%=======================================================================
 echo                                     %W%IT SUPPORT PROFESSIONAL TOOLKIT - VERSION 26.5%Res%
 echo  %G%====================================================================================================================%Res%
 echo.
-echo     %Y%[ 1. KIEM TRA]%Res%            %Y%[ 2. HE THONG ]%Res%       %Y%[ 3. MANG ^& INTERNET ]%Res%    %Y%[ 4. MAY IN ]%Res%
+echo     %Y%[ 1. KIEM TRA]%Res%           %Y%[ 2. HE THONG ]%Res%        %Y%[ 3. NETWORK ]%Res%     %Y%[ 4. MAY IN ]%Res%
 echo.
 echo      %G%1.%Res% Thong so may PC       %G%7.%Res% Don dep rac         %G%13.%Res% Lay MAC ^& Serial     %G%19.%Res% Restart Spooler
 echo      %G%2.%Res% Thong tin O cung      %G%8.%Res% Sua loi SFC/DISM    %G%14.%Res% Cau hinh IP/DNS      %G%20.%Res% Xoa ket lenh in
