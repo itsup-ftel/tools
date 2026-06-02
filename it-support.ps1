@@ -1262,7 +1262,7 @@ set "setupPath="
 for /r "%source%" %%F in (setup.exe set-up.exe) do (
     if exist "%%F" (
         set "setupPath=%%F"
-        goto :found_setup
+        goto found_setup
     )
 )
 
