@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -okchua ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -ok ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -1007,6 +1007,8 @@ set "downloadURL=%~4"
 
 set "path64=%ProgramFiles%\Adobe\%appName%"
 set "path32=%ProgramFiles(x86)%\Adobe\%appName%"
+set "folder64=%ProgramFiles%\%titleName%"
+set "folder32=%ProgramFiles(x86)%\%titleName%"
 
 :sub_menu
 cls
@@ -1035,6 +1037,10 @@ echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 set "foundPath="
 if exist "%path64%\%appExe%" set "foundPath=%path64%"
 if exist "%path32%\%appExe%" set "foundPath=%path32%"
+if exist "%folder64%\%appExe%" set "foundPath=%folder64%"
+if exist "%folder32%\%appExe%" set "foundPath=%folder32%"
+if exist "%folder64%\%titleName%\%appExe%" set "foundPath=%folder64%\%titleName%"
+if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%"
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
@@ -1058,7 +1064,7 @@ set "setupPath="
 for /r "%source%" %%F in (setup.exe set-up.exe autoplay.exe) do (
     if exist "%%F" (
         set "setupPath=%%F"
-        goto :found_setup
+        goto found_setup
     )
 )
 
@@ -1067,6 +1073,7 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
+    goto task_full
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
@@ -1106,20 +1113,25 @@ set "common32=%ProgramFiles(x86)%\Common Files\Adobe"
 
 echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
 
-:: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
-for %%P in ("%path64%" "%%path32%%" "%common64%" "%common32%") do (
-    :: Kiểm tra nếu thư mục tồn tại thì mới tiến hành chặn để tránh rác Firewall
+setlocal enabledelayedexpansion
+for %%P in ("%foundPath%" "%common64%" "%common32%" ) do (
     if exist "%%~P" (
         for %%D in (in out) do (
-            :: Chặn file thực thi chính của ứng dụng (chỉ áp dụng nếu là thư mục ứng dụng gốc)
+            :: Chặn file thực thi chính của ứng dụng
             if exist "%%~P\%appExe%" (
-                netsh advfirewall firewall add rule name="Adobe_%appExe%_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
+                netsh advfirewall firewall add rule name="Adobe_!appExe!_%%D" dir=%%D program="%%~P\%appExe%" action=block >nul 2>&1
             )
-            :: Chặn toàn bộ kết nối từ thư mục (bao gồm cả thư mục cài đặt và thư mục Common Files)
-            netsh advfirewall firewall add rule name="Adobe_Folder_Block_%%D" dir=%%D program="%%~P" action=block >nul 2>&1
+            :: Quét và chặn tất cả các file .exe con
+            for /r "%%~P" %%F in (*.exe) do (
+                if exist "%%~F" (
+                    netsh advfirewall firewall add rule name="Adobe_Folder_!appExe!_%%D" dir=%%D program="%%~F" action=block >nul 2>&1
+                )
+            )
         )
     )
 )
+
+endlocal
 netsh advfirewall set allprofiles state on >nul 2>&1
 echo:     %G%[OK] Da thiet lap Firewall (bao gom Common Files) thanh cong.%Res%
 
@@ -1298,8 +1310,6 @@ xcopy "%source%\Fix\*.*" "%foundPath%\" /E /I /H /Y /R /Q >nul
 echo:     %G%[OK] Da fix file %appName% thanh cong.%Res%
 
 :job_security
-::set "autodesk64=%ProgramFiles%\Autodesk"
-::set "autodesk32=%ProgramFiles(x86)%\Autodesk"
 set "common64=%ProgramFiles%\Common Files\Autodesk Shared"
 set "common32=%ProgramFiles(x86)%\Common Files\Autodesk Shared"
 set "roamingdesk=%AppData%\Autodesk"
@@ -1308,7 +1318,6 @@ set "localdesk=%localappdata%\Autodesk"
 echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
 
 setlocal enabledelayedexpansion
-
 for %%P in ("%foundPath%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
     if exist "%%~P" (
         for %%D in (in out) do (
