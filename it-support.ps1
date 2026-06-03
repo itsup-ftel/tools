@@ -988,10 +988,10 @@ echo.
 set /p choice="Nhap lua chon (0-8): "
 
 if %choice%==1 call :app_menu "Acrobat DC" "Acrobat.exe" "Acrobat" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
-if %choice%==2 call :app_menu "Adobe After Effects" "AfterFX.exe" "Adobe After Effects 2024" "%LinkDL%/AfterEffects2024"
+if %choice%==2 call :app_menu "Adobe After Effects" "AfterFX.exe" "Adobe After Effects 2024" "%LinkDL%/AfterEffects2024.zip"
 if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "Adobe Illustrator 2024" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
-if %choice%==4 call :app_menu "Adobe InDesign" "InDesign.exe" "Adobe InDesign 2024" "%LinkDL%/InDesign2024"
-if %choice%==5 call :app_menu "Adobe Media Encoder" "Adobe Media Encoder.exe" "Adobe Media Encoder 2024" "%LinkDL%/MediaEncoder2024"
+if %choice%==4 call :app_menu "Adobe InDesign" "InDesign.exe" "Adobe InDesign 2024" "%LinkDL%/InDesign2024.zip"
+if %choice%==5 call :app_menu "Adobe Media Encoder" "Adobe Media Encoder.exe" "Adobe Media Encoder 2024" "%LinkDL%/MediaEncoder2024.zip"
 if %choice%==6 call :app_menu "Adobe Lightroom Classic" "Adobe Lightroom Classic.exe" "Adobe Lightroom Classic" "%LinkDL%/LightroomClassic2024.zip"
 if %choice%==7 call :app_menu "Adobe Photoshop" "Photoshop.exe" "Photoshop 2024" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
 if %choice%==8 call :app_menu "Adobe Premiere Pro" "Adobe Premiere Pro.exe" "Adobe Premiere Pro 2024" "%LinkDL%/PremierePro2024.zip"
