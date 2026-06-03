@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -sket ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -sketch ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -1240,10 +1240,10 @@ echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 set "foundPath="
 if exist "%path64%\%appExe%" set "foundPath=%path64%"
 if exist "%path32%\%appExe%" set "foundPath=%path32%"
-if exist "%folder64%\%appName%\%appExe%" set "foundPath=%folder64%"
-if exist "%folder32%\%appName%\%appExe%" set "foundPath=%folder32%"
-if exist "%browse64%\%appName%\%titleName%\%appExe%" set "foundPath=%browse64%"
-if exist "%browse32%\%appName%\%titleName%\%appExe%" set "foundPath=%browse32%"
+if exist "%folder64%\%appExe%" set "foundPath=%folder64%"
+if exist "%folder32%\%appExe%" set "foundPath=%folder32%"
+if exist "%folder64%\%titleName%\%appExe%" set "foundPath=%folder64%\%titleName%"
+if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%"
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
@@ -1310,7 +1310,7 @@ set "localdesk=%localappdata%\Autodesk"
 echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
 
 :: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
-for %%P in ("%path64%" "%%path32%%" "%foundPath%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
+for %%P in ("%foundPath%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
     :: Kiểm tra nếu thư mục tồn tại thì mới tiến hành chặn để tránh rác Firewall
     if exist "%%~P" (
         for %%D in (in out) do (
