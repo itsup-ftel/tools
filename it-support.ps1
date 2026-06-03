@@ -1256,7 +1256,6 @@ echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\autodesk.zip" "%downloadURL%"
 
-
 echo:     %W%[==^> Tam tat Antivirus de chay cai dat...]%Res%
 powershell -Command "Add-MpPreference -ExclusionPath '%source%'" >nul 2>&1
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true -DisableBehaviorMonitoring $true -DisableIOAVProtection $true -DisableIntrusionPreventionSystem $true -DisableScriptScanning $true -SubmitSamplesConsent 2" >nul 2>&1
@@ -1296,7 +1295,6 @@ powershell -Command "Expand-Archive -Path '%source%\Fix.zip' -DestinationPath '%
 
 echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
 xcopy "%source%\Fix\*.*" "%foundPath%\" /E /I /H /Y /R /Q >nul
-::xcopy "%source%\Fix\*.*" "%path32%\" /E /I /H /Y /R /Q >nul
 echo:     %G%[OK] Da fix file %appName% thanh cong.%Res%
 
 :job_security
@@ -1308,7 +1306,7 @@ set "roamingdesk=%AppData%\Autodesk"
 set "localdesk=%localappdata%\Autodesk"
 
 echo:     %W%[==^> Dang thiet lap Firewall Rules cho %appName% va Common Files...]%Res%
-
+setlocal enabledelayedexpansion
 :: Vòng lặp tối ưu quét qua tất cả thư mục ứng dụng và thư mục Common Files
 for %%P in ("%foundPath%" "%common64%" "%common32%" "%roamingdesk%" "%localdesk%") do (
     :: Kiểm tra nếu thư mục tồn tại thì mới tiến hành chặn để tránh rác Firewall
