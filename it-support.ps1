@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -ok ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -final ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -987,14 +987,14 @@ echo %C%==================================================%Res%
 echo.
 set /p choice="Nhap lua chon (0-8): "
 
-if %choice%==1 call :app_menu "Acrobat DC" "Acrobat" "Acrobat DC Pro" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
-if %choice%==2 call :app_menu "Adobe After Effects" "After Effects" "After Effects 2024" "%LinkDL%/AfterEffects2024"
-if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "ADOBE ILLUSTRATOR" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
-if %choice%==4 call :app_menu "Adobe InDesign" "InDesign" "InDesign 2024" "%LinkDL%/InDesign2024"
-if %choice%==5 call :app_menu "Adobe Media Encoder" "Media Encoder" "Media Encoder 2024" "%LinkDL%/MediaEncoder2024"
-if %choice%==6 call :app_menu "Adobe Lightroom Classic" "Lightroom Classic" "Lightroom Classic 2024" "%LinkDL%/LightroomClassic2024.zip"
-if %choice%==7 call :app_menu "Adobe Photoshop" "photoshop.exe" "ADOBE PHOTOSHOP" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
-if %choice%==8 call :app_menu "Adobe Premiere Pro" "Premiere Pro" "Premiere Pro 2024" "%LinkDL%/PremierePro2024.zip"
+if %choice%==1 call :app_menu "Acrobat DC" "Acrobat.exe" "Acrobat" "https://trials.adobe.com/AdobeProducts/APRO/Acrobat_HelpX/win32/Acrobat_DC_Web_x64_WWMUI.zip"
+if %choice%==2 call :app_menu "Adobe After Effects" "AfterFX.exe" "Adobe After Effects 2024" "%LinkDL%/AfterEffects2024"
+if %choice%==3 call :app_menu "Adobe Illustrator" "Illustrator.exe" "Adobe Illustrator 2024" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Illustrator-2025-29.0.1.192-m0nkrus.MUI.zip"
+if %choice%==4 call :app_menu "Adobe InDesign" "InDesign.exe" "Adobe InDesign 2024" "%LinkDL%/InDesign2024"
+if %choice%==5 call :app_menu "Adobe Media Encoder" "Adobe Media Encoder.exe" "Adobe Media Encoder 2024" "%LinkDL%/MediaEncoder2024"
+if %choice%==6 call :app_menu "Adobe Lightroom Classic" "Adobe Lightroom Classic.exe" "Adobe Lightroom Classic" "%LinkDL%/LightroomClassic2024.zip"
+if %choice%==7 call :app_menu "Adobe Photoshop" "Photoshop.exe" "Photoshop 2024" "https://repo.sxl.net/_h/design/adobe.cc/Adobe-Photoshop-2025-26.0.0.26-m0nkrus.MUI.zip"
+if %choice%==8 call :app_menu "Adobe Premiere Pro" "Adobe Premiere Pro.exe" "Adobe Premiere Pro 2024" "%LinkDL%/PremierePro2024.zip"
 if %choice%==0 goto menu
 goto adobe
 
@@ -1007,6 +1007,8 @@ set "downloadURL=%~4"
 
 set "path64=%ProgramFiles%\Adobe\%appName%"
 set "path32=%ProgramFiles(x86)%\Adobe\%appName%"
+set "location64=%ProgramFiles%\Adobe\%titleName%"
+set "location32=%ProgramFiles(x86)%\Adobe\%titleName%"
 set "folder64=%ProgramFiles%\%titleName%"
 set "folder32=%ProgramFiles(x86)%\%titleName%"
 
@@ -1039,8 +1041,10 @@ if exist "%path64%\%appExe%" set "foundPath=%path64%"
 if exist "%path32%\%appExe%" set "foundPath=%path32%"
 if exist "%folder64%\%appExe%" set "foundPath=%folder64%"
 if exist "%folder32%\%appExe%" set "foundPath=%folder32%"
-if exist "%folder64%\%titleName%\%appExe%" set "foundPath=%folder64%\%titleName%"
-if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%"
+if exist "%location64%\%appExe%" set "foundPath=%location64%"
+if exist "%location32%\%appExe%" set "foundPath=%location32%"
+if exist "%location64%\Support Files\%appExe%" set "foundPath=%location64%\Support Files"
+if exist "%location64%\Support Files\Contents\Windows\%appExe%" set "foundPath=%location64%\Support Files\Contents\Windows"
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
