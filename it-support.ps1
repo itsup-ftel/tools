@@ -76,7 +76,7 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -sk ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%        %C%[ 6. CONG CU 2 -sket ]%Res%       %C%[ 7. CAI DAT ]%Res%          %C%[ 8. FIX LOI ]%Res%
 echo.
 echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
 echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
@@ -1194,7 +1194,7 @@ set /p auchoice="Nhap lua chon (0-5): "
 
 if %auchoice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
 if %auchoice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
-if %auchoice%==3 call :autodesk_menu "3dsMax" "3DsMax.exe" "3dsMax 2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
+if %auchoice%==3 call :autodesk_menu "3dsMax" "3DsMax.exe" "2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
 if %auchoice%==4 call :autodesk_menu "Revit 2026" "Revit.exe" "REVIT 2026" "%LinkDL%/Revit2026.zip" "%LinkDL%/FixRevit2026.zip"
 if %auchoice%==5 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
 if %auchoice%==0 goto menu
@@ -1240,8 +1240,10 @@ echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 set "foundPath="
 if exist "%path64%\%appExe%" set "foundPath=%path64%"
 if exist "%path32%\%appExe%" set "foundPath=%path32%"
-if exist "%folder64%\%appExe%" set "foundPath=%folder64%"
-if exist "%folder32%\%appExe%" set "foundPath=%folder32%"
+if exist "%folder64%\%appName%\%appExe%" set "foundPath=%folder64%"
+if exist "%folder32%\%appName%\%appExe%" set "foundPath=%folder32%"
+if exist "%browse64%\%appName%\%titleName%\%appExe%" set "foundPath=%browse64%"
+if exist "%browse32%\%appName%\%titleName%\%appExe%" set "foundPath=%browse32%"
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
