@@ -412,7 +412,7 @@ goto print
 :manual_mayin
 cls
 echo %C%Dang mo hop thoai add may in thu cong=%Res%
-powershell -Command "Start-Process rundll32.exe 'shell32.dll,SHHelpShortcuts_RunDLL AddPrinter'"
+powershell -Command "rundll32 printui.dll,PrintUIEntry /il"
 echo.
 pause
 goto print
