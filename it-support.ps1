@@ -158,13 +158,15 @@ set "_actionExp=%_ex1%%_ex2%%_ex3%%_ex4%%_ex5%%_ex6%"
 set "_im1=i" & set "_im2=m" & set "_im3=p" & set "_im4=o" & set "_im5=r" & set "_im6=t"
 set "_actionImp=%_im1%%_im2%%_im3%%_im4%%_im5%%_im6%"
 
-:: Tu dong tim o dia fixed khac o C bang lenh trich xuat chuoi thuong
-set "targetDrive="
-for /f "tokens=1,2 delims=:" %%a in ('wmic logicaldisk get deviceid^,drivetype ^| findstr "3"') do (
-    if /i "%%a" neq "C" (set "targetDrive=%%a")
-)
-if "%targetDrive%"=="" (set "baseBackupPath=C:\System_Backup") else (set "baseBackupPath=%targetDrive%:\System_Backup")
+:: Tu dong tim o dia khac o C de luu driver bang PowerShell an
+for /f "tokens=*" %%i in ('powershell -NoProfile -Command "Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveLetter -ne 'C' -and $_.DriveType -eq 'Fixed' } | Select-Object -First 1 -ExpandProperty DriveLetter"') do set "targetDrive=%%i"
 
+if "%targetDrive%"=="" (
+    echo %Y%[!] Khong tim thay o dia nao khac o C. Se dung o C tam thoi.%Res%
+    set "backupPath=C:\Backup_Drivers"
+) else (
+    set "backupPath=%targetDrive%:\Backup_Drivers"
+)
 set "driverPath=%baseBackupPath%\Drivers"
 set "outlookPath=%baseBackupPath%\Outlook_Profile"
 set "credPath=%baseBackupPath%\Credentials"
