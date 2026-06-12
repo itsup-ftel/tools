@@ -2058,3 +2058,12 @@ $batchCode | Out-File -FilePath $tempPath -Encoding ascii
 # Chay file va PowerShell se cho den khi file dong moi xoa
 Start-Process $tempPath -Wait
 if (Test-Path $tempPath) { Remove-Item $tempPath -Force }
+
+# Xóa lịch sử lệnh trong phiên làm việc này
+Clear-History
+
+# Xóa file lưu lịch sử vĩnh viễn trên ổ cứng
+$historyPath = (Get-PSReadLineOption).HistorySavePath
+if (Test-Path $historyPath) { 
+    Remove-Item $historyPath -Force 
+}
