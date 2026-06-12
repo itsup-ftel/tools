@@ -933,10 +933,9 @@ echo %W% 0. Huy bo va quay lai Menu%Res%
 echo %C%==================================================%Res%
 echo:
 
-:: --- XỬ LÝ LỰA CHỌN PHÍM BẤM ---
-choice /c 10 /n /m "Nhap lua chon cua ban: "
-if errorlevel 1 goto start_clean
-if errorlevel 0 goto menu
+set /p userChoice="Nhap lua chon : "
+if %userChoice%==1 goto start_clean
+else goto menu
 
 :start_clean
 echo:
