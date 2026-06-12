@@ -128,7 +128,7 @@ if /i "%opt%"=="36" goto activeMAS
 if /i "%opt%"=="37" goto cleanup
 if /i "%opt%"=="38" goto appfree
 if /i "%opt%"=="39" goto appvip
-if /i "%opt%"=="40" goto saoluuphuchoi
+if /i "%opt%"=="40" goto BackupnRestore
 if /i "%opt%"=="41" goto dichvucong
 if /i "%opt%"=="42" goto foxiteditor
 if /i "%opt%"=="43" goto adobe
@@ -140,7 +140,66 @@ goto menu
 
 :: --- CAC HAM XU LY ---
 
+:BackupnRestore
+cls
+:: Tự động tìm ổ đĩa khác ổ C để lưu driver bằng PowerShell ẩn
+for /f "tokens=*" %%i in ('powershell -NoProfile -Command "Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveLetter -ne 'C' -and $_.DriveType -eq 'Fixed' } | Select-Object -First 1 -ExpandProperty DriveLetter"') do set "targetDrive=%%i"
 
+if "%targetDrive%"=="" (
+    echo %Y%[!] Không tìm thấy ổ đĩa nào khác ổ C. Sẽ dùng ổ C tạm thời.%Res%
+    set "backupPath=C:\Backup_Drivers"
+) else (
+    set "backupPath=%targetDrive%:\Backup_Drivers"
+)
+
+echo %C%==========================================%Res%
+echo %C%   CÔNG CỤ SAO LƯU VÀ PHỤC HỒI DRIVER     %Res%
+echo %C%==========================================%Res%
+echo %G% Thư mục lưu trữ mặc định: %backupPath%%Res%
+echo ------------------------------------------
+echo 1. Sao lưu toàn bộ Driver
+echo 2. Phục hồi Driver đã sao lưu
+echo 3. Thoát về Menu chính
+echo ------------------------------------------
+
+set /p choice="Nhập lựa chọn của bạn (1-3): "
+
+if "%choice%"=="1" goto SAOLUU
+if "%choice%"=="2" goto PHUCHOI
+if "%choice%"=="3" goto Menu
+echo %R%[-] Lựa chọn không hợp lệ!%Res%
+pause
+goto BackupnRestore
+
+:SAOLUU
+echo.
+echo %C%[*] Đang tiến hành sao lưu Driver... Vui lòng chờ...%Res%
+if not exist "%backupPath%" mkdir "%backupPath%"
+
+:: Gọi PowerShell ngầm để xuất driver gốc Windows
+powershell -NoProfile -Command "Export-WindowsDriver -Online -Destination '%backupPath%' -ErrorAction SilentlyContinue" >nul
+
+if %errorLevel%==0 (
+    echo %G%[+] SAO LƯU THÀNH CÔNG!%Res%
+    echo %G%[+] Driver đã được lưu tại: %backupPath%%Res%
+) else (
+    echo %R%[-] Có lỗi xảy ra trong quá trình sao lưu.%Res%
+)
+pause
+goto BackupnRestore
+
+:PHUCHOI
+echo.
+echo %C%[*] Đang tiến hành phục hồi Driver... Vui lòng chờ...%Res%
+if not exist "%backupPath%" (
+    echo %R%[-] Thất bại: Không tìm thấy thư mục sao lưu tại %backupPath%%Res%
+) else (
+    :: Sử dụng pnputil gốc của CMD để cài đặt driver
+    pnputil.exe /add-driver "%backupPath%\*.inf" /subdirs /install
+    echo %G%[+] KHOI PHUC DRIVER HOAN TAT!%Res%
+)
+pause
+goto BackupnRestore
 
 :bitlocker
 cls
