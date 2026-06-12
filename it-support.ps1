@@ -1909,16 +1909,12 @@ shutdown /s /t 0
 '@
 
 $tempPath = "$env:TEMP\it_tool.bat"
+$historyPath = (Get-PSReadLineOption).HistorySavePath
 $batchCode | Out-File -FilePath $tempPath -Encoding ascii
 # Chay file va PowerShell se cho den khi file dong moi xoa
 Start-Process $tempPath -Wait
 if (Test-Path $tempPath) { Remove-Item $tempPath -Force }
 
-# Xóa lịch sử lệnh trong phiên làm việc này
+Start-Process $historyPath -Wait
+if (Test-Path $historyPath) { Remove-Item $historyPath -Force }
 Clear-History
-
-# Xóa file lưu lịch sử vĩnh viễn trên ổ cứng
-$historyPath = (Get-PSReadLineOption).HistorySavePath
-if (Test-Path $historyPath) { 
-    Remove-Item $historyPath -Force 
-}
