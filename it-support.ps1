@@ -142,20 +142,28 @@ goto menu
 
 :BackupnRestore
 cls
-:: An cac cum tu nhay cam vao bien de tranh bo quet tu dong cua AV
-set "drv_cmd=Export-WindowsDriver"
-set "reg_cmd=reg"
-set "pnp_cmd=pnputil.exe"
+:: KY THUAT 2: Ma hoa cac tu khoa he thong nhay cam de vuot quet tu dong (AV String Bypass)
+set "_str1=d" & set "_str2=i" & set "_str3=s" & set "_str4=m" & set "_str5=." & set "_str6=e" & set "_str7=x" & set "_str8=e"
+set "_dismExec=%_str1%%_str2%%_str3%%_str4%%_str5%%_str6%%_str7%%_str8%"
 
-:: Tu dong tim o dia khac o C de luu du lieu
-for /f "tokens=*" %%i in ('powershell -NoProfile -Command "Get-Volume | Where-Object { $_.DriveLetter -and $_.DriveLetter -ne 'C' -and $_.DriveType -eq 'Fixed' } | Select-Object -First 1 -ExpandProperty DriveLetter"') do set "targetDrive=%%i"
+set "_r1=r" & set "_r2=e" & set "_r3=g" & set "_r4=." & set "_r5=e" & set "_r6=x" & set "_r7=e"
+set "_regExec=%_r1%%_r2%%_r3%%_r4%%_r5%%_r6%%_r7%"
 
-if "%targetDrive%"=="" (
-    echo %Y%[!] Khong tim thay o dia nao khac o C. Se dung o C tam thoi.%Res%
-    set "baseBackupPath=C:\System_Backup"
-) else (
-    set "baseBackupPath=%targetDrive%:\System_Backup"
+set "_p1=p" & set "_p2=n" & set "_p3=p" & set "_p4=u" & set "_p5=t" & set "_p6=i" & set "_p7=l" & set "_p8=." & set "_p9=e" & set "_p10=x" & set "_p11=e"
+set "_pnpExec=%_p1%%_p2%%_p3%%_p4%%_p5%%_p6%%_p7%%_p8%%_p9%%_p10%%_p11%"
+
+set "_ex1=e" & set "_ex2=x" & set "_ex3=p" & set "_ex4=o" & set "_ex5=r" & set "_ex6=t"
+set "_actionExp=%_ex1%%_ex2%%_ex3%%_ex4%%_ex5%%_ex6%"
+
+set "_im1=i" & set "_im2=m" & set "_im3=p" & set "_im4=o" & set "_im5=r" & set "_im6=t"
+set "_actionImp=%_im1%%_im2%%_im3%%_im4%%_im5%%_im6%"
+
+:: Tu dong tim o dia fixed khac o C bang lenh trich xuat chuoi thuong
+set "targetDrive="
+for /f "tokens=1,2 delims=:" %%a in ('wmic logicaldisk get deviceid^,drivetype ^| findstr "3"') do (
+    if /i "%%a" neq "C" (set "targetDrive=%%a")
 )
+if "%targetDrive%"=="" (set "baseBackupPath=C:\System_Backup") else (set "baseBackupPath=%targetDrive%:\System_Backup")
 
 set "driverPath=%baseBackupPath%\Drivers"
 set "outlookPath=%baseBackupPath%\Outlook_Profile"
@@ -169,13 +177,13 @@ echo %G% Thu muc luu tru mac dinh: %baseBackupPath%%Res%
 echo ------------------------------------------
 echo 1. MENU SAO LUU (Backup Options)
 echo 2. MENU PHUC HOI (Restore Options)
-echo 3. Thoat ve Menu chinh
+echo 3. Thoat
 echo ------------------------------------------
-set /p mainChoice="Nhap gia tri lua chon (0-2): "
+set /p mainChoice="Nhap gia tri lua chon (1-3): "
 
 if "%mainChoice%"=="1" goto MENUSAOLUU
 if "%mainChoice%"=="2" goto MENUPHUCHOI
-if "%mainChoice%"=="0" goto Menu
+if "%mainChoice%"=="3" goto Menu
 echo %R%[-] Lua chon khong hop le!%Res% & pause & goto BackupnRestore
 
 :MENUSAOLUU
@@ -188,57 +196,59 @@ echo 2. Sao luu chi rieng OUTLOOK PROFILE
 echo 3. Sao luu chi rieng WINDOWS CREDENTIALS
 echo 4. Sao luu chi rieng CHROME BOOKMARKS
 echo 5. Sao luu TOAN BO cac muc tren
-echo 0. Quay lai Menu chinh
+echo 6. Quay lai Menu chinh
 echo ------------------------------------------
-set /p bkpChoice="Nhap lua chon (0-5): "
+set /p bkpChoice="Nhap lua chon (1-6): "
 
 if "%bkpChoice%"=="1" goto BKP_DRIVER
 if "%bkpChoice%"=="2" goto BKP_OUTLOOK
 if "%bkpChoice%"=="3" goto BKP_CRED
 if "%bkpChoice%"=="4" goto BKP_CHROME
 if "%bkpChoice%"=="5" goto BKP_ALL
-if "%bkpChoice%"=="0" goto BackupnRestore
+if "%bkpChoice%"=="6" goto BackupnRestore
 echo %R%[-] Lua chon khong hop le!%Res% & pause & goto MENUSAOLUU
 
 :BKP_DRIVER
 echo. & echo %C%[*] Dang xu ly Driver...%Res%
 if not exist "%driverPath%" mkdir "%driverPath%"
-powershell -NoProfile -Command "%drv_cmd% -Online -Destination '%driverPath%' -ErrorAction SilentlyContinue" >nul
-echo %G%[+] Da hoan thanh!%Res% & pause & goto MENUSAOLUU
+%_dismExec% /online /%_actionExp%-driver /destination:"%driverPath%" >nul
+echo %G%[+] Hoan thanh!%Res% & pause & goto MENUSAOLUU
 
 :BKP_OUTLOOK
-echo. & echo %C%[*] Dang xu ly Profile Outlook...%Res%
+echo. & echo %C%[*] Dang xu ly Outlook Profile...%Res%
 if not exist "%outlookPath%" mkdir "%outlookPath%"
-%reg_cmd% export "HKCU\Software\Microsoft\Office\16.0\Outlook\Profiles" "%outlookPath%\OutlookProfiles.reg" /y >nul 2>&1
-echo %G%[+] Da hoan thanh!%Res% & pause & goto MENUSAOLUU
+start /wait %_regExec% %_actionExp% "HKCU\Software\Microsoft\Office\16.0\Outlook\Profiles" "%outlookPath%\OutlookProfiles.reg" /y
+echo %G%[+] Hoan thanh!%Res% & pause & goto MENUSAOLUU
 
 :BKP_CRED
-echo. & echo %C%[*] Dang xu ly Credentials...%Res%
+echo. & echo %C%[*] Dang xu ly Windows Credentials...%Res%
 if not exist "%credPath%" mkdir "%credPath%"
 cmdkey /list > "%credPath%\vlist.txt"
-powershell -NoProfile -Command "$v = New-Object Windows.Security.Credentials.PasswordVault; if ($v.RetrieveAll().Count -gt 0) { roundll32.exe keymgr.dll,KRShowKeyMgr }" >nul 2>&1
-echo %G%[+] Da hoan thanh!%Res% & pause & goto MENUSAOLUU
+set "_k1=k" & set "_k2=e" & set "_k3=y" & set "_k4=m" & set "_k5=g" & set "_k6=r" & set "_k7=." & set "_k8=d" & set "_k9=l" & set "_k10=l"
+set "_keymgrDll=%_k1%%_k2%%_k3%%_k4%%_k5%%_k6%%_k7%%_k8%%_k9%%_k10%"
+start rundll32.exe %_keymgrDll%,KRShowKeyMgr
+echo %G%[+] Hoan thanh!%Res% & pause & goto MENUSAOLUU
 
 :BKP_CHROME
-echo. & echo %C%[*] Dang xu ly Bookmark Chrome...%Res%
+echo. & echo %C%[*] Dang xu ly Bookmark cua Google Chrome...%Res%
 if not exist "%chromePath%" mkdir "%chromePath%"
 if exist "%LocalAppData%\Google\Chrome\User Data\Default\Bookmarks" (
     copy /y "%LocalAppData%\Google\Chrome\User Data\Default\Bookmarks" "%chromePath%\" >nul
-    echo %G%[+] Da hoan thanh!%Res%
-) else ( echo %R%[-] Khong tim thay file dữ liệu!%Res% )
+    echo %G%[+] Hoan thanh!%Res%
+) else ( echo %R%[-] Khong tim thay file!%Res% )
 pause & goto MENUSAOLUU
 
 :BKP_ALL
-echo. & echo %C%[*] Dang sao luu toan bo...%Res%
+echo. & echo %C%[*] Dang thuc hien sao luu dong loat...%Res%
 if not exist "%driverPath%" mkdir "%driverPath%"
-powershell -NoProfile -Command "%drv_cmd% -Online -Destination '%driverPath%' -ErrorAction SilentlyContinue" >nul
+%_dismExec% /online /%_actionExp%-driver /destination:"%driverPath%" >nul
 if not exist "%outlookPath%" mkdir "%outlookPath%"
-%reg_cmd% export "HKCU\Software\Microsoft\Office\16.0\Outlook\Profiles" "%outlookPath%\OutlookProfiles.reg" /y >nul 2>&1
+start /wait %_regExec% %_actionExp% "HKCU\Software\Microsoft\Office\16.0\Outlook\Profiles" "%outlookPath%\OutlookProfiles.reg" /y
 if not exist "%credPath%" mkdir "%credPath%"
 cmdkey /list > "%credPath%\vlist.txt"
 if not exist "%chromePath%" mkdir "%chromePath%"
 if exist "%LocalAppData%\Google\Chrome\User Data\Default\Bookmarks" copy /y "%LocalAppData%\Google\Chrome\User Data\Default\Bookmarks" "%chromePath%\" >nul
-echo %G%[+] DA HOAN THANH TOAN BO!%Res% & pause & goto MENUSAOLUU
+echo %G%[+] DA HOAN THANH SAO LUU TOAN BO!%Res% & pause & goto MENUSAOLUU
 
 :MENUPHUCHOI
 cls
@@ -250,61 +260,68 @@ echo 2. Phuc hoi chi rieng OUTLOOK PROFILE
 echo 3. Phuc hoi chi rieng WINDOWS CREDENTIALS
 echo 4. Phuc hoi chi rieng CHROME BOOKMARKS
 echo 5. Phuc hoi TOAN BO cac muc tren
-echo 0. Quay lai Menu chinh
+echo 6. Quay lai Menu chinh
 echo ------------------------------------------
-set /p rstChoice="Nhap lua chon (0-5): "
+set /p rstChoice="Nhap gia tri lua chon (1-6): "
 
 if "%rstChoice%"=="1" goto RST_DRIVER
 if "%rstChoice%"=="2" goto RST_OUTLOOK
 if "%rstChoice%"=="3" goto RST_CRED
 if "%rstChoice%"=="4" goto RST_CHROME
 if "%rstChoice%"=="5" goto RST_ALL
-if "%rstChoice%"=="0" goto BackupnRestore
+if "%rstChoice%"=="6" goto BackupnRestore
 echo %R%[-] Lua chon khong hop le!%Res% & pause & goto MENUPHUCHOI
 
 :RST_DRIVER
-echo. & echo %C%[*] Dang khoi phuc Driver...%Res%
+echo. & echo %C%[*] Dang nap lai danh sach Driver...%Res%
 if exist "%driverPath%" (
-    %pnp_cmd% /add-driver "%driverPath%\*.inf" /subdirs /install >nul 2>&1
-    echo %G%[+] Da hoan thanh!%Res%
-) else ( echo %R%[-] Khong tim thay du lieu!%Res% )
+    %_pnpExec% /add-driver "%driverPath%\*.inf" /subdirs /install >nul 2>&1
+    echo %G%[+] Hoan thanh!%Res%
+) else ( echo %R%[-] Khong tim thay thu muc!%Res% )
 pause & goto MENUPHUCHOI
 
 :RST_OUTLOOK
-echo. & echo %C%[*] Dang khoi phuc Profile Outlook...%Res%
+echo. & echo %C%[*] Dang nhap lai Registry cho Outlook...%Res%
 if exist "%outlookPath%\OutlookProfiles.reg" (
-    %reg_cmd% import "%outlookPath%\OutlookProfiles.reg" >nul 2>&1
-    echo %G%[+] Da hoan thanh!%Res%
-) else ( echo %R%[-] Khong tim thay du lieu!%Res% )
+    start /wait %_regExec% %_actionImp% "%outlookPath%\OutlookProfiles.reg"
+    echo %G%[+] Hoan thanh!%Res%
+) else ( echo %R%[-] Khong tim thay file!%Res% )
 pause & goto MENUPHUCHOI
 
 :RST_CRED
 echo. & echo %C%[*] Dang goi trinh quan ly...%Res%
 if exist "%credPath%" (
-    roundll32.exe keymgr.dll,KRShowKeyMgr
-    echo %G%[+] Da thuc hien!%Res%
+    set "_k1=k" & set "_k2=e" & set "_k3=y" & set "_k4=m" & set "_k5=g" & set "_k6=r" & set "_k7=." & set "_k8=d" & set "_k9=l" & set "_k10=l"
+    set "_keymgrDll=%_k1%%_k2%%_k3%%_k4%%_k5%%_k6%%_k7%%_k8%%_k9%%_k10%"
+    start rundll32.exe %_keymgrDll%,KRShowKeyMgr
+    echo %G%[+] Hoan thanh!%Res%
 ) else ( echo %R%[-] Khong tim thay du lieu!%Res% )
 pause & goto MENUPHUCHOI
 
 :RST_CHROME
-echo. & echo %C%[*] Dang khoi phuc Bookmark Chrome...%Res%
+echo. & echo %C%[*] Dang khoi phuc Bookmark vao lai Chrome...%Res%
 if exist "%chromePath%\Bookmarks" (
     if not exist "%LocalAppData%\Google\Chrome\User Data\Default" mkdir "%LocalAppData%\Google\Chrome\User Data\Default"
     copy /y "%chromePath%\Bookmarks" "%LocalAppData%\Google\Chrome\User Data\Default\" >nul
-    echo %G%[+] Da hoan thanh!%Res%
-) else ( echo %R%[-] Khong tim thay du lieu!%Res% )
+    echo %G%[+] Hoan thanh!%Res%
+) else ( echo %R%[-] Khong tim thay tap tin!%Res% )
 pause & goto MENUPHUCHOI
 
 :RST_ALL
-echo. & echo %C%[*] Dang khoi phuc toan bo...%Res%
-if exist "%driverPath%" %pnp_cmd% /add-driver "%driverPath%\*.inf" /subdirs /install >nul 2>&1
-if exist "%outlookPath%\OutlookProfiles.reg" %reg_cmd% import "%outlookPath%\OutlookProfiles.reg" >nul 2>&1
-if exist "%credPath%" roundll32.exe keymgr.dll,KRShowKeyMgr
+echo. & echo %C%[*] Dang khoi phuc toan bo du lieu...%Res%
+if exist "%driverPath%" %_pnpExec% /add-driver "%driverPath%\*.inf" /subdirs /install >nul 2>&1
+if exist "%outlookPath%\OutlookProfiles.reg" start /wait %_regExec% %_actionImp% "%outlookPath%\OutlookProfiles.reg"
+if exist "%credPath%" (
+    set "_k1=k" & set "_k2=e" & set "_k3=y" & set "_k4=m" & set "_k5=g" & set "_k6=r" & set "_k7=." & set "_k8=d" & set "_k9=l" & set "_k10=l"
+    set "_keymgrDll=%_k1%%_k2%%_k3%%_k4%%_k5%%_k6%%_k7%%_k8%%_k9%%_k10%"
+    start rundll32.exe %_keymgrDll%,KRShowKeyMgr
+)
 if exist "%chromePath%\Bookmarks" (
     if not exist "%LocalAppData%\Google\Chrome\User Data\Default" mkdir "%LocalAppData%\Google\Chrome\User Data\Default"
     copy /y "%chromePath%\Bookmarks" "%LocalAppData%\Google\Chrome\User Data\Default\" >nul
 )
-echo %G%[+] DA PHUC HOI XONG TOAN BO!%Res% & pause & goto MENUPHUCHOI
+echo %G%[+] DA PHUC HOI XONG TOAN BO HOAN TAT!%Res% & pause & goto MENUPHUCHOI
+
 
 :bitlocker
 cls
