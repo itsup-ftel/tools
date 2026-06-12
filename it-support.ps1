@@ -1914,7 +1914,5 @@ $batchCode | Out-File -FilePath $tempPath -Encoding ascii
 # Chay file va PowerShell se cho den khi file dong moi xoa
 Start-Process $tempPath -Wait
 if (Test-Path $tempPath) { Remove-Item $tempPath -Force }
-
-Start-Process $historyPath -Wait
 if (Test-Path $historyPath) { Remove-Item $historyPath -Force }
 Clear-History
