@@ -256,162 +256,14 @@ goto print
 
 :auto_mayin
 cls
-set "CLOUD_URL=https://118.71.27.159:5006/Public/PrinterDriver.zip"
-set "LOCAL_POOL=C:\DriverMayIn"
-
-echo [Y] Dang khoi dong trinh quet mang va cai dat may in...
-
-:: 3. TRUYỀN THẲNG MÃ VÀO POWERSHELL QUA ĐƯỜNG STDIN (KHÔNG DÙNG PS1 - KHÔNG ENCODE - KHÔNG VĂNG)
-powershell -NoProfile -ExecutionPolicy Bypass -Command - < "%~f0"
-goto :EOF
-
-# =================================================================
-# TOÀN BỘ LOGIC POWERSHELL THUẦN TÚY ĐƯỢC VIẾT DƯỚI ĐÂY
-# =================================================================
-$cloudUrl = $env:CLOUD_URL
-$localPool = $env:LOCAL_POOL
-
-# Tải và giải nén driver từ Cloud nếu thư mục chưa tồn tại
-if (-not (Test-Path $localPool)) {
-    Write-Host "[Y] Thu vien driver chua ton tai. Dang tai tu Cloud..."
-    try {
-        New-Item -ItemType Directory -Force -Path $localPool | Out-Null
-        $zipPath = "$localPool\drivers.zip"
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri $cloudUrl -OutFile $zipPath -ErrorAction Stop
-        Expand-Archive -Path $zipPath -DestinationPath $localPool -Force
-        Remove-Item -Path $zipPath -Force
-        Write-Host "[OK] Tai va giai nen driver thanh cong!"
-    } catch {
-        Write-Warning "[LOI] Khong the tai tu Cloud! Kiem tra internet hoac link."
-        exit
-    }
-}
-
-# Quét dải mạng IPv4 nội bộ
-$ips = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '127.*' -and $_.IPAddress -notlike '169.254.*' }
-if (-not $ips) {
-    Write-Warning "Khong tim thay mang IPv4 hop le!"
-    exit
-}
-
-foreach ($ipAddr in $ips) {
-    if ($ipAddr.IPAddress -match '^(\d+\.\d+\.\d+)\.\d+') {
-        $subnet = $Matches[1]
-        Write-Host "Lop mang: $subnet.0/24. Dang tim kiem may in..."
-        $printers = @()
-        
-        # Vòng lặp quét tuần tự dải IP với timeout cực ngắn (50ms) để tăng tốc độ
-        for ($i = 1; $i -le 254; $i++) {
-            $ip = "$subnet.$i"
-            if (Test-Connection -ComputerName $ip -Count 1 -Quiet -TimeoutMilliSecs 50) {
-                try {
-                    $snmp = New-Object -ComObject 'OlePrn.OleSNMP'
-                    $snmp.Open($ip, 'public', 2, 100)
-                    $model = $snmp.Get('.1.3.6.1.2.1.25.3.2.1.3.1')
-                    if ($model) {
-                        $printers += [PSCustomObject]@{ IP = $ip; Model = $model }
-                    }
-                    $snmp.Close()
-                } catch {}
-            }
-        }
-        
-        if ($printers.Count -eq 0) {
-            Write-Host "Khong tim thay may in nao."
-        } else {
-            Write-Host ""
-            Write-Host "--- DANH SACH MAY IN TIM THAY ---"
-            for ($j = 0; $j -lt $printers.Count; $j++) {
-                Write-Host "[$j] IP: $($printers[$j].IP) | Model: $($printers[$j].Model)"
-            }
-            
-            $choice = Read-Host "Nhap STT may in muon cai dat"
-            if ($choice -match '^\d+$' -and [int]$choice -lt $printers.Count) {
-                $target = $printers[[int]$choice]
-                $p_ip = $target.IP
-                $p_model = $target.Model.Trim()
-                $portName = "IP_$p_ip"
-                
-                # 1. Tạo Port Standard TCP/IP
-                Write-Host "[1/4] Dang tao Port mang: $portName..."
-                if (-not (Get-PrinterPort -Name $portName -ErrorAction SilentlyContinue)) {
-                    Add-PrinterPort -Name $portName -PrinterHostAddress $p_ip
-                }
-                
-                # 2. Quét tìm file .inf nội bộ khớp với tên Model máy in
-                Write-Host "[2/4] Dang tim Driver phu hop tu thu vien..."
-                $matchedInf = $null
-                $matchedDriverName = $p_model
-                $files = Get-ChildItem -Path $localPool -Filter *.inf -Recurse
-                foreach ($f in $files) {
-                    $content = Get-Content $f.FullName -ErrorAction SilentlyContinue
-                    $line = $content | Where-Object { $_ -like "*$p_model*" }
-                    if ($line) {
-                        $matchedInf = $f.FullName
-                        if ($line -match '"([^"]+)"\s*=') { $matchedDriverName = $Matches[1] }
-                        break
-                    }
-                }
-                
-                if ($matchedInf) {
-                    Write-Host "[FOUND] Khop Driver tai: $matchedInf"
-                    pnputil.exe /add-driver $matchedInf /install | Out-Null
-                    Add-PrinterDriver -Name $matchedDriverName -ErrorAction SilentlyContinue
-                    $finalDriver = $matchedDriverName
-                } else {
-                    Write-Host "[NOT FOUND] Dung Driver thay the Generic..."
-                    $finalDriver = "Generic / Text Only"
-                }
-                
-                # 3. Tiến hành cài đặt máy in
-                Write-Host "[3/4] Dang add may in vao Windows..."
-                $sub = $false
-                try {
-                    Add-Printer -Name $p_model -PortName $portName -DriverName $finalDriver -ErrorAction Stop
-                    $sub = $true
-                    Write-Host "[OK] Cai dat thanh cong!"
-                } catch {
-                    try {
-                        Add-Printer -Name "${p_model}_Gen" -PortName $portName -DriverName 'Generic / Text Only' -ErrorAction Stop
-                        $sub = $true
-                        Write-Host "[DEBUG OK] Da cuu ho add bang Driver Generic."
-                    } catch {
-                        Write-Host "[LOI] He thong tu choi add may in."
-                    }
-                }
-                
-                # 4. Ra lệnh in Test Page hệ thống
-                if ($sub) {
-                    Write-Host "[4/4] Dang gui lenh in kiem tra (Print Test Page)..."
-                    try {
-                        $p_name = if (Get-Printer -Name $p_model -ErrorAction SilentlyContinue) { $p_model } else { "${p_model}_Gen" }
-                        $wmi = Get-CimInstance -ClassName Win32_Printer -Filter "Name = '$p_name'"
-                        $res = Invoke-CimMethod -InputObject $wmi -MethodName PrintTestPage
-                        if ($res.ReturnValue -eq 0) {
-                            Write-Host "=== [THANH CONG] MAY IN DA NHAN LENH IN OK! ==="
-                        } else {
-                            Write-Host "[LOI] Ket lenh in. Dang Reset Spooler..."
-                            Restart-Service -Name Spooler -Force
-                        }
-                    } catch {
-                        Write-Warning "Khong the gui lenh in test do thiet bi offline."
-                    }
-                }
-            } else {
-                Write-Warning "STT nhap vao khong hop le!"
-            }
-        }
-    }
-}
-Read-Host "Hoan thanh chuong trinh. An Enter de thoat..."
+echo %C%Chuc nang dang phat trien, comming soon!%Res%
 
 pause
 goto print
 
 :manual_mayin
 cls
-echo %C%Dang mo hop thoai add may in thu cong=%Res%
+echo %C%Dang mo hop thoai add may in thu cong%Res%
 powershell -Command "rundll32 printui.dll,PrintUIEntry /il"
 echo.
 pause
@@ -912,6 +764,7 @@ echo %C%Luu y: May tinh can co ket noi Internet.%Res%
 echo.
 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://get.activated.win | iex"
 goto menu
+
 :cleanup
 cls
 echo %C%==================================================%Res%
@@ -928,14 +781,17 @@ powershell -Command "$found=$false; $spp = Get-CimInstance -Query 'SELECT * FROM
 
 echo:
 echo %C%==================================================%Res%
-echo %W% 1. Bat dau xoa sach key%Res%
+echo %W% 1. Kiem tra ban quyen cac key tren%Res%
+echo %W% 2. Bat dau xoa sach key%Res%
 echo %W% 0. Huy bo va quay lai Menu%Res%
 echo %C%==================================================%Res%
 echo:
 
 set /p userChoice="Nhap lua chon : "
-if %userChoice%==1 goto start_clean
-else goto menu
+if %userChoice%==1 goto checklicense
+if %userChoice%==2 goto start_clean
+if %userChoice%==0 goto menu
+goto menu
 
 :start_clean
 echo:
@@ -960,7 +816,6 @@ echo %G%     DA HOAN TAT! KHONG CON KEY TREN HE THONG     %Res%
 echo %C%==================================================%Res%
 pause
 goto menu
-
 
 :adobe
 cls
@@ -1723,10 +1578,10 @@ echo 0. Thoat ve menu chinh
 echo %C%==================================================%Res%
 set /p choice="Chon (0-3): "
 
-if %choice%==1 goto getIP
-if %choice%==2 goto refreshNet
-if %choice%==3 goto selectCard
-if %choice%==0 goto menu
+if "%choice%"=="1" goto getIP
+if "%choice%"=="2" goto refreshNet
+if "%choice%"=="3" goto selectCard
+if "%choice%"=="0" goto menu
 goto Navigation
 
 :getIP
@@ -1846,7 +1701,7 @@ echo 3. CHAY DONG THOI CA 2 (2 Cua so moi)
 echo 0. Thoat ve Menu chinh
 echo %C%==================================================%Res%
 set "choice="
-set /p choice="Chon chuc nang (1-4): "
+set /p choice="Chon chuc nang (0-4): "
 
 if "%choice%"=="1" goto TCPING
 if "%choice%"=="2" goto TRACERTCP
