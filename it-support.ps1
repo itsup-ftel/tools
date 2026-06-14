@@ -1119,6 +1119,7 @@ echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% 3dsMax 2022
 echo:         %G%[4]%Res% Revit 2026
 echo:         %G%[5]%Res% SketchUp 2021
+echo:         %G%[5]%Res% SketchUp 2026
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
@@ -1129,6 +1130,7 @@ if %auchoice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%
 if %auchoice%==3 call :autodesk_menu "3dsMax" "3DsMax.exe" "2022" "%LinkDL%/3DsMax2022.zip" "%LinkDL%/Fix3DsMax2022.zip"
 if %auchoice%==4 call :autodesk_menu "Revit 2026" "Revit.exe" "REVIT 2026" "%LinkDL%/Revit2026.zip" "%LinkDL%/FixRevit2026.zip"
 if %auchoice%==5 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 2021" "%LinkDL%/sketchup2021.zip" "%LinkDL%/FixSketchup21.zip"
+if %auchoice%==6 call :autodesk_menu "SketchUp" "SketchUp.exe" "SketchUp 2026" "%LinkDL%/sketchup2026.zip" "%LinkDL%/FixSketchup26.zip"
 if %auchoice%==0 goto menu
 goto autodesk
 
