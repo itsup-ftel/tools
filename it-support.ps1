@@ -1122,7 +1122,7 @@ echo:         %G%[2]%Res% AutoCAD 2023
 echo:         %G%[3]%Res% 3dsMax 2022
 echo:         %G%[4]%Res% Revit 2026
 echo:         %G%[5]%Res% SketchUp 2021
-echo:         %G%[5]%Res% SketchUp 2026
+echo:         %G%[6]%Res% SketchUp 2026
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
