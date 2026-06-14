@@ -1126,7 +1126,7 @@ echo:         %G%[6]%Res% SketchUp 2026
 echo:         %R%[0]%Res% Thoat ve Menu chinh
 echo %C%==================================================%Res%
 echo.
-set /p auchoice="Nhap lua chon (0-5): "
+set /p auchoice="Nhap lua chon (0-6): "
 
 if %auchoice%==1 call :autodesk_menu "AutoCAD 2021" "Acad.exe" "AUTOCAD 2021" "%LinkDL%/ACAD21.zip" "%LinkDL%/FixACAD21.zip"
 if %auchoice%==2 call :autodesk_menu "AutoCAD 2023" "Acad.exe" "AUTOCAD 2023" "%LinkDL%/ACAD23.zip" "%LinkDL%/FixACAD23.zip"
