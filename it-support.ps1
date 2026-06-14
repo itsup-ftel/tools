@@ -658,15 +658,15 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "@{Name='Foxit PDF Reader'; ID='Foxit.FoxitReader'}," ^
     "@{Name='Google Chrome'; ID='Google.Chrome'}," ^
     "@{Name='Google Drive'; ID='Google.Drive'}," ^
-    "@{Name='LibreOffice'; ID='TheDocumentFoundation.LibreOffice'}," ^
+    "@{Name='Libre Office'; ID='TheDocumentFoundation.LibreOffice'}," ^
     "@{Name='K-Lite Codec Pack Full'; ID='CodecGuide.K-LiteCodecPack.Full'}," ^
     "@{Name='Kaspersky'; ID='Kaspersky.Kaspersky'}," ^
-    "@{Name='WPSOffice'; ID='Kingsoft.WPSOffice'}," ^
+    "@{Name='WPS Office'; ID='Kingsoft.WPSOffice'}," ^
     "@{Name='Microsoft Teams'; ID='Microsoft.Teams'}," ^
     "@{Name='Notepad++'; ID='Notepad++.Notepad++'}," ^
     "@{Name='OneDrive'; ID='Microsoft.OneDrive'}," ^
     "@{Name='PDF24 Creator'; ID='PDF24.PDF24Creator'}," ^
-    "@{Name='StirlingPDF'; ID='StirlingTools.StirlingPDF'}," ^
+    "@{Name='Stirling PDF'; ID='StirlingTools.StirlingPDF'}," ^
     "@{Name='Synology Chat'; ID='Synology.ChatClient'}," ^
     "@{Name='TreeSize Free'; ID='JAMSoftware.TreeSizeFree'}," ^
     "@{Name='UltraViewer'; ID='UltraViewer.UltraViewer'}," ^
