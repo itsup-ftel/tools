@@ -966,9 +966,7 @@ if exist "%location64%\Support Files\Contents\Windows\%appExe%" set "foundPath=%
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
-    echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
-    timeout /t 3 >nul
-    goto task_patch
+    goto ask_kichhoat
 )
 
 echo:     %W%[==^> Dang tai %appName%...]%Res%
@@ -996,12 +994,19 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
-    goto task_full
+    goto ask_active
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
     goto sub_menu
 )
+
+:ask_kichhoat
+echo      %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
+set /p subChoice="Nhap lua chon (y/n): "
+if %subChoice%==y goto task_patch
+if %subChoice%==n goto sub_menu
+goto sub_menu
 
 :: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
 del /f /q "%source%\app.zip" >nul 2>&1
@@ -1184,9 +1189,7 @@ if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
-    echo:    %Y%[==^> Chuyen huong sang buoc kich hoat sau 3 giay...]%Res%
-    timeout /t 3 >nul
-    goto job_patch
+    goto ask_active
 )
 
 echo:     %W%[==^> Dang tai %appName%...]%Res%
@@ -1238,7 +1241,7 @@ curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h"
 powershell -Command "Expand-Archive -Path '%source%\Fix.zip' -DestinationPath '%source%' -Force"
 
 echo:     %W%[==^> Dang tien hanh kich hoat...]%Res%
-xcopy "%source%\Fix\*.*" "%foundPath%\" /E /I /H /Y /R /Q >nul
+xcopy "%source%\Fix\*.*" "%foundPath%" /E /I /H /Y /R /Q >nul
 echo:     %G%[OK] Da fix file %appName% thanh cong.%Res%
 
 :job_security
