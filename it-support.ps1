@@ -76,13 +76,13 @@ echo      %G%4.%Res% Thong tin User       %G%10.%Res% On/Off Win Update   %G%16.
 echo      %G%5.%Res% Thong tin Bitlocker  %G%11.%Res% Restart Explorer    %G%17.%Res% Xem Pass Wi-Fi       %G%23.%Res% Quan ly may in
 echo      %G%6.%Res% Thong tin Ban quyen  %G%12.%Res% Xu ly Task          %G%18.%Res% Reset Mang           %G%24.%Res% Xu ly loi may in
 echo.
-echo     %C%[ 5. CONG CU 1 ]%Res%         %C%[ 6. CONG CU 2 ]%Res%        %C%[ 7. CAI DAT 1]%Res%         %C%[ 8. CAI DAT 2 ]%Res%
+echo     %C%[ 5. CONG CU 1 ]%Res%         %C%[ 6. CONG CU 2 ]%Res%        %C%[ 7. CAI DAT 1]%Res%          %C%[ 8. CAI DAT 2 ]%Res%
 echo.
-echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office       %G%40.%Res% Sao luu/ Phuc hoi
-echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%   %G%41.%Res% Dich vu cong
-echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup Win/Office  %G%42.%Res% Foxit PDF Editor
-echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi   %G%43.%Res% Adobe
-echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung Ban Quyen  %G%44.%Res% Autodesk
+echo     %G%25.%Res% Control Panel        %G%30.%Res% Print Management    %G%35.%Res% Bo cai Office        %G%40.%Res% Sao luu/ Phuc hoi
+echo     %G%26.%Res% Task Manager         %G%31.%Res% Network Connection  %G%36.%Res% %G%Active Win/Office%Res%    %G%41.%Res% Dich vu cong
+echo     %G%27.%Res% Services (msc)       %G%32.%Res% Registry Editor     %G%37.%Res% Cleanup Win/Office   %G%42.%Res% Foxit PDF Editor
+echo     %G%28.%Res% Device Manager       %G%33.%Res% Advanced Firewall   %G%38.%Res% Ung dung Mien Phi    %G%43.%Res% Adobe
+echo     %G%29.%Res% Windows Settings     %G%34.%Res% Uninstall Programs  %G%39.%Res% Ung dung Ban Quyen   %G%44.%Res% Autodesk
 echo.
 echo   %R%[ R ]%Res% Khoi dong lai PC   %R%[ S ]%Res% Tat may PC       %W%[ 0 ] Thoat tool%Res%
 echo  %G%====================================================================================================================%Res%
@@ -1213,7 +1213,11 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
-    goto job_full
+    echo:         %R%[0]%Res% Quay lai menu chinh
+    echo      %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
+    set /p subChoice="Nhap lua chon (y/n): "
+    if %subChoice%==y goto job_patch
+    if %subChoice%==n goto subdesk_menu
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
