@@ -1213,16 +1213,19 @@ if defined setupPath (
     echo:     %G%[==^> Da tim thay: "%setupPath%"]%Res%
     echo:     %W%[==^> Hien popup -> click%Res% %Y%Install%Res% %W%-> click%Res% %Y%Close%Res% %W%de hoan tat cai dat...]%Res%
     start /wait "" "%setupPath%"
-    echo:         %R%[0]%Res% Quay lai menu chinh
-    echo      %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
-    set /p subChoice="Nhap lua chon (y/n): "
-    if %subChoice%==y goto job_patch
-    if %subChoice%==n goto subdesk_menu
+    goto ask_active
 ) else (
     echo:     %R%[[!] LOI: Khong tim thay file setup.exe sau khi giai nen.]%Res%
     pause
     goto subdesk_menu
 )
+
+:ask_active
+echo      %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
+set /p subChoice="Nhap lua chon (y/n): "
+if %subChoice%==y goto job_patch
+if %subChoice%==n goto subdesk_menu
+goto subdesk_menu
 
 :: Xóa file zip ứng dụng ngay để giải phóng bộ nhớ
 del /f /q "%source%\autodesk.zip" >nul 2>&1
