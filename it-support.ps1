@@ -1167,13 +1167,13 @@ echo %C%==================================================%Res%
 echo.
 set /p subChoice="Nhap lua chon (0-3): "
 
-if %subChoice%==1 goto job_full
-if %subChoice%==2 goto job_patch
+if %subChoice%==1 goto job_check
+if %subChoice%==2 goto job_check
 if %subChoice%==3 goto job_security
 if %subChoice%==0 goto autodesk
 goto subdesk_menu
 
-:job_full
+:job_check
 cls
 echo:     %Y%[==^> Dang kiem tra trang thai he thong...]%Res%
 set "foundPath="
@@ -1186,10 +1186,11 @@ if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
-    pause
     goto ask_active
 )
 
+:job_download
+cls
 echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\autodesk.zip" "%downloadURL%"
@@ -1222,8 +1223,9 @@ if defined setupPath (
 )
 
 :ask_active
-echo      %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
-set /p subChoice="Nhap lua chon (y/n): "
+cls
+echo:     %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
+set /p subChoice="Nhap xac nhan (y/n): "
 if %subChoice%==y goto job_patch
 if %subChoice%==n goto subdesk_menu
 goto subdesk_menu
