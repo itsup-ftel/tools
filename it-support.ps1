@@ -1190,7 +1190,6 @@ if defined foundPath (
 )
 
 :job_download
-cls
 echo:     %W%[==^> Dang tai %appName%...]%Res%
 if not exist "%source%" md "%source%"
 curl --insecure -u "download:8wjAc41jZ8Fq6Hgd67baCTdoM9uqYcSeRJFU2QvLucL9WreB3h" -L# --ssl-no-revoke -o "%source%\autodesk.zip" "%downloadURL%"
@@ -1223,7 +1222,6 @@ if defined setupPath (
 )
 
 :ask_active
-cls
 echo:     %C%[==^>Ban co muon kich hoat %appName% ?]%Res%
 set /p subChoice="Nhap xac nhan (y/n): "
 if %subChoice%==y goto job_patch
