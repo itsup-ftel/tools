@@ -1186,6 +1186,7 @@ if exist "%folder32%\%titleName%\%appExe%" set "foundPath=%folder32%\%titleName%
 
 if defined foundPath (
     echo:    %R%[[!] Phat hien %appName% da duoc cai dat tai:]%Res% "%foundPath%"
+    pause
     goto ask_active
 )
 
