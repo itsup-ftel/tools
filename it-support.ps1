@@ -154,9 +154,9 @@ if "%targetDrive%"=="" (
 
 :BackupnRestore
 cls
-echo %C%==========================================%Res%
-echo %C%   CONG CU SAO LUU VA PHUC HOI DRIVER     %Res%
-echo %C%==========================================%Res%
+echo %C%==================================================%Res%
+echo %C%      CONG CU SAO LUU VA PHUC HOI DRIVER     %Res%
+echo %C%==================================================%Res%
 echo %G% Thu muc luu tru mac dinh: %backupPath%%Res%
 echo ------------------------------------------
 echo 1. Sao luu toan bo Driver
@@ -934,7 +934,6 @@ set "folder32=%ProgramFiles(x86)%\%titleName%"
 cls
 title %titleName%
 echo %C%==================================================%Res%
-echo:
 echo:                   %Y%[%titleName% x64]%Res%
 echo %C%==================================================%Res%
 echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
@@ -1119,7 +1118,6 @@ set "tempHosts=%TEMP%\autodesk_hosts.txt"
 set "hPath=%SystemRoot%\System32\drivers\etc\hosts"
 set "LinkDL=https://118.71.27.159:5006/Public"
 echo %C%==================================================%Res%
-echo:
 echo:                %Y%[AUTODESK PREMIUM LIST]%Res%
 echo %C%==================================================%Res%
 echo:         %G%[1]%Res% AutoCAD 2021
@@ -1159,7 +1157,6 @@ set "folder32=%ProgramFiles(x86)%\%appName%"
 cls
 title %titleName%
 echo %C%==================================================%Res%
-echo:
 echo:                %Y%[%titleName% x64]%Res%
 echo %C%==================================================%Res%
 echo:         %B%[1]%Res% %G%FULL%Res%: Tai, Cai dat ^& Kich hoat
