@@ -865,6 +865,7 @@ goto menu
 echo:
 echo %G%[+]%W% Dang thuc hien xoa ban quyen Windows...%Res%
 powershell -Command "cscript //nologo %windir%\system32\slmgr.vbs /upk; cscript //nologo %windir%\system32\slmgr.vbs /cpky; cscript //nologo %windir%\system32\slmgr.vbs /rearm" >nul 2>&1
+
 echo %Y%Windows Status:%Res%
 powershell -Command "$win = cscript //nologo $env:windir\system32\slmgr.vbs /dli | Select-String 'Partial Product Key'; if($win){Write-Host \"  $win\"} else {Write-Host '  - Khong con Key Windows, hay khoi dong lai may tinh.' -ForegroundColor Red}"
 pause
@@ -873,7 +874,7 @@ goto cleanup
 :clean_office
 echo:
 echo %G%[+]%W% Dang thuc hien xoa sach key Office...%Res%
-powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; foreach ($p in $vbsPaths) { $out = cscript //nologo \"$p\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\" /unpkey:$k >$null } }" >nul 2>&1
+powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; foreach ($p in $vbsPaths) { $out = cscript //nologo \"$p\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\" /unpkey:$k >$null } }; cmdkey /list | Select-String 'MicrosoftOffice' | ForEach-Object { $tg = ($_ -split 'Target: ')[1].Trim(); cmdkey /delete:$tg >$null 2>&1 }; $o365Paths = @(\"${env:LOCALAPPDATA}\Microsoft\Office\16.0\Licensing\", \"${env:APPDATA}\Microsoft\Office\16.0\Licensing\"); foreach ($path in $o365Paths) { if (Test-Path $path) { Remove-Item -Path $path -Recurse -Force >$null 2>&1 } }; $regPaths = @('HKCU:\Software\Microsoft\Office\16.0\Common\Licensing', 'HKCU:\Software\Microsoft\Office\16.0\Common\Identity'); foreach ($reg in $regPaths) { if (Test-Path $reg) { Remove-Item -Path $reg -Recurse -Force >$null 2>&1 } }" >nul 2>&1
 
 echo %Y%Office Status:%Res%
 powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; $found = $false; foreach ($p in $vbsPaths) { $res = cscript //nologo \"$p\" /dstatus | Select-String 'Last 5 characters'; if ($res) { Write-Host \"  $res\"; $found = $true } }; if (-not $found) { Write-Host '  - Khong con Key Office.' -ForegroundColor Red }"
