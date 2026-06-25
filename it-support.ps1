@@ -847,10 +847,11 @@ powershell -Command "$found=$false; $spp = Get-CimInstance -Query 'SELECT * FROM
 
 echo:
 echo %C%==================================================%Res%
+echo %Y% CHUC NANG:%Res%
 echo %W% 1. Kiem tra ban quyen thuong mai%Res%
 echo %W% 2. Thuc hien xoa key Windows%Res%
 echo %W% 3. Thuc hien xoa key Office%Res%
-echo %W% 0. Thoat ve Menu chinh%Res%
+echo %B% 0. Thoat ve Menu chinh%Res%
 echo %C%==================================================%Res%
 echo:
 
