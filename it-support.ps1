@@ -6,7 +6,7 @@ if %errorLevel% neq 0 (
     powershell -Command "Start-Process -FilePath '%0' -Verb RunAs"
     exit /b
 )
-title IT SUPPORT PROFESSIONAL TOOLKIT v26.5
+title PROFESSIONAL TOOLKIT v26.5
 mode con: cols=110 lines=30
 
 for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do set "ESC=%%b"
