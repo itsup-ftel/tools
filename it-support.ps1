@@ -847,41 +847,38 @@ powershell -Command "$found=$false; $spp = Get-CimInstance -Query 'SELECT * FROM
 
 echo:
 echo %C%==================================================%Res%
-echo %W% 1. Kiem tra ban quyen%Res%
-echo %W% 2. Bat dau xoa sach key%Res%
-echo %W% 0. Huy bo va quay lai Menu%Res%
+echo %W% 1. Kiem tra ban quyen thuong mai%Res%
+echo %W% 2. Thuc hien xoa key Windows%Res%
+echo %W% 3. Thuc hien xoa key Office%Res%
+echo %W% 0. Thoat ve Menu chinh%Res%
 echo %C%==================================================%Res%
 echo:
 
-set /p userChoice="Nhap lua chon : "
+set /p userChoice="Nhap lua chon (0-3): "
 if %userChoice%==1 goto checklicense
-if %userChoice%==2 goto start_clean
+if %userChoice%==2 goto clean_windows
+if %userChoice%==3 goto clean_office
 if %userChoice%==0 goto menu
 goto menu
 
-:start_clean
+:clean_windows
 echo:
-echo %G%[+]%W% Dang quet va xoa ban quyen Windows...%Res%
+echo %G%[+]%W% Dang thuc hien xoa ban quyen Windows...%Res%
 powershell -Command "cscript //nologo %windir%\system32\slmgr.vbs /upk; cscript //nologo %windir%\system32\slmgr.vbs /cpky; cscript //nologo %windir%\system32\slmgr.vbs /rearm" >nul 2>&1
-
-echo:
-echo %G%[+]%W% Dang quet va xoa sach key Office...%Res%
-powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; foreach ($p in $vbsPaths) { $out = cscript //nologo \"$p\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\" /unpkey:$k >$null } }" >nul 2>&1
-
-echo:
-echo %C%--- KIEM TRA TRANG THAI KEY SAU KHI XOA ---%Res%
-
 echo %Y%Windows Status:%Res%
 powershell -Command "$win = cscript //nologo $env:windir\system32\slmgr.vbs /dli | Select-String 'Partial Product Key'; if($win){Write-Host \"  $win\"} else {Write-Host '  - Khong con Key Windows, hay khoi dong lai may tinh.' -ForegroundColor Red}"
+pause
+goto cleanup
+
+:clean_office
+echo:
+echo %G%[+]%W% Dang thuc hien xoa sach key Office...%Res%
+powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; foreach ($p in $vbsPaths) { $out = cscript //nologo \"$p\" /dstatus; $keys = $out | Select-String 'Last 5 characters of installed product key: (\w+)'; foreach ($m in $keys) { $k = $m.Matches.Groups.Value; cscript //nologo \"$p\" /unpkey:$k >$null } }" >nul 2>&1
 
 echo %Y%Office Status:%Res%
 powershell -Command "$paths = @('${env:SystemDrive}\Program Files', '${env:SystemDrive}\Program Files (x86)') | Where-Object { Test-Path $_ }; $vbsPaths = Get-ChildItem -Path $paths -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName; $found = $false; foreach ($p in $vbsPaths) { $res = cscript //nologo \"$p\" /dstatus | Select-String 'Last 5 characters'; if ($res) { Write-Host \"  $res\"; $found = $true } }; if (-not $found) { Write-Host '  - Khong con Key Office.' -ForegroundColor Red }"
-echo:
-echo %C%==================================================%Res%
-echo %G%     DA HOAN TAT! KHONG CON KEY TREN HE THONG     %Res%
-echo %C%==================================================%Res%
 pause
-goto menu
+goto cleanup
 
 :adobe
 cls
